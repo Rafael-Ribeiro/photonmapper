@@ -12,6 +12,8 @@
 #define POS_INC		0.1
 #define ANGLE_INC	0.03
 
+#define ESC_KEY		27
+
 /* globals */
 GLint screenWidth = 800, screenHeight = 600;
 GLfloat observerPos[] = { -1.0, 0.0, 0.0 };
@@ -121,7 +123,7 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 			flashDir[1] = tan(flashAngleHor);
 			break;
 
-		case 27:
+		case ESC_KEY:
 			exit(0);
 			break;	
 	}
@@ -181,7 +183,7 @@ int main(int argc, char* argv[])
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH );
 	glutInitWindowSize(screenWidth, screenHeight); 
 	glutInitWindowPosition(100, 100); 
-	glutCreateWindow("TP4 CG - jprafael@student.dei.uc.pt, jlbribeiro@student.dei.uc.pt");
+	glutCreateWindow("TP4 CG - jprafael@student.dei.uc.pt, jbaia@student.dei.uc.pt");
  
 	glClearColor(GRAY);
 	glShadeModel(GL_SMOOTH);
