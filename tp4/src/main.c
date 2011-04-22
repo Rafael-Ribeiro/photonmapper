@@ -3,7 +3,8 @@
 #include <GL/glut.h>
 
 /* constants */
-#define GRAY     0.9, 0.92, 0.29, 1.0
+#define GRAY		0.9, 0.92, 0.29, 1.0
+#define ESC_KEY		27
 
 /* globals */
 GLint screenWidth= 800, screenHeight=600;
@@ -72,7 +73,7 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 		case 'S':
 			break;
 
-		case 27:
+		case ESC_KEY:
 			exit(0);
 			break;	
 	}
