@@ -94,8 +94,7 @@ void draw()
 		drawObject(&objects[i]); 
 
 	/* TODO not yet sure whether the light position needs to be reset (possibly relative to the observer) */
-	if (lightFlash)
-		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, flashDir);
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, flashDir);
 
 /*
 	if (lightCeil)
@@ -136,7 +135,7 @@ void display()
 
 	draw();
 	
-	/* map at the top */
+	/* map at the bottom */
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glScissor(0,0,screenWidth/3, screenHeight/3);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -307,6 +306,7 @@ void init()
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_SCISSOR_TEST);
+	glEnable(GL_LIGHTING);
 
 	/* Object declaration */
 	nobjects = 1;
