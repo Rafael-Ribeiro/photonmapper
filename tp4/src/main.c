@@ -6,9 +6,24 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
+/* structers */
+typedef enum {t_cube, t_sphere, t_torus, t_icos, t_octa, t_teapot} object_type;
+typedef struct
+{
+	object_type type;
+
+	GLfloat pos[3];
+	GLfloat rotAxis[3];
+	GLfloat rotAngle;
+
+	/* color, proprieties, etc */
+} OBJECT;
+
 /* constants */
+#define M_PI		3.141592653589793238 /* not ansi */
 #define GRAY     	0.9, 0.92, 0.92, 1.0
 #define MAX_OBJS	10
+#define MAX_POS		20
 #define POS_INC		0.1
 #define ANGLE_INC	0.03
 
@@ -22,16 +37,55 @@ GLfloat observerDirAngle = 0.0;
 GLfloat flashDir[] = { 1.0, 0.0, 0.0 };
 GLfloat flashAngleHor = 0.0;
 GLfloat flashAngleVer = 0.0;
+OBJECT objects[MAX_OBJS];
 
+int nobjects = 0;
 bool color = false;
 bool day = true;
 bool lightCeil = false;
 bool lightFlash = false;
 
+void drawObject(OBJECT* obj)
+{
+	glPushMatrix();
+		glTranslatef(obj->pos[0], obj->pos[1], obj->pos[2]);
+		glRotatef(obj->rotAngle, obj->rotAxis[0], obj->rotAxis[1], obj->rotAxis[2]);
+
+		switch (obj->type)
+		{
+			case t_sphere:
+				glutSolidSphere(1.0, 10, 10);
+				break;
+
+			case t_cube:
+				glutSolidCube(1.0);
+				break;
+
+			case t_torus:
+				glutSolidTorus(0.5, 1.0, 10, 5);
+				break;
+
+			case t_icos:
+				glutSolidIcosahedron();
+				break;
+
+			case t_octa:
+				glutSolidOctahedron();
+				break;
+
+			case t_teapot:
+				glutSolidTeapot(1.0);
+				break;
+		}
+	glPopMatrix();
+}
+
 /* cria os objectos no espaço */
 void draw()
 {
-	glutWireCube(1.0);
+	int i;
+	for (i = 0; i < nobjects; i++)
+		drawObject(&objects[i]); 
 }
 
 /* renderiza as views em 2D */
@@ -194,6 +248,12 @@ int main(int argc, char* argv[])
 	glutDisplayFunc(display); 
 	glutReshapeFunc(resizeWindowCallback);
 	
+	nobjects = 1;
+	objects[0].type = t_teapot;
+	objects[0].pos[0] = 1.0; objects[0].pos[1] = 0.0; objects[0].pos[2] = 0.0; 
+	objects[0].rotAxis[0] = 0.0; objects[0].rotAxis[0] = 1.0; objects[0].rotAxis[0] = 0.0;
+	objects[0].rotAngle = 0;
+
 	glutMainLoop();
 
 	return 0;

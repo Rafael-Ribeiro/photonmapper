@@ -1,2 +1,2 @@
 all: main.c
-	gcc main.c -o main -lglut -lGLU
+	gcc main.c -o main -ansi -Wall -lglut -lGLU 
