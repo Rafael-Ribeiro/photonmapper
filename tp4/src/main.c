@@ -13,7 +13,7 @@ typedef struct
 	object_type type;
 
 	GLfloat pos[3];
-	GLfloat rotAxis[3];
+	GLfloat rotAxis[3]; 
 	GLfloat rotAngle;
 
 	/* color, proprieties, etc */
@@ -25,8 +25,8 @@ typedef struct
 #define MAX_OBJS	10
 #define MAX_POS		20
 #define POS_INC		0.1
-#define ANGLE_INC	0.03
-
+#define ANGLE_INC	0.01
+#define TIMER		50
 #define ESC_KEY		27
 
 /* globals */
@@ -49,6 +49,7 @@ void drawObject(OBJECT* obj)
 {
 	glPushMatrix();
 		glTranslatef(obj->pos[0], obj->pos[1], obj->pos[2]);
+		printf("%lf\n", obj->rotAngle);
 		glRotatef(obj->rotAngle, obj->rotAxis[0], obj->rotAxis[1], obj->rotAxis[2]);
 
 		switch (obj->type)
@@ -141,7 +142,7 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 
 		case 'a':
 		case 'A':
-			flashAngleHor -= ANGLE_INC;
+			flashAngleHor -= ANGLE_INC*2*M_PI;
 			if (flashAngleHor >= 2*M_PI)
 				flashAngleHor -= 2*M_PI;
  
@@ -151,7 +152,7 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 
 		case 'd':
 		case 'D':
-			flashAngleHor += ANGLE_INC;
+			flashAngleHor += ANGLE_INC*2*M_PI;
 			if (flashAngleHor < 0)
 				flashAngleHor += 2*M_PI;
 
@@ -161,7 +162,7 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 
 		case 'w':
 		case 'W':
-			flashAngleVer += ANGLE_INC;
+			flashAngleVer += ANGLE_INC*2*M_PI;
 			if (flashAngleVer >= 2*M_PI)
 				flashAngleVer -= 2*M_PI;
 		
@@ -170,7 +171,7 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 
 		case 's':
 		case 'S':
-			flashAngleVer -= ANGLE_INC;
+			flashAngleVer -= ANGLE_INC*2*M_PI;
 			if (flashAngleHor < 0)
 				flashAngleHor += 2*M_PI;
 
@@ -190,7 +191,7 @@ void keyboardSpecialCallback(int key, int x, int y)
 	switch (key)
 	{
 		case GLUT_KEY_LEFT:
-			observerDirAngle -= ANGLE_INC;
+			observerDirAngle -= ANGLE_INC*2*M_PI;
 			if (observerDirAngle < 0)
 				observerDirAngle += 2*M_PI;
 
@@ -199,7 +200,7 @@ void keyboardSpecialCallback(int key, int x, int y)
 			break;
 
 		case GLUT_KEY_RIGHT:
-			observerDirAngle += ANGLE_INC;
+			observerDirAngle += ANGLE_INC*2*M_PI;
 			if (observerDirAngle >= 2*M_PI)
 				observerDirAngle -= 2*M_PI;
 
@@ -231,6 +232,19 @@ void resizeWindowCallback(GLsizei w, GLsizei h)
 	glutPostRedisplay();
 }
 
+void timerCallback(int value) 
+{
+	int i;
+	for (i = 0; i < nobjects; i++)
+	{
+		objects[i].rotAngle += ANGLE_INC*360.0;
+		if (objects[i].rotAngle >= 360.0)
+			objects[i].rotAngle -= 360.0;
+	}
+	glutPostRedisplay();
+	glutTimerFunc(TIMER, timerCallback, 1);
+}
+
 int main(int argc, char* argv[])
 {
 	glutInit(&argc, argv);
@@ -253,7 +267,8 @@ int main(int argc, char* argv[])
 	objects[0].pos[0] = 1.0; objects[0].pos[1] = 0.0; objects[0].pos[2] = 0.0; 
 	objects[0].rotAxis[0] = 0.0; objects[0].rotAxis[0] = 1.0; objects[0].rotAxis[0] = 0.0;
 	objects[0].rotAngle = 0;
-
+	
+	glutTimerFunc(TIMER, timerCallback, 1);
 	glutMainLoop();
 
 	return 0;
