@@ -16,7 +16,7 @@ typedef struct
 	GLfloat rotAxis[3]; 
 	GLfloat rotAngle;
 
-	/* color, proprieties, etc */
+	/* color, properties, etc */
 } OBJECT;
 
 /* constants */
@@ -25,8 +25,12 @@ typedef struct
 #define MAX_OBJS	10
 #define MAX_POS		20
 #define POS_INC		0.1
+
 #define ANGLE_INC	0.01
-#define TIMER		50
+#define TIMER		25
+#define FLASH_CUTOFF_ANGLE		((GLfloat)15.0)
+#define FLASH_EXPONENT			((GLfloat)0.3)
+
 #define ESC_KEY		27
 
 /* globals */
@@ -49,8 +53,9 @@ void drawObject(OBJECT* obj)
 {
 	glPushMatrix();
 		glTranslatef(obj->pos[0], obj->pos[1], obj->pos[2]);
-		printf("%lf\n", obj->rotAngle);
 		glRotatef(obj->rotAngle, obj->rotAxis[0], obj->rotAxis[1], obj->rotAxis[2]);
+
+		glColor3f(0.0,0.0,0.0);
 
 		switch (obj->type)
 		{
@@ -87,6 +92,24 @@ void draw()
 	int i;
 	for (i = 0; i < nobjects; i++)
 		drawObject(&objects[i]); 
+
+	/* TODO not yet sure whether the light position needs to be reset (possibly relative to the observer) */
+	if (lightFlash)
+		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, flashDir);
+
+/*
+	if (lightCeil)
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, flashDir);
+
+	ambient lighting
+	if (day)
+	{
+		 
+	} else
+	{
+
+	}
+*/
 }
 
 /* renderiza as views em 2D */
@@ -94,17 +117,18 @@ void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	
+	/* main view */
 	glViewport(0,0,screenWidth, screenHeight);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
 	gluPerspective(60.0, 4.0/3.0, 1.0, 100.0);
-	/* glOrtho(-xC,xC,-yC,yC,-zC,zC); */
-
+	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(
+	gluLookAt
+	(
 		observerPos[0], observerPos[1], observerPos[2],
 		observerPos[0]+observerDir[0], observerPos[1]+observerDir[1], observerPos[2]+observerDir[2],
 		0, 1, 0
@@ -112,6 +136,29 @@ void display()
 
 	draw();
 	
+	/* map at the top */
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glScissor(0,0,screenWidth/3, screenHeight/3);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glViewport(0,0,screenWidth/3, screenHeight/3);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-MAX_POS/2, MAX_POS,-MAX_POS/2, MAX_POS/2, 0, MAX_POS*2); 
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt
+	(
+		0, MAX_POS, 0,	/* camera pos: above the map*/
+		0, 0, 0, 		/* look at center */
+		1, 0, 0 		/* camera top: front */
+	);
+
+	draw();
+
+	glScissor(0, 0, screenWidth, screenHeight);
 	glutSwapBuffers();
 }
 
@@ -138,6 +185,11 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 		case 'f':
 		case 'F':
 			lightFlash = !lightFlash;
+			if (lightFlash)
+				glEnable(GL_LIGHT0);
+			else
+				glDisable(GL_LIGHT0);
+				
 			break;
 
 		case 'a':
@@ -241,34 +293,56 @@ void timerCallback(int value)
 		if (objects[i].rotAngle >= 360.0)
 			objects[i].rotAngle -= 360.0;
 	}
+
 	glutPostRedisplay();
 	glutTimerFunc(TIMER, timerCallback, 1);
 }
 
-int main(int argc, char* argv[])
+/* inicializa o OpenGL e variáveis */
+void init()
+{
+	/* GLfloat flashPos[] = {observerPos[0],observerPos[1] /COMMENT + flash height relative to observer? COMMENT/,observerPos[2]}; */
+
+	glClearColor(GRAY);
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_SCISSOR_TEST);
+
+	/* Object declaration */
+	nobjects = 1;
+	objects[0].type = t_teapot;
+	objects[0].pos[0] = 1.0; objects[0].pos[1] = 0.0; objects[0].pos[2] = 0.0; 
+	objects[0].rotAxis[0] = 0.0; objects[0].rotAxis[1] = 1.0; objects[0].rotAxis[2] = 0.0;
+	objects[0].rotAngle = 0;
+	/* Object declaration */
+
+	/* Flashlight */
+	if (lightFlash)
+		glEnable(GL_LIGHT0);
+
+	glLightfv(GL_LIGHT0, GL_POSITION, observerPos);
+	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, FLASH_CUTOFF_ANGLE);
+	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, FLASH_EXPONENT);
+	/* Flashlight */
+}
+
+int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH );
 	glutInitWindowSize(screenWidth, screenHeight); 
 	glutInitWindowPosition(100, 100); 
 	glutCreateWindow("TP4 CG - jprafael@student.dei.uc.pt, jbaia@student.dei.uc.pt");
- 
-	glClearColor(GRAY);
-	glShadeModel(GL_SMOOTH);
-	glEnable(GL_DEPTH_TEST);
-	
+ 	
 	glutKeyboardFunc(keyboardASCIICallback);
 	glutSpecialFunc(keyboardSpecialCallback); 
 	glutDisplayFunc(display); 
 	glutReshapeFunc(resizeWindowCallback);
 	
-	nobjects = 1;
-	objects[0].type = t_teapot;
-	objects[0].pos[0] = 1.0; objects[0].pos[1] = 0.0; objects[0].pos[2] = 0.0; 
-	objects[0].rotAxis[0] = 0.0; objects[0].rotAxis[0] = 1.0; objects[0].rotAxis[0] = 0.0;
-	objects[0].rotAngle = 0;
-	
 	glutTimerFunc(TIMER, timerCallback, 1);
+
+	init();
+
 	glutMainLoop();
 
 	return 0;
