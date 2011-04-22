@@ -7,10 +7,11 @@
 #include <GL/glut.h>
 
 /* constants */
-#define GRAY     	0.9, 0.92, 0.92, 1.0
-#define MAX_OBJS	10
-#define POS_INC		0.1
-#define ANGLE_INC	0.03
+#define GRAY     				0.9, 0.92, 0.92, 1.0
+#define MAX_OBJS				10
+#define POS_INC					0.1
+#define ANGLE_INC				0.03
+#define FLASH_CUTOFF_ANGLE		((GLfloat)15.0)
 
 #define ESC_KEY		27
 
@@ -31,7 +32,16 @@ bool lightFlash = false;
 /* cria os objectos no espaço */
 void draw()
 {
+	/* GLfloat flashPos[] = {observerPos[0],observerPos[1] /COMMENT + flash height relative to observer? COMMENT/,observerPos[2]}; */
+
 	glutWireCube(1.0);
+
+	/* Flashlight */
+	glLightfv(GL_LIGHT0, GL_POSITION, observerPos);
+	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, FLASH_CUTOFF_ANGLE);
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, flashDir);
+	glEnable(GL_LIGHT0);
+	/* Flashlight */
 }
 
 /* renderiza as views em 2D */
