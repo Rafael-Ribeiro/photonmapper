@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH );
 	glutInitWindowSize(screenWidth, screenHeight); 
 	glutInitWindowPosition(100, 100); 
-	glutCreateWindow("TP4 CG - jprafael@student.dei.uc.pt, jlbribeiro@student.dei.uc.pt");
+	glutCreateWindow("TP4 CG - jprafael@student.dei.uc.pt, jbaia@student.dei.uc.pt");
  
 	glClearColor(GRAY);
 	glShadeModel(GL_SMOOTH);
