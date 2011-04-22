@@ -3,7 +3,7 @@
 #include <GL/glut.h>
 
 /* constants */
-#define GREY     0.9, 0.92, 0.29, 1.0
+#define GRAY     0.9, 0.92, 0.29, 1.0
 
 /* globals */
 GLint screenWidth= 800, screenHeight=600;
