@@ -19,7 +19,8 @@ typedef struct
 
 /* constants */
 #define M_PI		3.141592653589793238 /* not ansi */
-#define GREY     	0.9, 0.92, 0.92, 1.0
+#define GREY     	0.90, 0.90, 0.90, 1.0
+#define BLACK     	0.0, 0.0, 0.0, 1.0
 #define MAX_OBJS	10
 #define MAX_POS		20
 #define POS_INC		0.1
@@ -29,11 +30,17 @@ typedef struct
 
 #define ESC_KEY		27
 
+
 /* light constants */
-#define CEIL_LIGHT				GL_LIGHT0
-#define FLASH_LIGHT				GL_LIGHT1
-#define FLASH_CUTOFF_ANGLE		((GLfloat)15.0)
-#define FLASH_EXPONENT			((GLfloat)0.3)
+#define CEIL_LIGHT					GL_LIGHT0
+
+#define FLASHLIGHT_LIGHT			GL_LIGHT1
+#define FLASHLIGHT_CUTOFF_ANGLE		((GLfloat)15.0)
+#define FLASHLIGHT_EXPONENT			((GLfloat)0.3)
+#define FLASHLIGHT_OFFSET_X			((GLfloat)0.0)
+#define FLASHLIGHT_OFFSET_Y			((GLfloat)0.0)
+#define FLASHLIGHT_OFFSET_Z			((GLfloat)0.0)
+
 
 /* globals */
 GLint screenWidth = 800, screenHeight = 600;
@@ -46,15 +53,15 @@ OBJECT objects[MAX_OBJS];
 GLfloat ambientLightColorDay[4] = { 0.9, 0.9, 0.9, 1.0 };
 GLfloat ambientLightColorNight[4] = { 0.1, 0.1, 0.1, 1.0 };
 
-GLfloat flashDir[] = { 1.0, 0.0, 0.0 };
-GLfloat flashAngleHor = 0.0;
-GLfloat flashAngleVer = 0.0;
+GLfloat flashlightDir[] = { 1.0, 0.0, 0.0 };
+GLfloat flashlightAngleHor = 0.0;
+GLfloat flashlightAngleVer = 0.0;
 
 int nobjects = 0;
 bool color = false;
-bool day = true;
+bool day = false;
 bool ceilLightOn = false;
-bool flashLightOn = false;
+bool flashlightOn = true;
 
 void drawObject(OBJECT* obj)
 {
@@ -64,6 +71,7 @@ void drawObject(OBJECT* obj)
 		glTranslatef(obj->pos[0], obj->pos[1], obj->pos[2]);
 		glRotatef(obj->rotAngle, obj->rotAxis[0], obj->rotAxis[1], obj->rotAxis[2]);
 
+		/* FIXME This will get cleaned up, it's just for now (gold material properties) */
 		mat[0] = 0.24725; mat[1] = 0.1995; mat[2] = 0.0745; mat[3] = 1.0; /* red, green, blue and alpha ambient component */
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat);
 		mat[0] = 0.75164; mat[1] = 0.60648; mat[2] = 0.22648; /* red, green and blue diffuse component */
@@ -104,12 +112,11 @@ void drawObject(OBJECT* obj)
 /* cria os objectos no espaço */
 void draw()
 {
+	GLfloat flashlightPos[4] = { observerPos[0] + FLASHLIGHT_OFFSET_X, observerPos[1] + FLASHLIGHT_OFFSET_Y, observerPos[2] + FLASHLIGHT_OFFSET_Z, 1.0 }; /* this allows a flashlight-observer "offset" */
+
 	int i;
 	for (i = 0; i < nobjects; i++)
 		drawObject(&objects[i]); 
-
-	/* TODO not yet sure whether the light position needs to be reset (possibly relative to the observer) */
-	glLightfv(FLASH_LIGHT, GL_SPOT_DIRECTION, flashDir);
 
 	if (day)
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLightColorDay);
@@ -121,10 +128,14 @@ void draw()
 	else
 		glDisable(CEIL_LIGHT);
 
-	if (flashLightOn)
-		glEnable(FLASH_LIGHT);
+	if (flashlightOn)
+	{
+		glEnable(FLASHLIGHT_LIGHT);
+		glLightfv(FLASHLIGHT_LIGHT, GL_POSITION, flashlightPos);
+		glLightfv(FLASHLIGHT_LIGHT, GL_SPOT_DIRECTION, observerDir);
+	}
 	else
-		glDisable(FLASH_LIGHT);
+		glDisable(FLASHLIGHT_LIGHT);
 }
 
 /* renderiza as views em 2D */
@@ -199,45 +210,45 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 
 		case 'f':
 		case 'F':
-			flashLightOn = !flashLightOn;				
+			flashlightOn = !flashlightOn;				
 			break;
 
 		case 'a':
 		case 'A':
-			flashAngleHor -= ANGLE_INC*2*M_PI;
-			if (flashAngleHor >= 2*M_PI)
-				flashAngleHor -= 2*M_PI;
+			flashlightAngleHor -= ANGLE_INC*2*M_PI;
+			if (flashlightAngleHor >= 2*M_PI)
+				flashlightAngleHor -= 2*M_PI;
  
-			flashDir[0] = cos(flashAngleHor);
-			flashDir[2] = sin(flashAngleHor);
+			flashlightDir[0] = cos(flashlightAngleHor);
+			flashlightDir[2] = sin(flashlightAngleHor);
 			break;
 
 		case 'd':
 		case 'D':
-			flashAngleHor += ANGLE_INC*2*M_PI;
-			if (flashAngleHor < 0)
-				flashAngleHor += 2*M_PI;
+			flashlightAngleHor += ANGLE_INC*2*M_PI;
+			if (flashlightAngleHor < 0)
+				flashlightAngleHor += 2*M_PI;
 
-			flashDir[0] = cos(flashAngleHor);
-			flashDir[2] = sin(flashAngleHor);
+			flashlightDir[0] = cos(flashlightAngleHor);
+			flashlightDir[2] = sin(flashlightAngleHor);
 			break;
 
 		case 'w':
 		case 'W':
-			flashAngleVer += ANGLE_INC*2*M_PI;
-			if (flashAngleVer >= 2*M_PI)
-				flashAngleVer -= 2*M_PI;
+			flashlightAngleVer += ANGLE_INC*2*M_PI;
+			if (flashlightAngleVer >= 2*M_PI)
+				flashlightAngleVer -= 2*M_PI;
 		
-			flashDir[1] = tan(flashAngleHor);
+			flashlightDir[1] = tan(flashlightAngleHor);
 			break;
 
 		case 's':
 		case 'S':
-			flashAngleVer -= ANGLE_INC*2*M_PI;
-			if (flashAngleHor < 0)
-				flashAngleHor += 2*M_PI;
+			flashlightAngleVer -= ANGLE_INC*2*M_PI;
+			if (flashlightAngleHor < 0)
+				flashlightAngleHor += 2*M_PI;
 
-			flashDir[1] = tan(flashAngleHor);
+			flashlightDir[1] = tan(flashlightAngleHor);
 			break;
 
 		case ESC_KEY:
@@ -279,7 +290,7 @@ void keyboardSpecialCallback(int key, int x, int y)
 			observerPos[0] -= cos(observerDirAngle)*POS_INC;
 			observerPos[2] -= sin(observerDirAngle)*POS_INC;
 			break;
-			
+
 		default:
 			break;
 	}
@@ -311,31 +322,68 @@ void timerCallback(int value)
 /* Ligths setup */
 void setupLighting()
 {
-	GLfloat flashLightColor[4] = {0.1, 0.1, 0.1, 1.0};
-	GLfloat flashLightPos[4] = {-1.0, 0.0, 0.0, 1.0};
-	GLfloat flashLightAttCon = 1.0;
-	GLfloat flashLightAttLin = 0.05;
-	GLfloat flashLightAttQua = 0.0;
+	GLfloat ceilPos[4] = { 0, 15, 0, 1.0 };
+	GLfloat ceilAmbientColor[4] = { 0.0, 0.0, 0.0, 1.0 };
+	GLfloat ceilDiffuseColor[4] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat ceilSpecularColor[4] = { 1.0, 1.0, 1.0, 1.0 };
+
+	GLfloat ceilAttCon = 0.50;
+	GLfloat ceilAttLin = 0.05;
+	GLfloat ceilAttQua = 0.0;
+
+	GLfloat flashlightPos[4] = { observerPos[0] + FLASHLIGHT_OFFSET_X, observerPos[1] + FLASHLIGHT_OFFSET_Y, observerPos[2] + FLASHLIGHT_OFFSET_Z, 1.0 }; /* this allows a flashlight-observer "offset" */
+
+	GLfloat flashlightAmbientColor[4] = { 0.0, 0.0, 0.0, 1.0 };
+	GLfloat flashlightDiffuseColor[4] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat flashlightSpecularColor[4] = { 1.0, 1.0, 1.0, 1.0 };
+
+	GLfloat flashlightAttCon = 1.0;
+	GLfloat flashlightAttLin = 0.05;
+	GLfloat flashlightAttQua = 0.0;
 
 	/* Ambient light */
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLightColorDay);
+	if (day)
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLightColorDay);
+	else
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLightColorNight);
 
 	/* Flashlight */
-	glLightfv(FLASH_LIGHT, GL_POSITION, flashLightPos);
-	glLightfv(FLASH_LIGHT, GL_AMBIENT, flashLightColor);
-	glLightf (FLASH_LIGHT, GL_CONSTANT_ATTENUATION, flashLightAttCon);
-	glLightf (FLASH_LIGHT, GL_LINEAR_ATTENUATION, flashLightAttLin);
-	glLightf (FLASH_LIGHT, GL_QUADRATIC_ATTENUATION, flashLightAttQua);
-	glLightf(FLASH_LIGHT, GL_SPOT_CUTOFF, FLASH_CUTOFF_ANGLE);
-	glLightf(FLASH_LIGHT, GL_SPOT_EXPONENT, FLASH_EXPONENT);
+	if (flashlightOn)
+		glEnable(FLASHLIGHT_LIGHT);
+
+	glLightfv(FLASHLIGHT_LIGHT, GL_POSITION, flashlightPos);
+
+	glLightfv(FLASHLIGHT_LIGHT, GL_SPOT_DIRECTION, flashlightDir);
+	glLightf(FLASHLIGHT_LIGHT, GL_SPOT_CUTOFF, FLASHLIGHT_CUTOFF_ANGLE);
+	glLightf(FLASHLIGHT_LIGHT, GL_SPOT_EXPONENT, FLASHLIGHT_EXPONENT);
+
+	glLightfv(FLASHLIGHT_LIGHT, GL_AMBIENT, flashlightAmbientColor);
+	glLightfv(FLASHLIGHT_LIGHT, GL_DIFFUSE, flashlightDiffuseColor);
+	glLightfv(FLASHLIGHT_LIGHT, GL_SPECULAR, flashlightSpecularColor);
+
+	glLightf(FLASHLIGHT_LIGHT, GL_CONSTANT_ATTENUATION, flashlightAttCon);
+	glLightf(FLASHLIGHT_LIGHT, GL_LINEAR_ATTENUATION, flashlightAttLin);
+	glLightf(FLASHLIGHT_LIGHT, GL_QUADRATIC_ATTENUATION, flashlightAttQua);
 
 	/* Ceil light */
+	if (ceilLightOn)
+		glEnable(CEIL_LIGHT);
+
+	glLightfv(CEIL_LIGHT, GL_POSITION, ceilPos);
+
+	glLightfv(CEIL_LIGHT, GL_AMBIENT, ceilAmbientColor);
+	glLightfv(CEIL_LIGHT, GL_DIFFUSE, ceilDiffuseColor);
+	glLightfv(CEIL_LIGHT, GL_SPECULAR, ceilSpecularColor);
+
+	glLightf(CEIL_LIGHT, GL_CONSTANT_ATTENUATION, ceilAttCon);
+	glLightf(CEIL_LIGHT, GL_LINEAR_ATTENUATION, ceilAttLin);
+	glLightf(CEIL_LIGHT, GL_QUADRATIC_ATTENUATION, ceilAttQua);
 }
 
 /* inicializa o OpenGL e variáveis */
 void init()
 {
-	glClearColor(GREY);
+	glClearColor(BLACK);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_SCISSOR_TEST);
@@ -344,7 +392,7 @@ void init()
 	/* Object declaration */
 	nobjects = 1;
 	objects[0].type = t_teapot;
-	objects[0].pos[0] = 1.0; objects[0].pos[1] = 0.0; objects[0].pos[2] = 0.0; 
+	objects[0].pos[0] = 0.0; objects[0].pos[1] = 0.0; objects[0].pos[2] = 0.0; 
 	objects[0].rotAxis[0] = 0.0; objects[0].rotAxis[1] = 1.0; objects[0].rotAxis[2] = 0.0;
 	objects[0].rotAngle = 0;
  
