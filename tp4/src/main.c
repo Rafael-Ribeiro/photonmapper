@@ -52,6 +52,7 @@ OBJECT objects[MAX_OBJS];
 
 GLfloat ambientLightColorDay[4] = { 0.9, 0.9, 0.9, 1.0 };
 GLfloat ambientLightColorNight[4] = { 0.1, 0.1, 0.1, 1.0 };
+/* GLfloat ambientLightColorNight[4] = { 0.0, 0.0, 0.0, 1.0 }; //Completely dark */
 
 GLfloat flashlightDir[] = { 1.0, 0.0, 0.0 };
 GLfloat flashlightAngleHor = 0.0;
@@ -115,8 +116,6 @@ void draw()
 	GLfloat flashlightPos[4] = { observerPos[0] + FLASHLIGHT_OFFSET_X, observerPos[1] + FLASHLIGHT_OFFSET_Y, observerPos[2] + FLASHLIGHT_OFFSET_Z, 1.0 }; /* this allows a flashlight-observer "offset" */
 
 	int i;
-	for (i = 0; i < nobjects; i++)
-		drawObject(&objects[i]); 
 
 	if (day)
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLightColorDay);
@@ -136,6 +135,10 @@ void draw()
 	}
 	else
 		glDisable(FLASHLIGHT_LIGHT);
+
+	for (i = 0; i < nobjects; i++)
+		drawObject(&objects[i]); 
+
 }
 
 /* renderiza as views em 2D */
@@ -245,8 +248,8 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 		case 's':
 		case 'S':
 			flashlightAngleVer -= ANGLE_INC*2*M_PI;
-			if (flashlightAngleHor < 0)
-				flashlightAngleHor += 2*M_PI;
+			if (flashlightAngleVer < 0)
+				flashlightAngleVer += 2*M_PI;
 
 			flashlightDir[1] = tan(flashlightAngleHor);
 			break;
