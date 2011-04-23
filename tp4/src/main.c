@@ -400,7 +400,7 @@ void init()
 	objects[0].rotAngle = 0;
 
 	objects[0].mat.ambient[0] = 0.24725; objects[0].mat.ambient[1] = 0.1995; objects[0].mat.ambient[2] = 0.0745; objects[0].mat.ambient[3] = 1.0; /* red, green, blue and alpha ambient component */		
-	objects[0].mat.diffuse[0] = 0.75164; objects[0].mat.diffuse[0] = 0.60648; objects[0].mat.diffuse[0] = 0.22648; /* red, green and blue diffuse component */
+	objects[0].mat.diffuse[0] = 0.75164; objects[0].mat.diffuse[1] = 0.60648; objects[0].mat.diffuse[2] = 0.22648; /* red, green and blue diffuse component */
 	objects[0].mat.specular[0] = 0.628281; objects[0].mat.specular[1] = 0.555802; objects[0].mat.specular[2] = 0.366065; /* red, green and blue speculars */
 	objects[0].mat.shininess = 0.4;
 	setupLighting();
