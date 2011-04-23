@@ -2,8 +2,6 @@
 #include <stdbool.h>
 #include <math.h>
 
-#include <GL/gl.h>
-#include <GL/glu.h>
 #include <GL/glut.h>
 
 /* structers */
@@ -21,41 +19,58 @@ typedef struct
 
 /* constants */
 #define M_PI		3.141592653589793238 /* not ansi */
-#define GRAY     	0.9, 0.92, 0.92, 1.0
+#define GREY     	0.9, 0.92, 0.92, 1.0
 #define MAX_OBJS	10
 #define MAX_POS		20
 #define POS_INC		0.1
 
 #define ANGLE_INC	0.01
 #define TIMER		25
-#define FLASH_CUTOFF_ANGLE		((GLfloat)15.0)
-#define FLASH_EXPONENT			((GLfloat)0.3)
 
 #define ESC_KEY		27
 
+/* light constants */
+#define CEIL_LIGHT				GL_LIGHT0
+#define FLASH_LIGHT				GL_LIGHT1
+#define FLASH_CUTOFF_ANGLE		((GLfloat)15.0)
+#define FLASH_EXPONENT			((GLfloat)0.3)
+
 /* globals */
 GLint screenWidth = 800, screenHeight = 600;
-GLfloat observerPos[] = { -1.0, 0.0, 0.0 };
+
+GLfloat observerPos[] = { -3.0, 0.0, 0.0 };
 GLfloat observerDir[] = { 1.0, 0.0, 0.0 };
 GLfloat observerDirAngle = 0.0;
+OBJECT objects[MAX_OBJS];
+
+GLfloat ambientLightColorDay[4] = { 0.9, 0.9, 0.9, 1.0 };
+GLfloat ambientLightColorNight[4] = { 0.1, 0.1, 0.1, 1.0 };
+
 GLfloat flashDir[] = { 1.0, 0.0, 0.0 };
 GLfloat flashAngleHor = 0.0;
 GLfloat flashAngleVer = 0.0;
-OBJECT objects[MAX_OBJS];
 
 int nobjects = 0;
 bool color = false;
 bool day = true;
-bool lightCeil = false;
-bool lightFlash = false;
+bool ceilLightOn = false;
+bool flashLightOn = false;
 
 void drawObject(OBJECT* obj)
 {
+	GLfloat mat[4];
+
 	glPushMatrix();
 		glTranslatef(obj->pos[0], obj->pos[1], obj->pos[2]);
 		glRotatef(obj->rotAngle, obj->rotAxis[0], obj->rotAxis[1], obj->rotAxis[2]);
 
-		glColor3f(0.0,0.0,0.0);
+		mat[0] = 0.24725; mat[1] = 0.1995; mat[2] = 0.0745; mat[3] = 1.0; /* red, green, blue and alpha ambient component */
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat);
+		mat[0] = 0.75164; mat[1] = 0.60648; mat[2] = 0.22648; /* red, green and blue diffuse component */
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat);
+		mat[0] = 0.628281; mat[1] = 0.555802; mat[2] = 0.366065; /* red, green and blue speculars */
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat);
+		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.4 * 128); /* shininess * 128 */
 
 		switch (obj->type)
 		{
@@ -94,27 +109,28 @@ void draw()
 		drawObject(&objects[i]); 
 
 	/* TODO not yet sure whether the light position needs to be reset (possibly relative to the observer) */
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, flashDir);
+	glLightfv(FLASH_LIGHT, GL_SPOT_DIRECTION, flashDir);
 
-/*
-	if (lightCeil)
-		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, flashDir);
-
-	ambient lighting
 	if (day)
-	{
-		 
-	} else
-	{
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLightColorDay);
+	else
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLightColorNight);
 
-	}
-*/
+	if (ceilLightOn)
+		glEnable(CEIL_LIGHT);
+	else
+		glDisable(CEIL_LIGHT);
+
+	if (flashLightOn)
+		glEnable(FLASH_LIGHT);
+	else
+		glDisable(FLASH_LIGHT);
 }
 
 /* renderiza as views em 2D */
 void display()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	/* main view */
 	glViewport(0,0,screenWidth, screenHeight);
@@ -178,17 +194,12 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 
 		case 't':
 		case 'T':
-			lightCeil = !lightCeil;
+			ceilLightOn = !ceilLightOn;
 			break;
 
 		case 'f':
 		case 'F':
-			lightFlash = !lightFlash;
-			if (lightFlash)
-				glEnable(GL_LIGHT0);
-			else
-				glDisable(GL_LIGHT0);
-				
+			flashLightOn = !flashLightOn;				
 			break;
 
 		case 'a':
@@ -297,12 +308,34 @@ void timerCallback(int value)
 	glutTimerFunc(TIMER, timerCallback, 1);
 }
 
+/* Ligths setup */
+void setupLighting()
+{
+	GLfloat flashLightColor[4] = {0.1, 0.1, 0.1, 1.0};
+	GLfloat flashLightPos[4] = {-1.0, 0.0, 0.0, 1.0};
+	GLfloat flashLightAttCon = 1.0;
+	GLfloat flashLightAttLin = 0.05;
+	GLfloat flashLightAttQua = 0.0;
+
+	/* Ambient light */
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLightColorDay);
+
+	/* Flashlight */
+	glLightfv(FLASH_LIGHT, GL_POSITION, flashLightPos);
+	glLightfv(FLASH_LIGHT, GL_AMBIENT, flashLightColor);
+	glLightf (FLASH_LIGHT, GL_CONSTANT_ATTENUATION, flashLightAttCon);
+	glLightf (FLASH_LIGHT, GL_LINEAR_ATTENUATION, flashLightAttLin);
+	glLightf (FLASH_LIGHT, GL_QUADRATIC_ATTENUATION, flashLightAttQua);
+	glLightf(FLASH_LIGHT, GL_SPOT_CUTOFF, FLASH_CUTOFF_ANGLE);
+	glLightf(FLASH_LIGHT, GL_SPOT_EXPONENT, FLASH_EXPONENT);
+
+	/* Ceil light */
+}
+
 /* inicializa o OpenGL e variáveis */
 void init()
 {
-	/* GLfloat flashPos[] = {observerPos[0],observerPos[1] /COMMENT + flash height relative to observer? COMMENT/,observerPos[2]}; */
-
-	glClearColor(GRAY);
+	glClearColor(GREY);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_SCISSOR_TEST);
@@ -314,16 +347,8 @@ void init()
 	objects[0].pos[0] = 1.0; objects[0].pos[1] = 0.0; objects[0].pos[2] = 0.0; 
 	objects[0].rotAxis[0] = 0.0; objects[0].rotAxis[1] = 1.0; objects[0].rotAxis[2] = 0.0;
 	objects[0].rotAngle = 0;
-	/* Object declaration */
-
-	/* Flashlight */
-	if (lightFlash)
-		glEnable(GL_LIGHT0);
-
-	glLightfv(GL_LIGHT0, GL_POSITION, observerPos);
-	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, FLASH_CUTOFF_ANGLE);
-	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, FLASH_EXPONENT);
-	/* Flashlight */
+ 
+	setupLighting();
 }
 
 int main(int argc, char** argv)
