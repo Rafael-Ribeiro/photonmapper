@@ -59,7 +59,7 @@ GLfloat flashlightAngleVer = 0.0;
 
 int nobjects = 0;
 bool color = false;
-bool day = false;
+bool day = true;
 bool ceilLightOn = false;
 bool flashlightOn = true;
 
