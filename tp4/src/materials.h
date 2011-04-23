@@ -1,1 +1,1 @@
-void loadMaterial(char* file, MATERIAL* mat);
+MATERIAL loadMaterial(char* file);

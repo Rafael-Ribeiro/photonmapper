@@ -7,6 +7,7 @@
 #include "structures.h"
 #include "constants.h"
 #include "materials.h"
+#include "objects.h"
 
 /* globals */
 GLint screenWidth = 800, screenHeight = 600;
@@ -19,10 +20,7 @@ OBJECT objects[MAX_OBJS];
 GLfloat ambientLightColorDay[4] = { 0.9, 0.9, 0.9, 1.0 };
 GLfloat ambientLightColorNight[4] = { 0.1, 0.1, 0.1, 1.0 };
 
-GLfloat flashlightDir[] = { 1.0, 0.0, 0.0 };
-GLfloat flashlightAngleHor = 0.0;
-GLfloat flashlightAngleVer = 0.0;
-
+/*ceiling */
 GLfloat ceilPos[4] = { 0, 15, 0, 1.0 };
 GLfloat ceilAmbientColor[4] = { 0.0, 0.0, 0.0, 1.0 };
 GLfloat ceilDiffuseColor[4] = { 1.0, 1.0, 1.0, 1.0 };
@@ -32,51 +30,24 @@ GLfloat ceilAttCon = 0.50;
 GLfloat ceilAttLin = 0.05;
 GLfloat ceilAttQua = 0.0;
 
+/* flashlight */
+GLfloat flashlightDir[] = { 1.0, 0.0, 0.0 };
+GLfloat flashlightAngleHor = 0.0;
+GLfloat flashlightAngleVer = 0.0;
+
+GLfloat flashlightAmbientColor[4] = { 0.0, 0.0, 0.0, 1.0 };
+GLfloat flashlightDiffuseColor[4] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat flashlightSpecularColor[4] = { 1.0, 1.0, 1.0, 1.0 };
+
+GLfloat flashlightAttCon = 1.0;
+GLfloat flashlightAttLin = 0.05;
+GLfloat flashlightAttQua = 0.0;
+
 int nobjects = 0;
 bool color = false;
 bool day = true;
 bool ceilLightOn = false;
 bool flashlightOn = true;
-
-void drawObject(OBJECT* obj)
-{
-	glPushMatrix();
-		glTranslatef(obj->pos[0], obj->pos[1], obj->pos[2]);
-		glRotatef(obj->rotAngle, obj->rotAxis[0], obj->rotAxis[1], obj->rotAxis[2]);
-
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, obj->mat.ambient);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, obj->mat.diffuse);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, obj->mat.specular);
-		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, obj->mat.shininess * 128); /* shininess * 128 */
-
-		switch (obj->type)
-		{
-			case t_sphere:
-				glutSolidSphere(1.0, 10, 10);
-				break;
-
-			case t_cube:
-				glutSolidCube(1.0);
-				break;
-
-			case t_torus:
-				glutSolidTorus(0.5, 1.0, 10, 5);
-				break;
-
-			case t_icos:
-				glutSolidIcosahedron();
-				break;
-
-			case t_octa:
-				glutSolidOctahedron();
-				break;
-
-			case t_teapot:
-				glutSolidTeapot(1.0);
-				break;
-		}
-	glPopMatrix();
-}
 
 /* cria os objectos no espaço */
 void draw()
@@ -299,14 +270,6 @@ void setupLighting()
 {
 	GLfloat flashlightPos[4] = { observerPos[0] + FLASHLIGHT_OFFSET_X, observerPos[1] + FLASHLIGHT_OFFSET_Y, observerPos[2] + FLASHLIGHT_OFFSET_Z, 1.0 }; /* this allows a flashlight-observer "offset" */
 
-	GLfloat flashlightAmbientColor[4] = { 0.0, 0.0, 0.0, 1.0 };
-	GLfloat flashlightDiffuseColor[4] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat flashlightSpecularColor[4] = { 1.0, 1.0, 1.0, 1.0 };
-
-	GLfloat flashlightAttCon = 1.0;
-	GLfloat flashlightAttLin = 0.05;
-	GLfloat flashlightAttQua = 0.0;
-
 	/* Ambient light */
 	if (day)
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLightColorDay);
@@ -357,11 +320,7 @@ void init()
 	
 	/* Object declaration */
 	nobjects = 1;
-	objects[0].type = t_teapot;
-	objects[0].pos[0] = 0.0; objects[0].pos[1] = 0.0; objects[0].pos[2] = 0.0; 
-	objects[0].rotAxis[0] = 0.0; objects[0].rotAxis[1] = 1.0; objects[0].rotAxis[2] = 0.0;
-	objects[0].rotAngle = 0;
-	loadMaterial("materials/gold", &objects[0].mat);
+	objects[0] = loadObject("objects/teapot");
 
 	setupLighting();
 }
