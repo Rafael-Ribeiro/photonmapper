@@ -4,50 +4,9 @@
 
 #include <GL/glut.h>
 
-/* structers */
-typedef struct
-{
-	GLfloat ambient[4];
-	GLfloat diffuse[3];
-	GLfloat specular[3];
-	GLfloat shininess;
-} MATERIAL;
-typedef enum {t_cube, t_sphere, t_torus, t_icos, t_octa, t_teapot} object_type;
-typedef struct
-{
-	object_type type;
-
-	GLfloat pos[3];
-	GLfloat rotAxis[3]; 
-	GLfloat rotAngle;
-	
-	MATERIAL mat;
-} OBJECT;
-
-/* constants */
-#define M_PI		3.141592653589793238 /* not ansi */
-#define GREY     	0.90, 0.90, 0.90, 1.0
-#define BLACK     	0.0, 0.0, 0.0, 1.0
-#define LIGHT_BLUE  0.52, 0.80, 0.98, 0.0
-#define MAX_OBJS	10
-#define MAX_POS		20
-#define POS_INC		0.1
-
-#define ANGLE_INC	0.01
-#define TIMER		25
-
-#define ESC_KEY		27
-
-/* light constants */
-#define CEIL_LIGHT					GL_LIGHT0
-
-#define FLASHLIGHT_LIGHT			GL_LIGHT1
-#define FLASHLIGHT_CUTOFF_ANGLE		((GLfloat)15.0)
-#define FLASHLIGHT_EXPONENT			((GLfloat)0.3)
-#define FLASHLIGHT_OFFSET_X			((GLfloat)0.0)
-#define FLASHLIGHT_OFFSET_Y			((GLfloat)0.0)
-#define FLASHLIGHT_OFFSET_Z			((GLfloat)0.0)
-
+#include "structures.h"
+#include "constants.h"
+#include "materials.h"
 
 /* globals */
 GLint screenWidth = 800, screenHeight = 600;
@@ -402,11 +361,8 @@ void init()
 	objects[0].pos[0] = 0.0; objects[0].pos[1] = 0.0; objects[0].pos[2] = 0.0; 
 	objects[0].rotAxis[0] = 0.0; objects[0].rotAxis[1] = 1.0; objects[0].rotAxis[2] = 0.0;
 	objects[0].rotAngle = 0;
+	loadMaterial("materials/gold", &objects[0].mat);
 
-	objects[0].mat.ambient[0] = 0.24725; objects[0].mat.ambient[1] = 0.1995; objects[0].mat.ambient[2] = 0.0745; objects[0].mat.ambient[3] = 1.0; /* red, green, blue and alpha ambient component */		
-	objects[0].mat.diffuse[0] = 0.75164; objects[0].mat.diffuse[1] = 0.60648; objects[0].mat.diffuse[2] = 0.22648; /* red, green and blue diffuse component */
-	objects[0].mat.specular[0] = 0.628281; objects[0].mat.specular[1] = 0.555802; objects[0].mat.specular[2] = 0.366065; /* red, green and blue speculars */
-	objects[0].mat.shininess = 0.4;
 	setupLighting();
 }
 
