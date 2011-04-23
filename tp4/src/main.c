@@ -83,6 +83,11 @@ void draw()
 /* renderiza as views em 2D */
 void display()
 {
+	if (day)
+		glClearColor(LIGHT_BLUE);
+	else
+		glClearColor(BLACK);
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	/* main view */
@@ -107,9 +112,10 @@ void display()
 	/* map at the bottom */
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glScissor(0,0,screenWidth/3, screenHeight/3);
+	glClearColor(GREY);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glViewport(0,0,screenWidth/3, screenHeight/3);
+	glViewport(0,0,screenWidth/3, screenHeight/3); /* TODO: make squared */
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -119,12 +125,18 @@ void display()
 	glLoadIdentity();
 	gluLookAt
 	(
-		0, MAX_POS, 0,	/* camera pos: above the map*/
-		0, 0, 0, 		/* look at center */
-		1, 0, 0 		/* camera top: front (Ox axis)*/
+		observerPos[0], MAX_POS, observerPos[2],		/* camera pos: above the map*/
+		observerPos[0], observerPos[1], observerPos[2], /* look at observer */
+		observerDir[0], observerDir[1], observerDir[2] 	/* camera top: observer dir*/
 	);
 
 	draw();
+
+	/* TODO: make the line color red*/
+	glBegin(GL_LINES);
+		glVertex3d(observerPos[0], 0.0, observerPos[2]);
+		glVertex3d(observerPos[0] + observerDir[0]*2, 0.0, observerPos[2]+observerDir[2]*2);
+	glEnd();
 
 	glScissor(0, 0, screenWidth, screenHeight);
 	glutSwapBuffers();
@@ -143,11 +155,6 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 		case 'n':
 		case 'N':
 			day = !day;
-			if (day)
-				glClearColor(LIGHT_BLUE);
-			else
-				glClearColor(BLACK);
-			break;
 
 		case 't':
 		case 'T':
@@ -319,8 +326,9 @@ void init()
 	glShadeModel(GL_SMOOTH);
 	
 	/* Object declaration */
-	nobjects = 1;
+	nobjects = 2;
 	objects[0] = loadObject("objects/teapot");
+	objects[1] = loadObject("objects/sphere");
 
 	setupLighting();
 }
@@ -340,7 +348,6 @@ int main(int argc, char** argv)
 	glutReshapeFunc(resizeWindowCallback);
 	
 	glutTimerFunc(TIMER, timerCallback, 1);
-	glClearColor(LIGHT_BLUE);
 	
 	init();
 
