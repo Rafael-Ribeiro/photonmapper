@@ -5,6 +5,13 @@
 #include <GL/glut.h>
 
 /* structers */
+typedef struct
+{
+	GLfloat ambient[4];
+	GLfloat diffuse[3];
+	GLfloat specular[3];
+	GLfloat shininess;
+} MATERIAL;
 typedef enum {t_cube, t_sphere, t_torus, t_icos, t_octa, t_teapot} object_type;
 typedef struct
 {
@@ -13,11 +20,8 @@ typedef struct
 	GLfloat pos[3];
 	GLfloat rotAxis[3]; 
 	GLfloat rotAngle;
-
-	GLfloat ambient[4];
-	GLfloat diffuse[3];
-	GLfloat specular[3];
-	GLfloat shininess;
+	
+	MATERIAL mat;
 } OBJECT;
 
 /* constants */
@@ -71,11 +75,10 @@ void drawObject(OBJECT* obj)
 		glTranslatef(obj->pos[0], obj->pos[1], obj->pos[2]);
 		glRotatef(obj->rotAngle, obj->rotAxis[0], obj->rotAxis[1], obj->rotAxis[2]);
 
-		/* FIXME This will get cleaned up, it's just for now (gold material properties) */
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, obj->ambient);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, obj->diffuse);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, obj->specular);
-		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, obj->shininess * 128); /* shininess * 128 */
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, obj->mat.ambient);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, obj->mat.diffuse);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, obj->mat.specular);
+		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, obj->mat.shininess * 128); /* shininess * 128 */
 
 		switch (obj->type)
 		{
@@ -392,9 +395,11 @@ void init()
 	objects[0].pos[0] = 0.0; objects[0].pos[1] = 0.0; objects[0].pos[2] = 0.0; 
 	objects[0].rotAxis[0] = 0.0; objects[0].rotAxis[1] = 1.0; objects[0].rotAxis[2] = 0.0;
 	objects[0].rotAngle = 0;
-	objects[0].ambient[0] = 0.24725; objects[0].ambient[1] = 0.1995; objects[0].ambient[2] = 0.0745; objects[0].ambient[3] = 1.0; /* red, green, blue and alpha ambient component */		
-	objects[0].diffuse[0] = 0.; objects[0].diffuse[0] = 0.60648; objects[0].diffuse[0] = 0.22648; /* red, green and blue diffuse component */
-	objects[0].specular[0] = 0.628281; objects[0].specular[1] = 0.555802; objects[0].specular[2] = 0.366065; /* red, green and blue speculars */
+
+	objects[0].mat.ambient[0] = 0.24725; objects[0].mat.ambient[1] = 0.1995; objects[0].mat.ambient[2] = 0.0745; objects[0].mat.ambient[3] = 1.0; /* red, green, blue and alpha ambient component */		
+	objects[0].mat.diffuse[0] = 0.75164; objects[0].mat.diffuse[0] = 0.60648; objects[0].mat.diffuse[0] = 0.22648; /* red, green and blue diffuse component */
+	objects[0].mat.specular[0] = 0.628281; objects[0].mat.specular[1] = 0.555802; objects[0].mat.specular[2] = 0.366065; /* red, green and blue speculars */
+	objects[0].mat.shininess = 0.4;
 	setupLighting();
 }
 
