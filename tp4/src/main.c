@@ -28,6 +28,7 @@ typedef struct
 #define M_PI		3.141592653589793238 /* not ansi */
 #define GREY     	0.90, 0.90, 0.90, 1.0
 #define BLACK     	0.0, 0.0, 0.0, 1.0
+#define LIGHT_BLUE  0.52, 0.80, 0.98, 0.0
 #define MAX_OBJS	10
 #define MAX_POS		20
 #define POS_INC		0.1
@@ -58,11 +59,19 @@ OBJECT objects[MAX_OBJS];
 
 GLfloat ambientLightColorDay[4] = { 0.9, 0.9, 0.9, 1.0 };
 GLfloat ambientLightColorNight[4] = { 0.1, 0.1, 0.1, 1.0 };
-/* GLfloat ambientLightColorNight[4] = { 0.0, 0.0, 0.0, 1.0 }; //Completely dark */
 
 GLfloat flashlightDir[] = { 1.0, 0.0, 0.0 };
 GLfloat flashlightAngleHor = 0.0;
 GLfloat flashlightAngleVer = 0.0;
+
+GLfloat ceilPos[4] = { 0, 15, 0, 1.0 };
+GLfloat ceilAmbientColor[4] = { 0.0, 0.0, 0.0, 1.0 };
+GLfloat ceilDiffuseColor[4] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat ceilSpecularColor[4] = { 1.0, 1.0, 1.0, 1.0 };
+
+GLfloat ceilAttCon = 0.50;
+GLfloat ceilAttLin = 0.05;
+GLfloat ceilAttQua = 0.0;
 
 int nobjects = 0;
 bool color = false;
@@ -182,7 +191,7 @@ void display()
 	(
 		0, MAX_POS, 0,	/* camera pos: above the map*/
 		0, 0, 0, 		/* look at center */
-		1, 0, 0 		/* camera top: front */
+		1, 0, 0 		/* camera top: front (Ox axis)*/
 	);
 
 	draw();
@@ -204,6 +213,10 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 		case 'n':
 		case 'N':
 			day = !day;
+			if (day)
+				glClearColor(LIGHT_BLUE);
+			else
+				glClearColor(BLACK);
 			break;
 
 		case 't':
@@ -325,15 +338,6 @@ void timerCallback(int value)
 /* Ligths setup */
 void setupLighting()
 {
-	GLfloat ceilPos[4] = { 0, 15, 0, 1.0 };
-	GLfloat ceilAmbientColor[4] = { 0.0, 0.0, 0.0, 1.0 };
-	GLfloat ceilDiffuseColor[4] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat ceilSpecularColor[4] = { 1.0, 1.0, 1.0, 1.0 };
-
-	GLfloat ceilAttCon = 0.50;
-	GLfloat ceilAttLin = 0.05;
-	GLfloat ceilAttQua = 0.0;
-
 	GLfloat flashlightPos[4] = { observerPos[0] + FLASHLIGHT_OFFSET_X, observerPos[1] + FLASHLIGHT_OFFSET_Y, observerPos[2] + FLASHLIGHT_OFFSET_Z, 1.0 }; /* this allows a flashlight-observer "offset" */
 
 	GLfloat flashlightAmbientColor[4] = { 0.0, 0.0, 0.0, 1.0 };
@@ -386,12 +390,12 @@ void setupLighting()
 /* inicializa o OpenGL e variáveis */
 void init()
 {
-	glClearColor(BLACK);
-	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_SCISSOR_TEST);
 	glEnable(GL_LIGHTING);
 
+	glShadeModel(GL_SMOOTH);
+	
 	/* Object declaration */
 	nobjects = 1;
 	objects[0].type = t_teapot;
@@ -409,6 +413,7 @@ void init()
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
+
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH );
 	glutInitWindowSize(screenWidth, screenHeight); 
 	glutInitWindowPosition(100, 100); 
@@ -420,7 +425,8 @@ int main(int argc, char** argv)
 	glutReshapeFunc(resizeWindowCallback);
 	
 	glutTimerFunc(TIMER, timerCallback, 1);
-
+	glClearColor(LIGHT_BLUE);
+	
 	init();
 
 	glutMainLoop();
