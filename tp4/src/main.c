@@ -10,7 +10,7 @@
 #include "objects.h"
 
 /* globals */
-GLint screenWidth = 800, screenHeight = 600;
+GLfloat screenWidth = 800, screenHeight = 600;
 
 GLfloat observerPos[] = { -3.0, 0.0, 0.0 };
 GLfloat observerDir[] = { 1.0, 0.0, 0.0 };
@@ -114,7 +114,7 @@ void display()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluPerspective(60.0, 4.0/3.0, 1.0, 100.0);
+	gluPerspective(60.0, screenWidth/screenHeight, 1.0, 100.0);
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -128,10 +128,9 @@ void display()
 	draw();
 	
 	/* map at the bottom */
-	glClear(GL_DEPTH_BUFFER_BIT);
 	glScissor(0,0,screenHeight/3, screenHeight/3);
 	glClearColor(GREY);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glViewport(0,0, screenHeight/3, screenHeight/3);
 
@@ -349,10 +348,12 @@ void init()
 	glShadeModel(GL_SMOOTH);
 	
 	/* Object declaration */
-	nobjects = 3;
-	objects[0] = loadObject("objects/teapot");
-	objects[1] = loadObject("objects/sphere");
-	objects[2] = loadObject("objects/yellowtorus");
+	nobjects = 5;
+	objects[0] = loadObject("objects/brass_teapot");
+	objects[1] = loadObject("objects/chrome_sphere");
+	objects[2] = loadObject("objects/yellow_rubber_torus");
+	objects[3] = loadObject("objects/white_plastic_cube");
+	objects[4] = loadObject("objects/emerald_icos");
 
 	setupLighting();
 }

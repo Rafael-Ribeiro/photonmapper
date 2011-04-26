@@ -12,7 +12,6 @@ typedef struct
 	object_type type;
 
 	GLfloat pos[3];
-	GLfloat rotAxis[3]; 
 	GLfloat rotAngle;
 	
 	MATERIAL mat;

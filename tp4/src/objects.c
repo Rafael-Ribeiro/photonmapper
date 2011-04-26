@@ -31,7 +31,6 @@ OBJECT loadObject(char* file)
 		obj.type = t_octa;
 
 	fscanf(f, "%f %f %f", &obj.pos[0], &obj.pos[1], &obj.pos[2]);
-	fscanf(f, "%f %f %f", &obj.rotAxis[0], &obj.rotAxis[1], &obj.rotAxis[2]);
 	fscanf(f, "%f", &obj.rotAngle);
 	fscanf(f, "%64s", mat);
 	obj.mat = loadMaterial(mat);
@@ -45,7 +44,7 @@ void drawObject(OBJECT* obj)
 {
 	glPushMatrix();
 		glTranslatef(obj->pos[0], obj->pos[1], obj->pos[2]);
-		glRotatef(obj->rotAngle, obj->rotAxis[0], obj->rotAxis[1], obj->rotAxis[2]);
+		glRotatef(obj->rotAngle, 0.0, 1.0, 0.0);
 
 		if (color)
 			glColor3fv(obj->mat.ambient);
@@ -64,7 +63,7 @@ void drawObject(OBJECT* obj)
 				break;
 
 			case t_cube:
-				glutSolidCube(1.0);
+				glutSolidCube(3.0);
 				break;
 
 			case t_torus:
