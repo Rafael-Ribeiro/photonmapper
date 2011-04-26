@@ -8,7 +8,7 @@
 #define POS_INC		0.1
 
 #define ANGLE_INC	0.01
-#define TIMER		25
+#define TIMER		5
 
 #define ESC_KEY		27
 
@@ -16,8 +16,8 @@
 #define CEIL_LIGHT					GL_LIGHT0
 
 #define FLASHLIGHT_LIGHT			GL_LIGHT1
-#define FLASHLIGHT_CUTOFF_ANGLE		((GLfloat)15.0)
-#define FLASHLIGHT_EXPONENT			((GLfloat)0.3)
+#define FLASHLIGHT_CUTOFF_ANGLE		((GLfloat)30.0)
+#define FLASHLIGHT_EXPONENT			((GLint)80)
 #define FLASHLIGHT_OFFSET_X			((GLfloat)0.0)
 #define FLASHLIGHT_OFFSET_Y			((GLfloat)0.0)
 #define FLASHLIGHT_OFFSET_Z			((GLfloat)0.0)

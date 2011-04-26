@@ -47,7 +47,18 @@ int nobjects = 0;
 bool color = false;
 bool day = true;
 bool ceilLightOn = false;
-bool flashlightOn = true;
+bool flashlightOn = false;
+
+void updateFlashlight()
+{
+	float r;
+
+	r = cos(flashlightAngleVer);
+
+	flashlightDir[0] = r*cos(flashlightAngleHor+observerDirAngle);
+	flashlightDir[1] = sin(flashlightAngleVer);
+	flashlightDir[2] = r*sin(flashlightAngleHor+observerDirAngle);
+}
 
 /* cria os objectos no espaço */
 void draw()
@@ -56,28 +67,35 @@ void draw()
 
 	int i;
 
+	if (color)
+	{
+		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+		glEnable(GL_COLOR_MATERIAL);
+	}
+
 	if (day)
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLightColorDay);
 	else
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLightColorNight);
 
-	if (ceilLightOn)
+	if (!day && ceilLightOn)
 		glEnable(CEIL_LIGHT);
 	else
 		glDisable(CEIL_LIGHT);
 
-	if (flashlightOn)
+	if (!day && flashlightOn)
 	{
 		glEnable(FLASHLIGHT_LIGHT);
 		glLightfv(FLASHLIGHT_LIGHT, GL_POSITION, flashlightPos);
-		glLightfv(FLASHLIGHT_LIGHT, GL_SPOT_DIRECTION, observerDir);
-	}
-	else
+		glLightfv(FLASHLIGHT_LIGHT, GL_SPOT_DIRECTION, flashlightDir);
+	} else
 		glDisable(FLASHLIGHT_LIGHT);
 
 	for (i = 0; i < nobjects; i++)
 		drawObject(&objects[i]); 
 
+	if (color)
+		glDisable(GL_COLOR_MATERIAL);
 }
 
 /* renderiza as views em 2D */
@@ -155,7 +173,13 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 		case 'n':
 		case 'N':
 			day = !day;
+			if (day)
+			{
+				flashlightAngleHor = flashlightAngleVer = 0.0;
+				updateFlashlight();
+			}
 
+			break;
 		case 't':
 		case 'T':
 			ceilLightOn = !ceilLightOn;
@@ -169,39 +193,38 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 		case 'a':
 		case 'A':
 			flashlightAngleHor -= ANGLE_INC*2*M_PI;
-			if (flashlightAngleHor >= 2*M_PI)
-				flashlightAngleHor -= 2*M_PI;
+			if (flashlightAngleHor <= -M_PI/2)
+				flashlightAngleHor = -M_PI/2;
  
-			flashlightDir[0] = cos(flashlightAngleHor);
-			flashlightDir[2] = sin(flashlightAngleHor);
+			updateFlashlight();
+
 			break;
 
 		case 'd':
 		case 'D':
 			flashlightAngleHor += ANGLE_INC*2*M_PI;
-			if (flashlightAngleHor < 0)
-				flashlightAngleHor += 2*M_PI;
+			if (flashlightAngleHor >= M_PI/2)
+				flashlightAngleHor = M_PI/2;
 
-			flashlightDir[0] = cos(flashlightAngleHor);
-			flashlightDir[2] = sin(flashlightAngleHor);
+			updateFlashlight();
 			break;
 
 		case 'w':
 		case 'W':
 			flashlightAngleVer += ANGLE_INC*2*M_PI;
-			if (flashlightAngleVer >= 2*M_PI)
-				flashlightAngleVer -= 2*M_PI;
+			if (flashlightAngleVer >= M_PI/2)
+				flashlightAngleVer = M_PI/2;
 		
-			flashlightDir[1] = tan(flashlightAngleHor);
+			updateFlashlight();
 			break;
 
 		case 's':
 		case 'S':
 			flashlightAngleVer -= ANGLE_INC*2*M_PI;
-			if (flashlightAngleVer < 0)
-				flashlightAngleVer += 2*M_PI;
+			if (flashlightAngleVer <= -M_PI/2)
+				flashlightAngleVer = -M_PI/2;
 
-			flashlightDir[1] = tan(flashlightAngleHor);
+			updateFlashlight();
 			break;
 
 		case ESC_KEY:
@@ -248,6 +271,7 @@ void keyboardSpecialCallback(int key, int x, int y)
 			break;
 	}
 
+	updateFlashlight();
 	glutPostRedisplay();
 }
 
@@ -263,7 +287,7 @@ void timerCallback(int value)
 	int i;
 	for (i = 0; i < nobjects; i++)
 	{
-		objects[i].rotAngle += ANGLE_INC*360.0;
+		objects[i].rotAngle += ANGLE_INC/10.0*360.0;
 		if (objects[i].rotAngle >= 360.0)
 			objects[i].rotAngle -= 360.0;
 	}
@@ -326,9 +350,10 @@ void init()
 	glShadeModel(GL_SMOOTH);
 	
 	/* Object declaration */
-	nobjects = 2;
+	nobjects = 3;
 	objects[0] = loadObject("objects/teapot");
 	objects[1] = loadObject("objects/sphere");
+	objects[1] = loadObject("objects/yellowtorus");
 
 	setupLighting();
 }

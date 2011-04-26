@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include <GL/glut.h>
 
 #include "structures.h"
 #include "materials.h"
+#include "externs.h"
 
 OBJECT loadObject(char* file)
 {
@@ -45,15 +47,20 @@ void drawObject(OBJECT* obj)
 		glTranslatef(obj->pos[0], obj->pos[1], obj->pos[2]);
 		glRotatef(obj->rotAngle, obj->rotAxis[0], obj->rotAxis[1], obj->rotAxis[2]);
 
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, obj->mat.ambient);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, obj->mat.diffuse);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, obj->mat.specular);
-		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, obj->mat.shininess * 128); /* shininess * 128 */
+		if (color)
+			glColor3fv(obj->mat.ambient);
+		else
+		{
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, obj->mat.ambient);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, obj->mat.diffuse);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, obj->mat.specular);
+			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, obj->mat.shininess * 128); /* shininess * 128 */
+		}
 
 		switch (obj->type)
 		{
 			case t_sphere:
-				glutSolidSphere(1.0, 10, 10);
+				glutSolidSphere(1.0, 50, 50);
 				break;
 
 			case t_cube:
@@ -61,7 +68,7 @@ void drawObject(OBJECT* obj)
 				break;
 
 			case t_torus:
-				glutSolidTorus(0.5, 1.0, 10, 5);
+				glutSolidTorus(0.5, 1.0, 50, 50);
 				break;
 
 			case t_icos:
@@ -76,5 +83,6 @@ void drawObject(OBJECT* obj)
 				glutSolidTeapot(1.0);
 				break;
 		}
+
 	glPopMatrix();
 }
