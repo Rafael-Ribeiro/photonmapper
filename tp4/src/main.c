@@ -129,15 +129,15 @@ void display()
 	
 	/* map at the bottom */
 	glClear(GL_DEPTH_BUFFER_BIT);
-	glScissor(0,0,screenWidth/3, screenHeight/3);
+	glScissor(0,0,screenHeight/3, screenHeight/3);
 	glClearColor(GREY);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glViewport(0,0,screenWidth/3, screenHeight/3); /* TODO: make squared */
+	glViewport(0,0, screenHeight/3, screenHeight/3);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-MAX_POS/2, MAX_POS,-MAX_POS/2, MAX_POS/2, 0, MAX_POS*2); 
+	glOrtho(-MAX_POS, MAX_POS,-MAX_POS, MAX_POS, 0, MAX_POS*2); 
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -148,13 +148,12 @@ void display()
 		observerDir[0], observerDir[1], observerDir[2] 	/* camera top: observer dir*/
 	);
 
-	draw();
-
-	/* TODO: make the line color red*/
 	glBegin(GL_LINES);
 		glVertex3d(observerPos[0], 0.0, observerPos[2]);
 		glVertex3d(observerPos[0] + observerDir[0]*2, 0.0, observerPos[2]+observerDir[2]*2);
 	glEnd();
+
+	draw();
 
 	glScissor(0, 0, screenWidth, screenHeight);
 	glutSwapBuffers();
@@ -353,7 +352,7 @@ void init()
 	nobjects = 3;
 	objects[0] = loadObject("objects/teapot");
 	objects[1] = loadObject("objects/sphere");
-	objects[1] = loadObject("objects/yellowtorus");
+	objects[2] = loadObject("objects/yellowtorus");
 
 	setupLighting();
 }
