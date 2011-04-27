@@ -47,7 +47,7 @@ void drawObject(OBJECT* obj)
 		glRotatef(obj->rotAngle, 0.0, 1.0, 0.0);
 
 		if (color)
-			glColor3fv(obj->mat.ambient);
+			glColor3fv(obj->mat.color);
 		else
 		{
 			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, obj->mat.ambient);
