@@ -1,5 +1,7 @@
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include <math.h>
 
 #include <GL/glut.h>
@@ -58,6 +60,24 @@ void updateFlashlight()
 	flashlightDir[0] = r*cos(flashlightAngleHor+observerDirAngle);
 	flashlightDir[1] = sin(flashlightAngleVer);
 	flashlightDir[2] = r*sin(flashlightAngleHor+observerDirAngle);
+}
+
+void draw_text(void* font, int x, int y, char* format, ...)
+{
+	char str[128];
+	int i, n;
+
+	va_list argp;
+
+	va_start(argp, format);
+	vsprintf(str, format, argp);
+	va_end(argp);
+
+	n = strlen(str);
+
+	glRasterPos2i(x, y);
+	for (i = 0; i < n; i++)
+		glutBitmapCharacter(font, str[i]);
 }
 
 /* cria os objectos no espaço */
@@ -147,14 +167,24 @@ void display()
 		observerDir[0], observerDir[1], observerDir[2] 	/* camera top: observer dir*/
 	);
 
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	glEnable(GL_COLOR_MATERIAL);
+	glColor3f(1.0, 0.0, 0.0); 
 	glBegin(GL_LINES);
 		glVertex3d(observerPos[0], 0.0, observerPos[2]);
 		glVertex3d(observerPos[0] + observerDir[0]*2, 0.0, observerPos[2]+observerDir[2]*2);
 	glEnd();
+	glDisable(GL_COLOR_MATERIAL);	
 
 	draw();
-
+	
 	glScissor(0, 0, screenWidth, screenHeight);
+
+	draw_text(GLUT_BITMAP_9_BY_15, 0, 0, "phase of the day: %s", day ? "day" : "night"); 
+	draw_text(GLUT_BITMAP_9_BY_15, 20, 10, "ceiling: %s", ceilLightOn ? "on" : "off"); 
+	draw_text(GLUT_BITMAP_9_BY_15, 30, 10, "flashlight: %s", flashlightOn ? "on" : "off"); 
+	draw_text(GLUT_BITMAP_9_BY_15, 40, 10, "color material: %s", color ? "on" : "off"); 
+
 	glutSwapBuffers();
 }
 
