@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 
 #include <GL/glut.h>
 
@@ -14,6 +15,7 @@ POLY loadPolygon(char* file)
 	char mat[64];
 	int i;
 	GLfloat vec[2][3];
+	GLfloat dist;
 
 	FILE* f = fopen(file, "r");
 
@@ -34,6 +36,14 @@ POLY loadPolygon(char* file)
 	pol.normal[1] = vec[0][2]*vec[1][0] - vec[0][0]*vec[1][2];
 	pol.normal[2] = vec[0][0]*vec[1][1] - vec[0][1]*vec[1][0];
 	
+	/* normalization */
+	dist = sqrt(pol.normal[0]*pol.normal[0] + pol.normal[1]*pol.normal[1]);
+	dist = sqrt(dist*dist + pol.normal[2]*pol.normal[2]);
+	
+	pol.normal[0] /= dist;
+	pol.normal[1] /= dist;
+	pol.normal[2] /= dist;
+
 	fscanf(f, "%f", &pol.rotAngle);
 	fscanf(f, "%64s", mat);
 	pol.mat = loadMaterial(mat);
@@ -50,12 +60,11 @@ void drawPoly(POLY* poly)
 		glRotatef(poly->rotAngle, 0.0, 1.0, 0.0);
 		glTranslatef(-poly->center[0], -poly->center[1], -poly->center[2]);
 
-/*
 		glBegin(GL_LINES);
 			glVertex3f(0.0, 0.0, 0.0);
 			glVertex3fv(poly->normal);
 		glEnd();
-*/
+
 		if (color)
 			glColor3fv(poly->mat.color);
 		else
