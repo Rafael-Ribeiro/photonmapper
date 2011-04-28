@@ -133,7 +133,7 @@ void display()
 		glClearColor(BLACK);
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 	/* main view */
 	glViewport(0,0,screenWidth, screenHeight);
 
@@ -152,7 +152,7 @@ void display()
 	);
 
 	draw();
-	
+
 	/* map at the bottom */
 	glScissor(0,0,screenHeight/3, screenHeight/3);
 	glClearColor(GREY);
@@ -173,23 +173,40 @@ void display()
 		observerDir[0], observerDir[1], observerDir[2] 	/* camera top: observer dir*/
 	);
 
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	glEnable(GL_COLOR_MATERIAL);
+	glDisable(GL_LIGHTING);
 	glColor3f(1.0, 0.0, 0.0); 
 	glBegin(GL_LINES);
 		glVertex3d(observerPos[0], 0.0, observerPos[2]);
 		glVertex3d(observerPos[0] + observerDir[0]*2, 0.0, observerPos[2]+observerDir[2]*2);
 	glEnd();
-	glDisable(GL_COLOR_MATERIAL);	
+	glEnable(GL_LIGHTING);	
 
 	draw();
 	
 	glScissor(0, 0, screenWidth, screenHeight);
 
-	draw_text(GLUT_BITMAP_9_BY_15, 0, 0, "phase of the day: %s", day ? "day" : "night"); 
-	draw_text(GLUT_BITMAP_9_BY_15, 20, 10, "ceiling: %s", ceilLightOn ? "on" : "off"); 
-	draw_text(GLUT_BITMAP_9_BY_15, 30, 10, "flashlight: %s", flashlightOn ? "on" : "off"); 
-	draw_text(GLUT_BITMAP_9_BY_15, 40, 10, "color material: %s", color ? "on" : "off"); 
+	/* text rendering */
+	glDisable(GL_LIGHTING);
+	glViewport(0,0, screenWidth, screenHeight);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0, screenWidth, 0, screenHeight);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	if (day)
+		glColor3f(0.0, 0.0, 0.0);
+	else
+		glColor3f(1.0, 1.0, 1.0);
+
+	draw_text(GLUT_BITMAP_9_BY_15, 20, screenHeight - 20, "%s", day ? "day" : "night");
+	draw_text(GLUT_BITMAP_9_BY_15, 20, screenHeight - 40, "ceiling: %s", ceilLightOn ? "on" : "off");
+	draw_text(GLUT_BITMAP_9_BY_15, 20, screenHeight - 60, "flashlight: %s", flashlightOn ? "on" : "off");
+	draw_text(GLUT_BITMAP_9_BY_15, 20, screenHeight - 80, "color material: %s", color ? "on" : "off");
+
+	glEnable(GL_LIGHTING);
 
 	glutSwapBuffers();
 }
