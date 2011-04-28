@@ -343,6 +343,13 @@ void timerCallback(int value)
 			objects[i].rotAngle -= 360.0;
 	}
 
+	for (i = 0; i < npolys; i++)
+	{
+		polys[i].rotAngle += ANGLE_INC/10.0*360.0;
+		if (polys[i].rotAngle >= 360.0)
+			polys[i].rotAngle -= 360.0;
+	}
+
 	glutPostRedisplay();
 	glutTimerFunc(TIMER, timerCallback, 1);
 }

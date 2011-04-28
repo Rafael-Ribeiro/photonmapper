@@ -24,6 +24,7 @@ typedef struct
 typedef struct
 {
 	GLfloat vertex[4][3];
+	GLfloat normal[3];
 	GLfloat center[3];	
 	GLfloat pos[3];
 	GLfloat rotAngle;
