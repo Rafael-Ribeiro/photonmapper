@@ -4,6 +4,7 @@
 #define BLACK     	0.0, 0.0, 0.0, 1.0
 #define LIGHT_BLUE  0.52, 0.80, 0.98, 0.0
 #define MAX_OBJS	10
+#define MAX_POLYS	1
 #define MAX_POS		20
 #define POS_INC		0.1
 

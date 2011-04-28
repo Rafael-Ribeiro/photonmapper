@@ -20,3 +20,13 @@ typedef struct
 	
 	MATERIAL mat;
 } OBJECT;
+
+typedef struct
+{
+	GLfloat vertex[4][3];
+	GLfloat center[3];	
+	GLfloat pos[3];
+	GLfloat rotAngle;
+	
+	MATERIAL mat;
+} POLY;
