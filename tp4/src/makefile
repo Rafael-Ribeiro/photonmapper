@@ -11,4 +11,4 @@ objects.o: objects.c
 	gcc objects.c -c -o objects.o -ansi -Wall -g 
 
 clean:
-	rm *.o main
+	rm -f *.o main
