@@ -10,6 +10,7 @@
 #include "constants.h"
 #include "materials.h"
 #include "objects.h"
+#include "polygons.h"
 
 /* globals */
 GLfloat screenWidth = 800, screenHeight = 600;
@@ -18,6 +19,7 @@ GLfloat observerPos[] = { -3.0, 0.0, 0.0 };
 GLfloat observerDir[] = { 1.0, 0.0, 0.0 };
 GLfloat observerDirAngle = 0.0;
 OBJECT objects[MAX_OBJS];
+POLY polys[MAX_POLYS];
 
 GLfloat ambientLightColorDay[4] = { 0.9, 0.9, 0.9, 1.0 };
 GLfloat ambientLightColorNight[4] = { 0.1, 0.1, 0.1, 1.0 };
@@ -46,6 +48,7 @@ GLfloat flashlightAttLin = 0.05;
 GLfloat flashlightAttQua = 0.0;
 
 int nobjects = 0;
+int npolys = 0;
 bool color = false;
 bool day = true;
 bool ceilLightOn = false;
@@ -113,6 +116,9 @@ void draw()
 
 	for (i = 0; i < nobjects; i++)
 		drawObject(&objects[i]); 
+
+	for (i = 0; i < npolys; i++)
+		drawPoly(&polys[i]);
 
 	if (color)
 		glDisable(GL_COLOR_MATERIAL);
@@ -337,6 +343,13 @@ void timerCallback(int value)
 			objects[i].rotAngle -= 360.0;
 	}
 
+	for (i = 0; i < npolys; i++)
+	{
+		polys[i].rotAngle += ANGLE_INC/10.0*360.0;
+		if (polys[i].rotAngle >= 360.0)
+			polys[i].rotAngle -= 360.0;
+	}
+
 	glutPostRedisplay();
 	glutTimerFunc(TIMER, timerCallback, 1);
 }
@@ -401,6 +414,9 @@ void init()
 	objects[2] = loadObject("objects/yellow_rubber_torus");
 	objects[3] = loadObject("objects/white_plastic_cube");
 	objects[4] = loadObject("objects/emerald_icos");
+
+	npolys = 1;
+	polys[0] = loadPolygon("polygons/poly1");
 
 	setupLighting();
 }

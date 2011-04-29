@@ -1,5 +1,5 @@
-all: main.o materials.o objects.o
-	gcc main.o materials.o objects.o -o main -ansi -Wall -lglut -lGLU -g
+all: main.o materials.o objects.o polygons.o
+	gcc main.o materials.o objects.o polygons.o -o main -ansi -Wall -lglut -lGLU -g
 
 main.o: main.c
 	gcc main.c -c -o main.o -ansi -Wall -g
@@ -9,6 +9,9 @@ materials.o: materials.c
 
 objects.o: objects.c
 	gcc objects.c -c -o objects.o -ansi -Wall -g 
+
+polygons.o: polygons.c
+	gcc polygons.c -c -o polygons.o -ansi -Wall -g 
 
 clean:
 	rm -f *.o main
