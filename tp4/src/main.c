@@ -174,12 +174,12 @@ void display()
 	);
 
 	glDisable(GL_LIGHTING);
-	glColor3f(1.0, 0.0, 0.0); 
+	glColor3f(1.0, 0.0, 0.0);
 	glBegin(GL_LINES);
 		glVertex3d(observerPos[0], 0.0, observerPos[2]);
 		glVertex3d(observerPos[0] + observerDir[0]*2, 0.0, observerPos[2]+observerDir[2]*2);
 	glEnd();
-	glEnable(GL_LIGHTING);	
+	glEnable(GL_LIGHTING);
 
 	draw();
 	

@@ -14,4 +14,4 @@ polygons.o: polygons.c
 	gcc polygons.c -c -o polygons.o -ansi -Wall -g 
 
 clean:
-	rm *.o main
+	rm -f *.o main
