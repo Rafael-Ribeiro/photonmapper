@@ -1,6 +1,7 @@
 #include "Vector.hpp"
 #include "Scene.hpp"
 #include "Engine.hpp"
+#include "PPM.hpp"
 
 int main()
 {

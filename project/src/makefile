@@ -1,7 +1,7 @@
 FLAGS = -Wall -ansi
 
-all: main.o Engine.o Scene.o Vector.o Plane.o Sphere.o Primitive.o
-	g++ main.o Engine.o Scene.o Vector.o Plane.o Sphere.o Primitive.o -o renderer ${FLAGS}
+all: main.o Engine.o Scene.o Vector.o Plane.o Sphere.o Primitive.o PPM.o
+	g++ main.o Engine.o Scene.o Vector.o Plane.o Sphere.o Primitive.o PPM.o -o renderer ${FLAGS}
 
 main.o: main.cpp
 	g++ main.cpp -c -o main.o ${FLAGS}
@@ -23,6 +23,9 @@ Scene.o: Scene.cpp Scene.hpp
 
 Engine.o: Engine.cpp Engine.hpp
 	g++ Engine.cpp -c -o Engine.o ${FLAGS}
+
+PPM.o: PPM.cpp PPM.hpp
+	g++ PPM.cpp -c -o PPM.o ${FLAGS}
 
 clean:
 	rm -f *.o ~* renderer
