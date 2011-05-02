@@ -4,6 +4,11 @@
 
 int main()
 {
+	/* TODO: build scene */
+	/* TODO: build engine */
+	
+	/* TODO: render */
+	/* TODO: draw image */
 
 	return 0;
 }
