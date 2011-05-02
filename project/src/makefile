@@ -1,13 +1,16 @@
 FLAGS = -Wall -ansi
 
-all: main.o Engine.o Scene.o Vector.o Plane.o Sphere.o Primitive.o PPM.o
-	g++ main.o Engine.o Scene.o Vector.o Plane.o Sphere.o Primitive.o PPM.o -o renderer ${FLAGS}
+all: main.o Engine.o Scene.o Vector.o Color.o Plane.o Sphere.o Primitive.o PPM.o
+	g++ main.o Engine.o Scene.o Vector.o Color.o Plane.o Sphere.o Primitive.o PPM.o -o renderer ${FLAGS}
 
 main.o: main.cpp
 	g++ main.cpp -c -o main.o ${FLAGS}
 
 Vector.o: Vector.cpp Vector.hpp
 	g++ Vector.cpp -c -o Vector.o ${FLAGS}
+
+Color.o: Color.cpp Color.hpp
+	g++ Color.cpp -c -o Color.o ${FLAGS}
 
 Primitive.o: Primitive.cpp Primitive.hpp Material.hpp
 	g++ Primitive.cpp -c -o Primitive.o ${FLAGS}

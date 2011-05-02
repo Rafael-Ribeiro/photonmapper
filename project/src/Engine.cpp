@@ -21,6 +21,7 @@ Color* Engine::render(Point origin, Vector direction, Vector top, double appertu
 		for (j = 0; j < width; j++)
 		{
 			/* cast ray */
+			pixels[i*width+j] = Color(i%255, j%255, (i+j)%255);
 		}
 	}
 
