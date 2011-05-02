@@ -25,4 +25,4 @@ Engine.o: Engine.cpp Engine.hpp
 	g++ Engine.cpp -c -o Engine.o ${FLAGS}
 
 clean:
-	rm -f *.o ~* raytracer
+	rm -f *.o ~* renderer
