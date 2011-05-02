@@ -4,6 +4,7 @@
 #include "Material.hpp"
 #include "Vector.hpp"
 #include "Ray.hpp"
+#include "Photon.hpp"
 
 struct Primitive
 {
@@ -14,6 +15,8 @@ struct Primitive
 	virtual Vector intersect(Ray r) = 0;
 	virtual Vector normal(Point p) = 0;
 	virtual double area() = 0;
+
+	virtual Photon randomPhoton() = 0;
 };
 
 #endif

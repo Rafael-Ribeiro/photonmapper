@@ -5,8 +5,6 @@
 
 #include "Primitive.hpp"
 
-using namespace std;
-
 struct Intersection
 {
 	Primitive* prim;
@@ -20,9 +18,10 @@ struct Scene
 	 * TODO:
 	 * kd_tree<Photon> photons;
 	 */
+	Scene();
 
-	vector<Primitive*> primitives;
-	vector<Primitive*> lights;
+	std::vector<Primitive*> primitives;
+	std::vector<Primitive*> lights;
 
 	/* TODO: kd-tree */
 	Intersection intersect(Ray& p) const;

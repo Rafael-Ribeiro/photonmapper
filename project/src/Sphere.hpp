@@ -14,6 +14,8 @@ struct Sphere : public Primitive
 	Vector intersect(Ray r);
 	Vector normal(Point p);
 	double area();
+
+	Photon randomPhoton();
 };
 
 #endif
