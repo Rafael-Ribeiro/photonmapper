@@ -15,6 +15,7 @@ struct Vector
 
 	Vector cross(Vector& v) const;
 	Vector dot(Vector& v) const;
+	double angle(Vector& v) const;
 
 	double norm() const;
 

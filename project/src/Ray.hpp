@@ -9,7 +9,6 @@ struct Ray
 	Vector direction;
 
 	Ray(Point origin, Vector direction);
-	Point intersect(Primitive o);
 };
 
 #endif
