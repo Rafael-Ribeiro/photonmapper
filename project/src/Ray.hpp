@@ -8,6 +8,7 @@ struct Ray
 	Point origin;
 	Vector direction;
 
+	Ray();
 	Ray(Point origin, Vector direction);
 };
 

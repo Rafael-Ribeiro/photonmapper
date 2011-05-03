@@ -23,9 +23,9 @@ double Plane::area()
 	return INFINITY;
 }
 
-Photon randomPhoton()
+Photon Plane::randomPhoton()
 {
-	return Photon(Ray(Point(0,0,0), Vector(1,0,0)), 0);
+	Ray r = Ray(Point(0,0,0), Vector(1,0,0));
+	return Photon(r, 0.0);
 }
-
 

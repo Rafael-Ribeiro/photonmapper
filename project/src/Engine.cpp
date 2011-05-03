@@ -1,4 +1,7 @@
 #include "Engine.hpp"
+#include <vector>
+
+using namespace std;
 
 Engine::Engine(Scene& scene)
 	: scene(scene)

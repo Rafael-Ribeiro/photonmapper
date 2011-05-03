@@ -2,7 +2,6 @@
 #define PHOTON_HPP
 
 #include "Ray.hpp"
-#include "Scene.hpp"
 
  /*
   * FIXME:

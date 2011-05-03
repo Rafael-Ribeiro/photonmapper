@@ -3,6 +3,7 @@
 #include "Sphere.hpp"
 #include "Vector.hpp"
 #include "Photon.hpp"
+#include "utils.hpp"
 
 Sphere::Sphere(Material mat, Vector center, double radius)
 	: Primitive(mat), center(center), radius(radius)
@@ -12,7 +13,7 @@ Sphere::Sphere(Material mat, Vector center, double radius)
 Vector Sphere::intersect(Ray r)
 {
 	// TODO 
-	return Vector(0,0,0);
+	return Vector(0.0, 0.0, 0.0);
 }
 
 Vector Sphere::normal(Point p)
@@ -29,6 +30,7 @@ Photon Sphere::randomPhoton()
 {
 	double theta, phi, r;
 	Point p;
+	Ray ray;
 
 	theta = random01()*2*M_PI;
 	phi = acos(2*random01()-1);
@@ -37,6 +39,7 @@ Photon Sphere::randomPhoton()
 	p = Point(r*cos(theta), this->radius*cos(phi), r*sin(theta));
 
 	/* TODO: just for white light, and not quite, see http://en.wikipedia.org/wiki/Planck%27s_law_of_black_body_radiation */
-	return Photon(Ray(p, this->normal(p), random01()*(750-390)+390);
+	ray = Ray(p, this->normal(p));
+	return Photon(ray, random01()*(750-390)+390);
 }
 
