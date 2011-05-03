@@ -20,7 +20,7 @@ struct Vector
 
 	double norm() const;
 
-	void normalize();
+	Vector normalize();
 };
 
 typedef Vector Point;

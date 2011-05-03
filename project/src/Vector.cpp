@@ -56,7 +56,9 @@ double Vector::norm() const
 	return sqrt(n*n+this->z*this->z);
 }
 
-void Vector::normalize()
+Vector Vector::normalize()
 {
 	*this = *this/this->norm();
+
+	return *this;
 }
