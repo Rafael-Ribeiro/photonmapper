@@ -19,6 +19,7 @@ Vector Sphere::intersect(Ray r)
 	 *
 	 * FIXME
 	 * Shouldn't the return type be a Point? (I know it's a typedef)
+	 * Or maybe a boolean (returning the intersection through reference modification)
 	 */
 	return Vector(0.0, 0.0, 0.0);
 }
