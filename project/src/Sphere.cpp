@@ -26,7 +26,7 @@ Vector Sphere::intersect(Ray r)
 
 Vector Sphere::normal(Point p)
 {
-	return p - this->center;
+	return (p - this->center).normalize();
 }
 
 double Sphere::area()
