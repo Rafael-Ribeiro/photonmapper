@@ -12,7 +12,14 @@ Sphere::Sphere(Material mat, Vector center, double radius)
 
 Vector Sphere::intersect(Ray r)
 {
-	// TODO 
+	/*
+	 * TODO
+	 * http://wiki.cgsociety.org/index.php/Ray_Sphere_Intersection
+	 * for mathematical formulation and C++ code snippet
+	 *
+	 * FIXME
+	 * Shouldn't the return type be a Point? (I know it's a typedef)
+	 */
 	return Vector(0.0, 0.0, 0.0);
 }
 
@@ -40,6 +47,6 @@ Photon Sphere::randomPhoton()
 
 	/* TODO: just for white light, and not quite, see http://en.wikipedia.org/wiki/Planck%27s_law_of_black_body_radiation */
 	ray = Ray(p, this->normal(p));
-	return Photon(ray, random01()*(750-390)+390);
+	return Photon(ray, random01() * (VISIBLE_U_WL - VISIBLE_L_WL) + VISIBLE_L_WL);
 }
 
