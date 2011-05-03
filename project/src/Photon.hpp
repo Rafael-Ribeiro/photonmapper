@@ -4,6 +4,13 @@
 #include "Ray.hpp"
 #include "Scene.hpp"
 
+ /*
+  * FIXME:
+  * Scene forward declaration;
+  * remove this later if possible (since dependencies may change)
+  */
+struct Scene;
+
 struct Photon
 {
 	Ray ray;
