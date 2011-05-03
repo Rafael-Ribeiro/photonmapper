@@ -12,7 +12,7 @@ struct Primitive
 
 	Primitive(Material& mat);
 
-	virtual Vector intersect(Ray r) = 0;
+	virtual bool intersect(Ray r, Point& p) = 0;
 	virtual Vector normal(Point p) = 0;
 	virtual double area() = 0;
 

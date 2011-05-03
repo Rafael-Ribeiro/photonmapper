@@ -15,7 +15,7 @@ struct Vector
 	Vector operator / (double q) const;
 
 	Vector cross(Vector& v) const;
-	Vector dot(Vector& v) const;
+	double dot(Vector& v) const;
 	double angle(Vector& v) const;
 
 	double norm() const;

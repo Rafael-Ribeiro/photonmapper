@@ -8,17 +8,34 @@
 Sphere::Sphere(Material mat, Vector center, double radius)
 	: Primitive(mat), center(center), radius(radius)
 {
+	this->radius2 = radius*radius;
 }
 
-Vector Sphere::intersect(Ray r)
+bool Sphere::intersect(Ray r, Point& p)
 {
-	// TODO 
-	return Vector(0.0, 0.0, 0.0);
+	double Tca, d2, Thc;
+	Vector L, offset;
+
+	L = this->center - r.origin;
+	Tca = L.dot(r.direction);
+	
+	if (Tca < 0.0)
+		return false;
+
+	d2 = L.dot(L) - Tca*Tca; /* pitagora's theorem */
+	if (d2 > this->radius2)
+		return false;
+
+	Thc = sqrt(this->radius2 - d2);
+	offset = r.direction*(Tca - Thc);
+	p = r.origin + offset;
+
+	return true;
 }
 
 Vector Sphere::normal(Point p)
 {
-	return p - this->center;
+	return (p - this->center)/this->radius;
 }
 
 double Sphere::area()

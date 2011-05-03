@@ -6,12 +6,16 @@
 
 struct Sphere : public Primitive
 {
+private:
+	double radius2;
+
+public:
 	Vector center;
 	double radius;
 
 	Sphere(Material mat, Vector center, double radius);
 
-	Vector intersect(Ray r);
+	bool intersect(Ray r, Point& p);
 	Vector normal(Point p);
 	double area();
 

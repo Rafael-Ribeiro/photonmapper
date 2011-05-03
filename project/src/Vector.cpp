@@ -42,9 +42,9 @@ Vector Vector::cross(Vector& v) const
 	);
 }
 
-Vector Vector::dot(Vector& v) const
+double Vector::dot(Vector& v) const
 {
-	return Vector(this->x * v.x, this->y * v.y, this->z * v.z);
+	return this->x*v.x + this->y*v.y + this->z*v.z;
 }
 
 /* functions */

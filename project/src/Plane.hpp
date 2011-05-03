@@ -6,12 +6,12 @@
 
 struct Plane : public Primitive
 {
-	Point p;
+	Point point;
 	Vector m_normal;
 
-	Plane(Material mat, Point p, Vector normal);
+	Plane(Material mat, Point point, Vector normal);
 
-	Vector intersect(Ray r);
+	bool intersect(Ray r, Point& p);
 	Vector normal(Point p);
 	double area();
 
