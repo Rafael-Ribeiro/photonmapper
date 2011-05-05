@@ -14,17 +14,16 @@ struct Intersection
 
 struct Scene
 {
-	/*
-	 * TODO:
-	 * kd_tree<Photon> photons;
-	 */
 	Scene();
+
+	std::vector<Photon> photonMap; /* TODO: kd_tree<Photon> photons; */
 
 	std::vector<Primitive*> primitives;
 	std::vector<Primitive*> lights;
 
 	/* TODO: kd-tree */
-	Intersection intersect(Ray& p) const;
+	bool intersect(Ray& p, Intersection& intersect) const;
+	void buildPhotonMap(unsigned int nPhotons, unsigned int nPhotonBounce);
 };
 
 #endif

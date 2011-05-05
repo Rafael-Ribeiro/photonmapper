@@ -19,8 +19,9 @@ struct Photon
 	Ray ray;
 	double wavelength;
 
+	Photon();
 	Photon(Ray& ray, double wavelength);
-	Photon bounce(Scene& scene, int bounces);
+	bool bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon);
 };
 
 #endif

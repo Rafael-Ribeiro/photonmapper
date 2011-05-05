@@ -62,3 +62,4 @@ Vector Vector::normalize()
 
 	return *this;
 }
+

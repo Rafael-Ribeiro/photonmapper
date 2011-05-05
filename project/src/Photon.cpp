@@ -1,15 +1,24 @@
 #include "Photon.hpp"
 #include "Scene.hpp"
 
+Photon::Photon()
+{
+}
+
 Photon::Photon(Ray& ray, double wavelength)
 	: ray(ray), wavelength(wavelength)
 {
 }
 
-Photon Photon::bounce(Scene& scene, int nPhotonBounce)
+bool Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 {
-	// TODO: bounce photons
+	Intersection intersect;
+	
+	if (!scene.intersect(this->ray, intersect))
+		return false;
 
-	return *this;
+	/* TODO: reflect, refract, ... */
+
+	return true;
 }
 

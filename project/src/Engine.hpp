@@ -5,14 +5,14 @@
 #include "Vector.hpp"
 #include "Color.hpp"
 
-#define MAX_PHOTONS			1000
-#define MAX_PHOTON_BOUNCE	5
+#define MAX_PHOTONS			((unsigned int)1000)
+#define MAX_PHOTON_BOUNCE	((unsigned int)5)
  
 struct Engine
 {
 	Scene scene;
-	int nPhotons;
-	int nPhotonBounce;
+	unsigned int nPhotons;
+	unsigned int nPhotonBounce;
 
 	Engine(Scene& scene);
 
