@@ -50,10 +50,7 @@ double Vector::dot(Vector& v) const
 /* functions */
 double Vector::norm() const
 {
-	double n;
-	n = sqrt(this->x*this->x + this->y*this->y);
-
-	return sqrt(n*n+this->z*this->z);
+	return sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
 }
 
 Vector Vector::normalize()
