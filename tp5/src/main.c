@@ -25,18 +25,33 @@ GLfloat radius = 5.0;
 /* cria os objectos no espaço */
 void draw()
 {
-	/* draw "transparency" */
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
-	glPushMatrix();
-		glColor4f(BLUE, transparency);
-		glutSolidSphere(1.0, 50.0, 50.0);
-	glPopMatrix();
+	if (angle >= M_PI)
+	{
+		glPushMatrix();
+			glColor4f(BLUE, transparency);
+			glutSolidSphere(1.0, 50.0, 50.0);
+		glPopMatrix();
 
-	glPushMatrix();
-		glColor4f(ORANGE, transparency);
-		glTranslatef(radius*sin(angle), 0, radius*cos(angle));
-		glutSolidSphere(1.0, 50.0, 50.0);
-	glPopMatrix();
+		glPushMatrix();
+			glColor4f(ORANGE, transparency);
+			glTranslatef(radius*sin(angle), 0, radius*cos(angle));
+			glutSolidSphere(1.0, 50.0, 50.0);
+		glPopMatrix();
+	} else
+	{
+		glPushMatrix();
+			glColor4f(ORANGE, transparency);
+			glTranslatef(radius*sin(angle), 0, radius*cos(angle));
+			glutSolidSphere(1.0, 50.0, 50.0);
+		glPopMatrix();
+
+		glPushMatrix();
+			glColor4f(BLUE, transparency);
+			glutSolidSphere(1.0, 50.0, 50.0);
+		glPopMatrix();
+
+
+	}
 }
 
 /* renderiza as views em 2D */
@@ -118,6 +133,8 @@ void resizeWindowCallback(GLsizei w, GLsizei h)
 void timerCallback(int value) 
 {
 	angle += speed*2*M_PI;
+	if (angle >= 2*M_PI)
+		angle -= 2*M_PI;
 
 	glutPostRedisplay();
 	glutTimerFunc(TIMER, timerCallback, 1);
@@ -127,8 +144,8 @@ void timerCallback(int value)
 void init()
 {
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT);
 	glShadeModel(GL_SMOOTH);
 }
 
