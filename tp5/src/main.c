@@ -6,7 +6,6 @@
 
 #define M_PI  	3.141592653589793238 /* not ansi */
 
-#define BLACK     0.0, 0.0, 0.0
 #define GREY 	0.90, 0.90, 0.90, 0.0
 #define BLUE	0.0, 0.0, 1.0
 #define ORANGE	1.0, 0.5, 0.0
@@ -23,18 +22,9 @@ GLfloat observerPos[] = { -10.0, 0.0, 0.0 };
 GLfloat angle = 0.0;
 GLfloat radius = 5.0;
 
-GLfloat black[4] = {BLACK, 0.0},
-		blue[4] = {BLUE, 0.0},
-		orange[4] = {ORANGE, 0.0};
-
 /* cria os objectos no espaço */
 void draw()
 {
-
-	glDisable(GL_LIGHTING);
-	glEnable(GL_BLEND);
-	glDepthFunc(GL_LESS);
-
 	/* draw "transparency" */
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 	glPushMatrix();
@@ -47,35 +37,12 @@ void draw()
 		glTranslatef(radius*sin(angle), 0, radius*cos(angle));
 		glutSolidSphere(1.0, 50.0, 50.0);
 	glPopMatrix();
-
-	/* draw speculars */
-	glEnable(GL_LIGHTING);
-	glDisable(GL_BLEND);	
-	glDepthFunc(GL_EQUAL);
-
-	glPushMatrix();
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, black);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, black);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blue);
-		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.5 * 128); /* shininess * 128 */
-
-		glutSolidSphere(1.0, 50.0, 50.0);
-	glPopMatrix();
-
-	glPushMatrix();
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, black);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, black);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, orange);
-		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.5 * 128); /* shininess * 128 */
-
-		glutSolidSphere(1.0, 50.0, 50.0);
-	glPopMatrix();
 }
 
 /* renderiza as views em 2D */
 void display()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 	glViewport(0,0,screenWidth, screenHeight);
 
 	glMatrixMode(GL_PROJECTION);
@@ -147,6 +114,7 @@ void resizeWindowCallback(GLsizei w, GLsizei h)
 
 	glutPostRedisplay();
 }
+
 void timerCallback(int value) 
 {
 	angle += speed*2*M_PI;
@@ -158,7 +126,6 @@ void timerCallback(int value)
 /* inicializa o OpenGL e variáveis */
 void init()
 {
-	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT);
@@ -169,7 +136,7 @@ int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
 
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH );
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(screenWidth, screenHeight); 
 	glutInitWindowPosition(100, 100); 
 	glutCreateWindow("TP5 CG - jprafael@student.dei.uc.pt, jbaia@student.dei.uc.pt");
