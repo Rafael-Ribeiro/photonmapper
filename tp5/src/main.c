@@ -49,8 +49,6 @@ void draw()
 			glColor4f(BLUE, transparency);
 			glutSolidSphere(1.0, 50.0, 50.0);
 		glPopMatrix();
-
-
 	}
 }
 
