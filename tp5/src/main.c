@@ -102,16 +102,16 @@ void keyboardASCIICallback(unsigned char key, int x, int y)
 		case 'a':
 		case 'A':
 			speed += 0.001;
-			if (speed > 1.0)
-				speed = 1.0;
+			if (speed > 0.01)
+				speed = 0.01;
 
 			break;
 
 		case 's':
 		case 'S':
 			speed -= 0.001;
-			if (speed < 0.0)
-				speed = 0.0;
+			if (speed < -0.01)
+				speed = -0.01;
 			break;
 
 		case ESC_KEY:
@@ -135,6 +135,8 @@ void timerCallback(int value)
 	angle += speed*2*M_PI;
 	if (angle >= 2*M_PI)
 		angle -= 2*M_PI;
+	else if (angle <= 0)
+		angle += 2*M_PI;
 
 	glutPostRedisplay();
 	glutTimerFunc(TIMER, timerCallback, 1);
