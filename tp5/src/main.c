@@ -1,3 +1,8 @@
+/*
+ * João Pedro Maia Rafael	2008112181
+ * José Luís Baía Ribeiro	2008112181
+ */
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
