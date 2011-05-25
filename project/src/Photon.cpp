@@ -14,14 +14,14 @@ bool Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 {
 	Intersection intersect;
 
-	photon = *this;	
-	return true;
+	photon = *this;
 
 	if (!scene.intersect(this->ray, intersect))
 		return false;
 
 	/* TODO: reflect, refract, ... */
 
+	
 	return true;
 }
 

@@ -12,11 +12,11 @@ struct Primitive
 
 	Primitive(Material& mat);
 
-	virtual bool intersect(Ray r, Point& p) = 0;
-	virtual Vector normal(Point p) = 0;
-	virtual double area() = 0;
+	virtual bool intersect(Ray r, Point& p) const = 0;
+	virtual Vector normal(Point p) const = 0;
+	virtual double area() const = 0;
 
-	virtual Photon randomPhoton() = 0;
+	virtual Photon randomPhoton() const = 0;
 };
 
 #endif

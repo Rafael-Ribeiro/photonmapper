@@ -11,7 +11,7 @@ Sphere::Sphere(Material mat, Vector center, double radius)
 	this->radius2 = radius*radius;
 }
 
-bool Sphere::intersect(Ray r, Point& p)
+bool Sphere::intersect(Ray r, Point& p) const 
 {
 	double Tca, d2, Thc;
 	Vector L, offset;
@@ -33,17 +33,17 @@ bool Sphere::intersect(Ray r, Point& p)
 	return true;
 }
 
-Vector Sphere::normal(Point p)
+Vector Sphere::normal(Point p) const
 {
 	return (p - this->center)/this->radius;
 }
 
-double Sphere::area()
+double Sphere::area() const
 {
 	return 4.0*M_PI*this->radius*this->radius/3.0;
 }
 
-Photon Sphere::randomPhoton()
+Photon Sphere::randomPhoton() const
 {
 	double theta, phi, r;
 	Point p;

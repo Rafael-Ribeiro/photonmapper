@@ -7,7 +7,7 @@ Plane::Plane(Material mat, Point p, Vector normal)
 {
 }
 
-bool Plane::intersect(Ray r, Point& p)
+bool Plane::intersect(Ray r, Point& p) const
 {
 	/* http://en.wikipedia.org/wiki/Line-plane_intersection*/
 	double a, b;
@@ -27,17 +27,17 @@ bool Plane::intersect(Ray r, Point& p)
 	return true;
 }
 
-Vector Plane::normal(Point p)
+Vector Plane::normal(Point p) const
 {
 	return this->m_normal;
 }
 
-double Plane::area()
+double Plane::area() const
 {
 	return INFINITY;
 }
 
-Photon Plane::randomPhoton()
+Photon Plane::randomPhoton() const
 {
 	Ray r = Ray(Point(0,0,0), Vector(1,0,0));
 	return Photon(r, 0.0);
