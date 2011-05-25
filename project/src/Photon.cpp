@@ -13,7 +13,10 @@ Photon::Photon(Ray& ray, double wavelength)
 bool Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 {
 	Intersection intersect;
-	
+
+	photon = *this;	
+	return true;
+
 	if (!scene.intersect(this->ray, intersect))
 		return false;
 

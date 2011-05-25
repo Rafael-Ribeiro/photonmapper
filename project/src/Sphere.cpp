@@ -53,10 +53,11 @@ Photon Sphere::randomPhoton()
 	phi = acos(2*random01()-1);
 
 	r = this->radius*sin(phi);
-	p = Point(r*cos(theta), this->radius*cos(phi), r*sin(theta));
+	p = Point(this->center.x + r*cos(theta), this->center.y + this->radius*cos(phi), this->center.z + r*sin(theta));
 
 	/* TODO: just for white light, and not quite, see http://en.wikipedia.org/wiki/Planck%27s_law_of_black_body_radiation */
 	ray = Ray(p, this->normal(p));
+
 	return Photon(ray, random01() * (VISIBLE_U_WL - VISIBLE_L_WL) + VISIBLE_L_WL);
 }
 

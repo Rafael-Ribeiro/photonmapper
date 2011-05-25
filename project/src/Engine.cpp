@@ -1,5 +1,6 @@
 #include "Engine.hpp"
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ Color* Engine::render(Point origin, Vector direction, Vector top, double appertu
 {
 	Color* pixels;
 	unsigned int i, j;
+	vector<Photon>::iterator it;
 
 	pixels = new Color[width*height];
 
@@ -25,8 +27,19 @@ Color* Engine::render(Point origin, Vector direction, Vector top, double appertu
 		for (j = 0; j < width; j++)
 		{
 			/* cast ray */
-			pixels[i*width+j] = Color(i%256, j%256, (i+j)%256);
+			pixels[i*width+j] = Color(0,0,0);
 		}
+	}
+
+	/* TEST */
+	for (it = this->scene.photonMap.begin(); it != this->scene.photonMap.end(); it++)
+	{
+		unsigned int x = (it->ray.origin.x-1)*1000+512;
+		unsigned int y = (it->ray.origin.z-1)*1000+256;
+
+		//cerr << it->ray.origin.x << " " << it->ray.origin.z << endl;
+
+		pixels[y*width+x] = Color(255, 255, 255);
 	}
 
 	/* TODO anti-aliasing */
