@@ -16,16 +16,16 @@ bool Plane::intersect(Ray r, Point& p) const
 	double a, b;
 	Vector offset;
 
-	a = r.direction.dot(this->m_normal);
+	a = this->m_normal.dot(r.direction);
 	if (a == 0)	/* Ray and Plane are paralel -> no intersection or Line intersection FIXME */
 		return false;
 
-	b = (r.origin - this->point).dot(this->m_normal);
-	if (b < 0) /* point is behind the ray */
+	b = this->m_normal.dot(this->point - r.origin);
+	if (a*b < 0) /* point is behind the point */
 		return false;
 
 	offset = r.direction * (b/a);
-	p = r.origin - offset;
+	p = r.origin + offset;
 
 	return true;
 }

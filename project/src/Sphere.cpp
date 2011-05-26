@@ -33,7 +33,6 @@ bool Sphere::intersect(Ray r, Point& p) const
 	offset = r.direction*(Tca - Thc);
 	p = r.origin + offset;
 
-	cerr << "true" << endl;
 	return true;
 }
 

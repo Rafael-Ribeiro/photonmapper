@@ -27,7 +27,7 @@ struct Scene
 
 	/* TODO: kd-tree */
 	bool intersect(const Ray& p, Intersection& intersect) const;
-	void buildPhotonMap(unsigned int nPhotons, unsigned int nPhotonBounce);
+	void buildPhotonMap(int nPhotons, int nPhotonBounce);
 };
 
 #endif

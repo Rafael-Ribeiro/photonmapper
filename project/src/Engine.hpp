@@ -11,12 +11,12 @@
 struct Engine
 {
 	Scene scene;
-	unsigned int nPhotons;
-	unsigned int nPhotonBounce;
+	int nPhotons;
+	int nPhotonBounce;
 
 	Engine(Scene& scene);
 
-	Color* render(Point origin, Vector direction, Vector top, double apperture, unsigned int width, unsigned int height);
+	Color* render(Point origin, Vector direction, Vector top, double fovy, int width, int height);
 };
 
 #endif

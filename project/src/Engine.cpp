@@ -1,6 +1,7 @@
 #include "Engine.hpp"
 #include <vector>
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -11,40 +12,45 @@ Engine::Engine(Scene& scene)
 	this->nPhotonBounce = MAX_PHOTON_BOUNCE;
 }
 
-Color* Engine::render(Point origin, Vector direction, Vector top, double apperture, unsigned int width, unsigned int height)
+Color* Engine::render(Point origin, Vector direction, Vector top, double fovy, int width, int height)
 {
 	Color* pixels;
-	unsigned int i, j;
+	int i, j;
 	vector<Photon>::iterator it;
-	Vector right;
+	Vector left;
 	Ray ray;
-	double dx, dy;
+	double dx, dy, fovx, aspect;
+	double halfY, halfX;
 
 	pixels = new Color[width*height];
 
 	/* TODO photon mapping */
-	scene.buildPhotonMap(nPhotons, nPhotonBounce);
+	//scene.buildPhotonMap(nPhotons, nPhotonBounce);
 
-	right = direction.cross(top); /* left maybe? */
- 	cerr << right.x << " " << right.y << " " << right.z << endl;
+	aspect = (1.0 * width) / height;
+	fovx = fovy * aspect;
+	left = direction.cross(top)*sin(fovx);
+	top = top*sin(fovy);
 
-	ray.origin = origin;	
+	ray.origin = origin;
+	halfY = height / 2.0;
+	halfX = width / 2.0;
+
 	for (i = 0; i < height; i++)
 	{
-		dy = -(i - height/2.0) - 0.5;
+		dy = (-i+0.5+halfY)/halfY;
 
 		for (j = 0; j < width; j++)
 		{
-			/* cast ray */
-			dx = (i - width/2.0) - 0.5;
+			dx = (j+0.5-halfX)/halfX;
 
-			ray.direction = direction + right*(dx*apperture) + top*(dy*apperture);
-			pixels[i*width+j] = ray.getColor(scene, 1);
+			ray.direction = (direction + top*dy + left*dx).normalize();
+			pixels[i*width + j] = ray.getColor(scene, 1);
 		}
 	}
 
 	/* TEST */
-	for (it = this->scene.photonMap.begin(); it != this->scene.photonMap.end(); it++)
+	/*for (it = this->scene.photonMap.begin(); it != this->scene.photonMap.end(); it++)
 	{
 		unsigned int x = (it->ray.origin.x)*50+512;
 		unsigned int y = (it->ray.origin.z)*50+256;
@@ -54,7 +60,7 @@ Color* Engine::render(Point origin, Vector direction, Vector top, double appertu
 		if (x < 1024 && y < 512)
 			pixels[y*width+x] = Color(255, 255, 255);
 	}
-
+	*/
 	/* TODO anti-aliasing */
 
 	return pixels;

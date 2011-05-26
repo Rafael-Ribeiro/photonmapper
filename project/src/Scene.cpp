@@ -19,7 +19,7 @@ bool Scene::intersect(const Ray& ray, Intersection& intersect) const
 	Vector delta;
 
 	sqrd_dist = DBL_MAX;
-	for (it = this->primitives.begin(), end = this->primitives.end() ; it != end; it++)
+	for (it = this->primitives.begin(), end = this->primitives.end(); it != end; it++)
 	{
 		if ((*it)->intersect(ray, inter_point))
 		{
@@ -40,10 +40,9 @@ bool Scene::intersect(const Ray& ray, Intersection& intersect) const
 	return sqrd_dist < DBL_MAX;
 }
 
-void Scene::buildPhotonMap(unsigned int nPhotons, unsigned int nPhotonBounce)
+void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
 {
 	/* TODO build KD-tree */
-
 	unsigned int i, j, n;
 	double sum;
 	Photon photon;

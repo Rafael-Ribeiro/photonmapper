@@ -19,10 +19,10 @@ Color Ray::getColor(const Scene& scene, int maxdepth) const
 		return Color(0,0,0);
 
 	if (!scene.intersect(*this, inter))
-		return Color(0,1,0); /* TODO: foreground color */
+		return Color(0,0,255); /* TODO: background color (blue)*/
 
 	/* get color here */
 	
 	/* material color */
-	return inter.prim->mat.color;	
+	return inter.prim->mat.color;
 }
