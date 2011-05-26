@@ -5,9 +5,52 @@ Material::Material(Color color, double roughness, double refractance, double emi
 {
 }
 
+/*
+ * Reflectance according to Schlick’s approximation:
+ * http://en.wikipedia.org/wiki/Schlick's_approximation
+ * 
+ * For a more detailed version (function implemented according to this reference's extension):
+ * http://www.bramz.net/data/writings/reflection_transmission.pdf
+ */
 double Material::reflectance(double angle, double nFrom)
 {
-	/* TODO: reflectance */
-	/* based on incident angle AND roughness -> calc reflectance */
+	/* Note that:
+	 * n1 = nFrom
+	 * n2 = this->n (the medium where the photon is "entering")
+	 * θi = angle
+	 * θf needs to be calculated if n1 > n2 and angle > TIR
+	 */
+
+	double temp, temp2;
+	double R0 = (nFrom - this->n)/(nFrom + this->n);
+	R0 *= R0;
+
+	if (nFrom <= this->n)
+	{
+		temp = (1 - cos(angle));
+		temp2 = temp * temp; /* square */
+
+		temp2 *= temp2; /* forth */
+		temp *= temp2; /* fifth */
+
+		return R0 + (1 - R0) * temp;
+	} else if (angle > asin(n2/n1)) /* TIR's formula: asin(n2/n1) */
+	{
+		/*
+		 * θf is calculated using Snell's law:
+		 * http://en.wikipedia.org/wiki/Snell's_law
+		 */
+
+		double thetaf = asin((sin(angle) * nFrom)/this->n);
+
+		temp = (1 - cos(thetaf));
+		temp2 = temp * temp; /* square */
+
+		temp2 *= temp2; /* forth */
+		temp *= temp2; /* fifth */
+
+		return R0 + (1 - R0) * temp;
+	}
+
 	return 1.0;
 }
