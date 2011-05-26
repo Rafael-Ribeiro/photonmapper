@@ -26,5 +26,5 @@ Color Color::operator + (Color other) const
 	if (g > ((unsigned char)255)) g = ((unsigned char)255);
 	if (b > ((unsigned char)255)) b = ((unsigned char)255);
 
-	return Color(r, b, b); 
+	return Color((unsigned char)r, (unsigned char)g, (unsigned char)b); 
 }
