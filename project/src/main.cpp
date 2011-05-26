@@ -4,6 +4,7 @@
 #include "Vector.hpp"
 #include "Scene.hpp"
 #include "Engine.hpp"
+#include "Camera.hpp"
 #include "utils.hpp"
 #include "Sphere.hpp"
 #include "Plane.hpp"
@@ -60,8 +61,9 @@ int main()
 	scene.primitives.push_back(&p5);
 
 	Engine engine = Engine(scene);
-	
-	Color* pixels = engine.render(Point(0, 0, -40), Vector(0,0,1), Vector(0,1,0), M_PI/4, WIDTH, HEIGHT);
+	Camera camera = Camera(Point(0, 0, -40), Vector(0,0,1), Vector(0,1,0), M_PI/4);
+
+	Color* pixels = engine.render(camera, WIDTH, HEIGHT);
 	
 	writePPM(pixels, WIDTH, HEIGHT, std::cout);
 
