@@ -52,6 +52,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	}
 
 	/* TODO: instead of material color, get KNN photons and use the avereged color * irrandiance */
+
 	c = c + intersect.prim->mat.color*(1-reflectance)*(1-refractance);
 
 	return c;
