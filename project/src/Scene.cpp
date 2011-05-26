@@ -1,4 +1,5 @@
 #include <float.h>
+#include <iostream>
 
 #include "Scene.hpp"
 #include "Primitive.hpp"
@@ -31,7 +32,7 @@ bool Scene::intersect(Ray& ray, Intersection& intersect) const
 				intersect.prim = *it;
 				intersect.direction = ray.direction;
 
-				temp_dist = sqrd_dist;
+				sqrd_dist = temp_dist;
 			}
 		}
 	}

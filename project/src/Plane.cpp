@@ -2,6 +2,9 @@
 
 #include "Plane.hpp"
 
+#include <iostream>
+using namespace std;
+
 Plane::Plane(Material mat, Point p, Vector normal)
 	: Primitive(mat), point(p), m_normal(normal)
 {
@@ -17,12 +20,12 @@ bool Plane::intersect(Ray r, Point& p) const
 	if (a == 0)	/* Ray and Plane are paralel -> no intersection or Line intersection FIXME */
 		return false;
 
-	b = (this->point - r.origin).dot(this->m_normal);
+	b = (r.origin - this->point).dot(this->m_normal);
 	if (b < 0) /* point is behind the ray */
 		return false;
 
 	offset = r.direction * (b/a);
-	p = r.origin + offset;
+	p = r.origin - offset;
 
 	return true;
 }

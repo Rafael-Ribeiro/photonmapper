@@ -6,7 +6,7 @@
 #include "Color.hpp"
 
 #define MAX_PHOTONS			((unsigned int)1000)
-#define MAX_PHOTON_BOUNCE	((unsigned int)5)
+#define MAX_PHOTON_BOUNCE	((unsigned int)1)
  
 struct Engine
 {
