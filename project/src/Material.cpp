@@ -1,5 +1,7 @@
 #include "Material.hpp"
 
+#include <math.h>
+
 Material::Material(Color color, double roughness, double refractance, double emittance, double n)
 	: color(color), roughness(roughness), refractance(refractance), emittance(emittance), n(n)
 {
@@ -34,7 +36,7 @@ double Material::reflectance(double angle, double nFrom)
 		temp *= temp2; /* fifth */
 
 		return R0 + (1 - R0) * temp;
-	} else if (angle > asin(n2/n1)) /* TIR's formula: asin(n2/n1) */
+	} else if (angle > asin(this->n/nFrom)) /* TIR's formula: asin(n2/n1) */
 	{
 		/*
 		 * θf is calculated using Snell's law:
