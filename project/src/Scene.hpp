@@ -5,6 +5,8 @@
 
 #include "Primitive.hpp"
 
+#define N_AIR ((double)1.0) /* light of speed in the air is approximately the same as in vacuum */
+
 using namespace std;
 
 struct Intersection

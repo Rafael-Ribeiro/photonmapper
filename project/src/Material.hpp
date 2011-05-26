@@ -4,19 +4,6 @@
 #include "Vector.hpp"
 #include "Color.hpp"
 
-/*
-	pseudo-algorithm for ray tracing:
-
-	based on incident angle AND roughness -> calc reflectance
-	if not reflected
-		if refractance
-			refract
-		else
-			absorve
-	else
-		reflect
-*/
-
 struct Material
 {
 	Color color;
@@ -30,7 +17,7 @@ struct Material
 
 	Material(Color color, double roughness, double refractance, double emittance, double n);
 
-	double reflectance(double angle);
+	double reflectance(double angle, double nFrom);
 };
 
 #endif

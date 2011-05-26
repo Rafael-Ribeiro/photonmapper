@@ -21,7 +21,7 @@ struct Photon
 
 	Photon();
 	Photon(Ray& ray, double wavelength);
-	bool bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon);
+	bool bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, double nFrom);
 };
 
 #endif

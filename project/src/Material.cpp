@@ -5,8 +5,9 @@ Material::Material(Color color, double roughness, double refractance, double emi
 {
 }
 
-double Material::reflectance(double angle)
+double Material::reflectance(double angle, double nFrom)
 {
 	/* TODO: reflectance */
+	/* based on incident angle AND roughness -> calc reflectance */
 	return 1.0;
 }
