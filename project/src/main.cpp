@@ -22,11 +22,22 @@ int main()
 	Sphere s1 = Sphere(glass, Point(0, 1.0, 0), 1.0);
 	Sphere l1 = Sphere(light, Point(1.0, 3.0, 1.0), 0.1);
 	
-	Plane p1 = Plane(redConcrete, Point(0.0, 0.0, 0.0), Vector(0.0, 1.0, 0.0));
-	
+	Plane p1 = Plane(redConcrete, Point(0.0, 0.0, 0.0), Vector(0.0, 1.0, 0.0)); 	/* floor */
+	Plane p2 = Plane(redConcrete, Point(0.0, 4.0, 0.0), Vector(0.0, -1.0, 0.0)); 	/* ceil */
+	Plane p3 = Plane(redConcrete, Point(-3.0, 0.0, 0.0), Vector(1.0, 0.0, 0.0)); 	/* left */
+	Plane p4 = Plane(redConcrete, Point(+3.0, 0.0, 0.0), Vector(-1.0, 0.0, 0.0)); 	/* right */
+	Plane p5 = Plane(redConcrete, Point(0.0, 0.0, +3.0), Vector(0.0, 0.0, -1.0)); 	/* front */
+	Plane p6 = Plane(redConcrete, Point(0.0, 0.0, -3.0), Vector(0.0, 0.0, 1.0)); 	/* back */
+
 	/* TODO: add light to the primitive list too? */
 	scene.primitives.push_back(&s1);
 	scene.primitives.push_back(&p1);
+	scene.primitives.push_back(&p2);
+	scene.primitives.push_back(&p3);
+	scene.primitives.push_back(&p4);
+	scene.primitives.push_back(&p5);
+	scene.primitives.push_back(&p6);
+
 	scene.lights.push_back(&l1);
 
 	Engine engine = Engine(scene);

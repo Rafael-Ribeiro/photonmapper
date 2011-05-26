@@ -24,10 +24,15 @@ bool Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 		return false;
 	
 	/* TODO: reflect, refract, ... */
-		
-	/* continue -.-" */
+
 	photon.ray.direction = intersect.direction;
 	photon.ray.origin = intersect.point;
+		
+	/* continue -.-" */
+	if (true) /* reflect */
+	{
+		
+	}
 	
 	if (bouncesLeft > 0)
 		return photon.bounce(scene, bouncesLeft-1, photon);

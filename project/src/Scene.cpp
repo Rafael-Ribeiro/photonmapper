@@ -61,6 +61,6 @@ void Scene::buildPhotonMap(unsigned int nPhotons, unsigned int nPhotonBounce)
 		for (j = 0; j < n; j++)
 			if (this->lights[i]->randomPhoton().bounce(*this, nPhotonBounce, photon))
 				this->photonMap.push_back(photon);
-
 	}
+
 }
