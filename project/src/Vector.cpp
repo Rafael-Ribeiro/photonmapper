@@ -47,6 +47,12 @@ double Vector::dot(const Vector& v) const
 	return this->x*v.x + this->y*v.y + this->z*v.z;
 }
 
+double Vector::angle(const Vector& v) const
+{
+	/* TODO: angle between vectors */
+	return 0.0;
+}
+
 double Vector::sqrd_norm() const
 {
 	return this->x*this->x + this->y*this->y + this->z*this->z;
