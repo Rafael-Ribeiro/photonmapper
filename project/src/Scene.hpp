@@ -28,6 +28,7 @@ struct Scene
 	/* TODO: kd-tree */
 	bool intersect(const Ray& p, Intersection& intersect) const;
 	void buildPhotonMap(int nPhotons, int nPhotonBounce);
+	vector<const Photon*> getKNearestPhotons(Point p, int k) const;
 };
 
 #endif

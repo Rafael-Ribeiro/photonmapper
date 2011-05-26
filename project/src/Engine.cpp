@@ -25,7 +25,7 @@ Color* Engine::render(Point origin, Vector direction, Vector top, double fovy, i
 	pixels = new Color[width*height];
 
 	/* TODO photon mapping */
-	//scene.buildPhotonMap(nPhotons, nPhotonBounce);
+	this->scene.buildPhotonMap(nPhotons, nPhotonBounce);
 
 	aspect = (1.0 * width) / height;
 	fovx = fovy * aspect;

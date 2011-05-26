@@ -5,8 +5,8 @@
 #include "Vector.hpp"
 #include "Color.hpp"
 
-#define MAX_PHOTONS			((unsigned int)1000)
-#define MAX_PHOTON_BOUNCE	((unsigned int)10)
+#define MAX_PHOTONS			1000
+#define MAX_PHOTON_BOUNCE	10
  
 struct Engine
 {
