@@ -26,7 +26,7 @@ struct Scene
 	vector<Primitive*> lights;
 
 	/* TODO: kd-tree */
-	bool intersect(Ray& p, Intersection& intersect) const;
+	bool intersect(const Ray& p, Intersection& intersect) const;
 	void buildPhotonMap(unsigned int nPhotons, unsigned int nPhotonBounce);
 };
 

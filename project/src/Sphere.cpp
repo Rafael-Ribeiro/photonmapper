@@ -1,9 +1,12 @@
 #include <cmath>
+#include <iostream>
 
 #include "Sphere.hpp"
 #include "Vector.hpp"
 #include "Photon.hpp"
 #include "utils.hpp"
+
+using namespace std;
 
 Sphere::Sphere(Material mat, Vector center, double radius)
 	: Primitive(mat), center(center), radius(radius)
@@ -30,6 +33,7 @@ bool Sphere::intersect(Ray r, Point& p) const
 	offset = r.direction*(Tca - Thc);
 	p = r.origin + offset;
 
+	cerr << "true" << endl;
 	return true;
 }
 

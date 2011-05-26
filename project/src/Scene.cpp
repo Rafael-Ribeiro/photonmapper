@@ -11,7 +11,7 @@ Scene::Scene()
 }
 
 /* TODO: make this use a kd-tree*/
-bool Scene::intersect(Ray& ray, Intersection& intersect) const 
+bool Scene::intersect(const Ray& ray, Intersection& intersect) const 
 {
 	vector<Primitive*>::const_iterator it, end;
 	double sqrd_dist, temp_dist;
