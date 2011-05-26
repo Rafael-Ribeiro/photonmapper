@@ -17,6 +17,12 @@ Photon::Photon(Ray& ray, double wavelength)
 /* nFrom refers to the light speed in the medium from where the photon comes */
 bool Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, double nFrom)
 {
+	if (bouncesLeft == 0)
+	{
+		photon = *this;
+		return true;
+	}
+
 	Intersection intersect;
 	Vector normal;
 
@@ -40,7 +46,7 @@ bool Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 	*/
 
 	 /* reflectance depends on the angle between photon's ray and the primitive's normal on the intersection point  */
-	double refl = intersect.prim->mat.reflectance(intersect.direction.angle(intersect.prim->normal(intersect.point)),nFrom);
+	//double refl = intersect.prim->mat.reflectance(intersect.direction.angle(intersect.prim->normal(intersect.point)),nFrom);
 		
 	/* continue -.-" */
 	photon.ray.direction = intersect.direction;
@@ -49,13 +55,12 @@ bool Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 	/* continue -.-" */
 	if (true) /* reflection: http://en.wikipedia.org/wiki/Reflection_%28mathematics%29 */
 	{
-		normal = intersect.prim.normal(intersect.point);
-		photon.ray.direction -= 2*photon.ray.direction.dot(normal)*normal;
-	}
-	
-	if (bouncesLeft > 0)
-		return photon.bounce(scene, bouncesLeft-1, photon, nFrom);
+		normal = intersect.prim->normal(intersect.point);
+		photon.ray.direction = photon.ray.direction - normal*2*photon.ray.direction.dot(normal);
 
+		return photon.bounce(scene, bouncesLeft-1, photon, nFrom);
+	} 
+	
 	return true;
 }
 
