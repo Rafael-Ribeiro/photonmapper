@@ -21,8 +21,11 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	Intersection intersect;
 	Vector normal;
 
-	if (maxdepth == 0 || !scene.intersect(*this, intersect))
+	if (maxdepth == 0)
 		return c;
+
+	if (!scene.intersect(*this, intersect))
+		return Color(0,0,255);
 
 	double angle = intersect.direction.angle(intersect.prim->normal(intersect.point));
 	if (angle > M_PI/2)
@@ -42,7 +45,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 		// TODO: roughness
 		// reflected ray gives the axis of a cone (higher roughness -> larger cone)
 		// cast N rays
-		c = c + reflectedRay.getColor(scene, maxdepth-1, nFrom) * reflectance;
+		c = c + reflectedRay.getColor(scene, maxdepth-1, nFrom) * reflectance;		
 	}
 
 	if (refractance > 0)
@@ -57,7 +60,6 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	/* TODO: instead of material color, get KNN photons and use the averaged color * irrandiance */
 
 	c = c*(1-intersect.prim->mat.roughness) + intersect.prim->mat.color*(intersect.prim->mat.roughness);
-	cerr << (int)(intersect.prim->mat.color*(intersect.prim->mat.roughness)).g << endl;
 
 	return c;
 }

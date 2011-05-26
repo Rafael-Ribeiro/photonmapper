@@ -7,7 +7,8 @@
 
 #define MAX_PHOTONS			((unsigned int)1000)
 #define MAX_PHOTON_BOUNCE	((unsigned int)10)
- 
+#define MAX_RAY_BOUNCE		10
+
 struct Engine
 {
 	Scene scene;

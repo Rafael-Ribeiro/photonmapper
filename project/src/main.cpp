@@ -33,14 +33,14 @@ int main()
 
 	scene.lights.push_back(&l1);
 
-	//scene.primitives.push_back(&l1);
-	//scene.primitives.push_back(&s1);
+	scene.primitives.push_back(&l1);
+	scene.primitives.push_back(&s1);
 
-	//scene.primitives.push_back(&p1);
-	//scene.primitives.push_back(&p2);
-	//scene.primitives.push_back(&p3);
+	scene.primitives.push_back(&p1);
+	scene.primitives.push_back(&p2);
+	scene.primitives.push_back(&p3);
 	scene.primitives.push_back(&p4);
-	//scene.primitives.push_back(&p5);
+	scene.primitives.push_back(&p5);
 
 	Engine engine = Engine(scene);
 	
