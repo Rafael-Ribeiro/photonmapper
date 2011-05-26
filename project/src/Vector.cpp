@@ -1,5 +1,6 @@
-#include <math.h>
 #include "Vector.hpp"
+
+#include <math.h>
 
 Vector::Vector()
 {
@@ -49,8 +50,7 @@ double Vector::dot(const Vector& v) const
 
 double Vector::angle(const Vector& v) const
 {
-	/* TODO: angle between vectors */
-	return 0.0;
+	return acos(this->dot(v));
 }
 
 double Vector::sqrd_norm() const

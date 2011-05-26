@@ -43,9 +43,9 @@ double Material::reflectance(double angle, double nFrom)
 		 * http://en.wikipedia.org/wiki/Snell's_law
 		 */
 
-		double thetaf = asin((sin(angle) * nFrom)/this->n);
+		double theta_f = asin((sin(angle) * nFrom)/this->n);
 
-		temp = (1 - cos(thetaf));
+		temp = (1 - cos(theta_f));
 		temp2 = temp * temp; /* square */
 
 		temp2 *= temp2; /* forth */
