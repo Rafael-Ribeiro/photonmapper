@@ -40,7 +40,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 
 		normal = intersect.prim->normal(reflectedRay.origin);
 		reflectedRay.origin = intersect.point;
-		reflectedRay.direction = this->direction - normal * 2 * this->direction.dot(normal);
+		reflectedRay.direction = (this->direction - normal * 2 * this->direction.dot(normal)).normalize();
 
 		// TODO: roughness
 		// reflected ray gives the axis of a cone (higher roughness -> larger cone)
