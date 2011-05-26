@@ -15,11 +15,11 @@ public:
 
 	Sphere(Material mat, Vector center, double radius);
 
-	bool intersect(Ray r, Point& p);
-	Vector normal(Point p);
-	double area();
+	bool intersect(Ray r, Point& p) const;
+	Vector normal(Point p) const;
+	double area() const;
 
-	Photon randomPhoton();
+	Photon randomPhoton() const;
 };
 
 #endif

@@ -7,6 +7,8 @@
 
 #define N_AIR ((double)1.0) /* light of speed in the air is approximately the same as in vacuum */
 
+using namespace std;
+
 struct Intersection
 {
 	Primitive* prim;
@@ -18,10 +20,10 @@ struct Scene
 {
 	Scene();
 
-	std::vector<Photon> photonMap; /* TODO: kd_tree<Photon> photons; */
+	vector<Photon> photonMap; /* TODO: kd_tree<Photon> photons; */
 
-	std::vector<Primitive*> primitives;
-	std::vector<Primitive*> lights;
+	vector<Primitive*> primitives;
+	vector<Primitive*> lights;
 
 	/* TODO: kd-tree */
 	bool intersect(Ray& p, Intersection& intersect) const;

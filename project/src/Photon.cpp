@@ -1,6 +1,10 @@
 #include "Photon.hpp"
 #include "Scene.hpp"
 
+#include <iostream>
+
+using namespace std;
+
 Photon::Photon()
 {
 }
@@ -15,12 +19,11 @@ bool Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 {
 	Intersection intersect;
 
-	photon = *this;	
-	return true;
+	photon = *this;
 
 	if (!scene.intersect(this->ray, intersect))
 		return false;
-
+	
 	/* TODO: reflect, refract, ... */
 	/*
 		pseudo-algorithm for ray tracing:
@@ -37,8 +40,13 @@ bool Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 
 	 /* reflectance depends on the angle between photon's ray and the primitive's normal on the intersection point  */
 	double refl = intersect.prim->mat.reflectance(intersect.direction.angle(intersect.prim->normal(intersect.point)),nMedium);
-
+		
+	/* continue -.-" */
+	photon.ray.direction = intersect.direction;
+	photon.ray.origin = intersect.point;
 	
+	if (bouncesLeft > 0)
+		return photon.bounce(scene, bouncesLeft-1, photon);
 
 	return true;
 }

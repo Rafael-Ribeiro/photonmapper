@@ -39,7 +39,8 @@ Color* Engine::render(Point origin, Vector direction, Vector top, double appertu
 
 		//cerr << it->ray.origin.x << " " << it->ray.origin.z << endl;
 
-		pixels[y*width+x] = Color(255, 255, 255);
+		if (x < 1024 && y < 512)
+			pixels[y*width+x] = Color(255, 255, 255);
 	}
 
 	/* TODO anti-aliasing */

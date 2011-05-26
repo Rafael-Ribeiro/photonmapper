@@ -11,12 +11,12 @@ Vector::Vector(double x, double y, double z)
 }
 
 /* operators */
-Vector Vector::operator + (Vector& v) const
+Vector Vector::operator + (const Vector& v) const
 {
 	return Vector(this->x + v.x, this->y + v.y, this->z + v.z); 
 }
 
-Vector Vector::operator - (Vector& v) const
+Vector Vector::operator - (const Vector& v) const
 {
 	return Vector(this->x - v.x, this->y - v.y, this->z - v.z); 
 }
@@ -32,7 +32,7 @@ Vector Vector::operator / (double q) const
 }
 
 /* operator functions */
-Vector Vector::cross(Vector& v) const
+Vector Vector::cross(const Vector& v) const
 {
 	return Vector
 	(
@@ -42,15 +42,20 @@ Vector Vector::cross(Vector& v) const
 	);
 }
 
-double Vector::dot(Vector& v) const
+double Vector::dot(const Vector& v) const
 {
 	return this->x*v.x + this->y*v.y + this->z*v.z;
+}
+
+double Vector::sqrd_norm() const
+{
+	return this->x*this->x + this->y*this->y + this->z*this->z;
 }
 
 /* functions */
 double Vector::norm() const
 {
-	return sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
+	return sqrt(this->sqrd_norm());
 }
 
 Vector Vector::normalize()
