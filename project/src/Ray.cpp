@@ -45,7 +45,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 		// TODO: roughness
 		// reflected ray gives the axis of a cone (higher roughness -> larger cone)
 		// cast N rays
-		c = c + reflectedRay.getColor(scene, maxdepth-1, nFrom) * reflectance;		
+		c = c + reflectedRay.getColor(scene, maxdepth-1, nFrom) * reflectance;
 	}
 
 	if (refractance > 0)
