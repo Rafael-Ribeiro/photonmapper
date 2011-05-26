@@ -18,6 +18,7 @@ Photon::Photon(Ray& ray, double wavelength)
 bool Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, double nFrom)
 {
 	Intersection intersect;
+	Vector normal;
 
 	photon = *this;
 
@@ -46,9 +47,10 @@ bool Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 	photon.ray.origin = intersect.point;
 		
 	/* continue -.-" */
-	if (true) /* reflect */
+	if (true) /* reflection: http://en.wikipedia.org/wiki/Reflection_%28mathematics%29 */
 	{
-		
+		normal = intersect.prim.normal(intersect.point);
+		photon.ray.direction -= 2*photon.ray.direction.dot(normal)*normal;
 	}
 	
 	if (bouncesLeft > 0)
