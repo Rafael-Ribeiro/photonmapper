@@ -2,6 +2,7 @@
 #define PHOTON_HPP
 
 #include "Ray.hpp"
+#include "Color.hpp"
 
 /* Lower and upper visible spectrum wavelength limits */
 #define VISIBLE_L_WL 390
@@ -17,11 +18,11 @@ struct Scene;
 struct Photon
 {
 	Ray ray;
-	double wavelength;
+	Color color;
 
 	Photon();
-	Photon(Ray& ray, double wavelength);
-	bool bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, double nFrom);
+	Photon(Ray& ray, Color color);
+	void bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, double nFrom);
 };
 
 #endif

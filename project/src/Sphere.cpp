@@ -61,6 +61,6 @@ Photon Sphere::randomPhoton() const
 	/* TODO: just for white light, and not quite, see http://en.wikipedia.org/wiki/Planck%27s_law_of_black_body_radiation */
 	ray = Ray(p, this->normal(p));
 
-	return Photon(ray, random01() * (VISIBLE_U_WL - VISIBLE_L_WL) + VISIBLE_L_WL);
+	return Photon(ray, this->mat.color);
 }
 

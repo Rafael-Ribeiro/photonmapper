@@ -1,4 +1,4 @@
-FLAGS = -Wall -ansi
+FLAGS = -Wall -ansi -g
 
 all: main.o Engine.o Scene.o Vector.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o
 	g++ main.o Engine.o Scene.o Vector.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o -o renderer ${FLAGS}

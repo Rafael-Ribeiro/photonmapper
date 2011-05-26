@@ -23,14 +23,14 @@ int main()
 
 	/* TODO: greenWall, blueWall */
 	
-	Sphere s1 = Sphere(redConcrete, Point(0.0, 0.0, 10.0), 1);
-	Sphere l1 = Sphere(light, Point(1.0, 2.0, 5.0), 0.5);
+	Sphere s1 = Sphere(glass, Point(-20.0, -20.0, 20.0), 20);
+	Sphere l1 = Sphere(light, Point(0, 39.94, 0), 0.05);
 	
 	Plane p1 = Plane(grayConcrete, Point(0.0, -40.0, 0.0), Vector(0.0, 1.0, 0.0)); 		/* floor */
 	Plane p2 = Plane(grayConcrete, Point(0.0, +40.0, 0.0), Vector(0.0, -1.0, 0.0)); 	/* ceil */
 	Plane p3 = Plane(redConcrete, Point(-40.0, 0.0, 0.0), Vector(-1.0, 0.0, 0.0)); 		/* left */
 	Plane p4 = Plane(greenConcrete, Point(+40.0, 0.0, 0.0), Vector(-1.0, 0.0, 0.0)); 	/* right */
-	Plane p5 = Plane(grayConcrete, Point(0.0, 0.0, +400), Vector(0.0, 0.0, -1.0)); 		/* front */
+	Plane p5 = Plane(grayConcrete, Point(0.0, 0.0, +40), Vector(0.0, 0.0, -1.0)); 		/* front */
 //	Plane p6 = Plane(grayConcrete, Point(0.0, 0.0, -40.0), Vector(0.0, 0.0, 1.0)); 		/* back */
 
 	scene.lights.push_back(&l1);
@@ -48,7 +48,7 @@ int main()
 	Engine engine = Engine(scene);
 	
 	/* TODO: aperture */
-	Color* pixels = engine.render(Point(0,0,0), Vector(0,0,1), Vector(0,1,0), 1, WIDTH, HEIGHT);
+	Color* pixels = engine.render(Point(0,0,-40), Vector(0,0,1), Vector(0,1,0), M_PI/4, WIDTH, HEIGHT);
 	
 	writePPM(pixels, WIDTH, HEIGHT, std::cout);
 
