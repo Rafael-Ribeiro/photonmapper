@@ -19,18 +19,17 @@ Color* Engine::render(Point origin, Vector direction, Vector top, double fovy, i
 	vector<Photon>::iterator it;
 	Vector left;
 	Ray ray;
-	double dx, dy, fovx, aspect;
+	double dx, dy, aspect;
 	double halfY, halfX;
 
 	pixels = new Color[width*height];
 
 	/* TODO photon mapping */
-	//scene.buildPhotonMap(nPhotons, nPhotonBounce);
+	scene.buildPhotonMap(nPhotons, nPhotonBounce);
 
 	aspect = (1.0 * width) / height;
-	fovx = fovy * aspect;
-	left = direction.cross(top)*sin(fovx);
-	top = top*sin(fovy);
+	top = top*tan(fovy);
+	left = direction.cross(top)*tan(fovy)*aspect;
 
 	ray.origin = origin;
 	halfY = height / 2.0;
@@ -45,22 +44,26 @@ Color* Engine::render(Point origin, Vector direction, Vector top, double fovy, i
 			dx = (j+0.5-halfX)/halfX;
 
 			ray.direction = (direction + top*dy + left*dx).normalize();
-			pixels[i*width + j] = ray.getColor(scene, 1);
+			pixels[i*width + j] = ray.getColor(scene, 1, N_AIR);
 		}
 	}
 
-	/* TEST */
-	/*for (it = this->scene.photonMap.begin(); it != this->scene.photonMap.end(); it++)
+/*
+	for (i = 0; i < height; i++)
 	{
-		unsigned int x = (it->ray.origin.x)*50+512;
-		unsigned int y = (it->ray.origin.z)*50+256;
-
-		//cerr << it->ray.origin.x << " " << it->ray.origin.z << endl;
-
-		if (x < 1024 && y < 512)
-			pixels[y*width+x] = Color(255, 255, 255);
+		for (j = 0; j < width; j++)
+			pixels[i*width + j] = Color(0,0,0);
 	}
-	*/
+
+	for (it = this->scene.photonMap.begin(); it != this->scene.photonMap.end(); it++)
+	{
+		int x = (it->ray.origin.x + 60)*512.0/80;
+		int y = (it->ray.origin.z + 120)*256.0/80;
+
+		if (x>= 0 && y >= 0 && x < width && y < height)
+			pixels[y*width+x] = it->color;
+	}
+*/	
 	/* TODO anti-aliasing */
 
 	return pixels;

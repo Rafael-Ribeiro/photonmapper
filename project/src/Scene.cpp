@@ -58,8 +58,7 @@ void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
 		n = this->lights[i]->area() * this->lights[i]->mat.emittance*nPhotons/sum;
 	
 		for (j = 0; j < n; j++)
-			if (this->lights[i]->randomPhoton().bounce(*this, nPhotonBounce, photon, N_AIR))
-				this->photonMap.push_back(photon);
+			this->lights[i]->randomPhoton().bounce(*this, nPhotonBounce, photon, N_AIR);	
 	}
 
 }
