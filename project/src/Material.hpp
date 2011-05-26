@@ -8,7 +8,7 @@ struct Material
 {
 	Color color;
 
-	double roughness; /* 0..1 */
+	double roughness; /* 0..1: noise percentage to be added to the reflection angle */
 	double refractance; /* 0..1; absorvance = 1 - refractance */
 	double emittance; /* 0..inf lumen/m^2 */
 
