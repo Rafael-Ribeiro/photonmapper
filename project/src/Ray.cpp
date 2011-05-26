@@ -39,6 +39,9 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 		reflectedRay.origin = intersect.point;
 		reflectedRay.direction = this->direction - normal * 2 * this->direction.dot(normal);
 
+		// TODO: roughness
+		// reflected ray gives the axis of a cone (higher roughness -> larger cone)
+		// cast N rays
 		c = c + reflectedRay.getColor(scene, maxdepth-1, nFrom) * reflectance;
 	}
 
@@ -51,9 +54,10 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 		/* remember nFrom changes */
 	}
 
-	/* TODO: instead of material color, get KNN photons and use the avereged color * irrandiance */
+	/* TODO: instead of material color, get KNN photons and use the averaged color * irrandiance */
 
-	c = c + intersect.prim->mat.color*(1-reflectance)*(1-refractance);
+	c = c*(1-intersect.prim->mat.roughness) + intersect.prim->mat.color*(intersect.prim->mat.roughness);
+	cerr << (int)(intersect.prim->mat.color*(intersect.prim->mat.roughness)).g << endl;
 
 	return c;
 }

@@ -17,7 +17,7 @@ Color* Engine::render(Point origin, Vector direction, Vector top, double fovy, i
 	Color* pixels;
 	int i, j;
 	vector<Photon>::iterator it;
-	Vector left;
+	Vector right;
 	Ray ray;
 	double dx, dy, aspect;
 	double halfY, halfX;
@@ -29,7 +29,7 @@ Color* Engine::render(Point origin, Vector direction, Vector top, double fovy, i
 
 	aspect = (1.0 * width) / height;
 	top = top*tan(fovy);
-	left = direction.cross(top)*tan(fovy)*aspect;
+	right = direction.cross(top)*tan(fovy)*(-aspect);
 
 	ray.origin = origin;
 	halfY = height / 2.0;
@@ -43,8 +43,8 @@ Color* Engine::render(Point origin, Vector direction, Vector top, double fovy, i
 		{
 			dx = (j+0.5-halfX)/halfX;
 
-			ray.direction = (direction + top*dy + left*dx).normalize();
-			pixels[i*width + j] = ray.getColor(scene, 1, N_AIR);
+			ray.direction = (direction + top*dy + right*dx).normalize();
+			pixels[i*width + j] = ray.getColor(scene, MAX_RAY_BOUNCE, N_AIR);
 		}
 	}
 
