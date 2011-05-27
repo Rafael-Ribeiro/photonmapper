@@ -86,15 +86,16 @@ void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
  * (which is a vector at the moment) and sorting Photon* by their distance to p,
  * to return the first k Photon* of the sort
  */
-vector<const Photon*> Scene::getKNearestPhotons(Point p, int k) const
+vector<const Photon*> Scene::getNearestPhotons(Point p, double distance) const
 {
-	int i;
-
 	vector<const Photon*> knn;
 	vector<const Photon*> sortedPhotons;
-
 	vector<Photon>::const_iterator it, end;
+	vector<const Photon*>::const_iterator sortedIt, sortedEnd;
 
+	double sqrd_distance;
+
+	sqrd_distance = distance*distance;
 	sortedPhotons.reserve(this->photonMap.size());
 
 	for (it = this->photonMap.begin(), end = this->photonMap.end(); it != end; it++)
@@ -102,8 +103,12 @@ vector<const Photon*> Scene::getKNearestPhotons(Point p, int k) const
 
 	sort(sortedPhotons.begin(),sortedPhotons.end(),PointDistanceComparator(p));
 
-	for (i = 0; i < k; i++)
-		knn.push_back(sortedPhotons[i]);
+	for (sortedIt = sortedPhotons.begin(), sortedEnd = sortedPhotons.end();
+		sortedIt != sortedEnd && ((*sortedIt)->ray.origin - p).sqrd_norm() > sqrd_distance;
+		sortedIt++)
+	{
+		knn.push_back(*sortedIt);
+	}
 
 	return knn;
 }

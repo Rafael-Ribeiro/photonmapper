@@ -1,5 +1,6 @@
 #include "Ray.hpp"
 #include "Scene.hpp"
+#include "Engine.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -20,6 +21,12 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	Color c = Color(0,0,0);
 	Intersection intersect;
 	Vector normal;
+	vector<const Photon*> photons;
+	vector<const Photon*>::const_iterator photon, end;
+
+
+	double angle, reflectance, refractance, intensity;
+		
 
 	if (maxdepth == 0)
 		return c;
@@ -29,12 +36,12 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 
 	normal = intersect.prim->normal(intersect.point);
 
-	double angle = intersect.direction.angle(normal);
+	angle = intersect.direction.angle(normal);
 	if (angle > M_PI/2)
 		angle = M_PI-angle;	 /* abs(-(M_PI - angle)) */
 
-	double reflectance = intersect.prim->mat.reflectance(angle, nFrom);
-	double refractance = intersect.prim->mat.refractance;
+	reflectance = intersect.prim->mat.reflectance(angle, nFrom);
+	refractance = intersect.prim->mat.refractance;
 
 	if (reflectance > 0)
 	{
@@ -59,6 +66,8 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	}
 
 	/* TODO: instead of material color, get KNN photons and use the averaged color * irrandiance */
+	intensity = 0;
+	photons = scene.getNearestPhotons(intersect.point, Engine::MAX_GATHER_DISTANCE);
 
 	c = c*(1-intersect.prim->mat.roughness) + intersect.prim->mat.color*(intersect.prim->mat.roughness);
 

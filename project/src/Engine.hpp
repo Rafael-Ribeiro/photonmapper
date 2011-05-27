@@ -6,12 +6,13 @@
 #include "Color.hpp"
 #include "Camera.hpp"
 
-#define MAX_PHOTONS			1000
-#define MAX_PHOTON_BOUNCE	10
-#define MAX_RAY_BOUNCE		10
-
 struct Engine
 {
+	static const int MAX_PHOTONS = 1000;
+	static const int MAX_PHOTON_BOUNCE = 10;
+	static const int MAX_RAY_BOUNCE = 10;
+	static const double MAX_GATHER_DISTANCE = 5.0;
+
 	Scene scene;
 	int nPhotons;
 	int nPhotonBounce;
