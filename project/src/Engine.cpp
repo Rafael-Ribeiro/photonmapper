@@ -12,41 +12,19 @@ Engine::Engine(Scene& scene)
 	this->nPhotonBounce = MAX_PHOTON_BOUNCE;
 }
 
-Color* Engine::render(Camera camera, int width, int height)
+Color* Engine::render(Camera camera)
 {
 	Color* pixels;
 	int i, j;
-	vector<Photon>::iterator it;
-	Vector top, right;
-	Ray ray;
-	double dx, dy, aspect;
-	double halfY, halfX;
+	//vector<Photon>::iterator it;
 
-	pixels = new Color[width*height];
+	pixels = new Color[camera.width * camera.height];
 
-	/* TODO photon mapping */
 	this->scene.buildPhotonMap(nPhotons, nPhotonBounce);
 
-	aspect = (1.0 * width) / height;
-	top = camera.top * tan(camera.fovy);
-	right = camera.direction.cross(top) * tan(camera.fovy) * (-aspect);
-
-	ray.origin = camera.origin;
-	halfY = height / 2.0;
-	halfX = width / 2.0;
-
-	for (i = 0; i < height; i++)
-	{
-		dy = (-i+0.5+halfY)/halfY;
-
-		for (j = 0; j < width; j++)
-		{
-			dx = (j+0.5-halfX)/halfX;
-
-			ray.direction = (camera.direction + top*dy + right*dx).normalize();
-			pixels[i*width + j] = ray.getColor(scene, MAX_RAY_BOUNCE, N_AIR);
-		}
-	}
+	for (i = 0; i < camera.height; i++)
+		for (j = 0; j < camera.width; j++)
+			pixels[i * camera.width + j] = camera.rayTroughPixel(j, i).getColor(scene, MAX_RAY_BOUNCE, N_AIR);
 
 /*
 	for (i = 0; i < height; i++)

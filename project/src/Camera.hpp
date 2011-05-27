@@ -2,14 +2,23 @@
 #define CAMERA_HPP
 
 #include "Vector.hpp"
+#include "Ray.hpp"
 
 struct Camera
 {
-	Camera();
-	Camera(Point origin, Vector direction, Vector top, double fovy);
-
+private:
 	Point origin;
-	Vector direction, top;
-	double fovy;
+	Vector direction, top, right;
+	double aspect;
+	double halfWidth, halfHeight;	
+
+public:
+	int width, height;
+
+	Camera();
+	Camera(Point origin, Vector direction, Vector top, double fovy, int width, int height);
+
+	Ray rayTroughPixel(int x, int y);
 };
+
 #endif

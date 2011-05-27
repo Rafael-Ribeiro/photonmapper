@@ -18,7 +18,7 @@ struct Engine
 
 	Engine(Scene& scene);
 
-	Color* render(Camera camera,int width, int height);
+	Color* render(Camera camera);
 };
 
 #endif

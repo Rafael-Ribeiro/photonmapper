@@ -62,7 +62,7 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 	{
 		/* reflection http://en.wikipedia.org/wiki/Reflection_%28mathematics%29 */
 		normal = intersect.prim->normal(intersect.point);
-		photon.ray.direction = photon.ray.direction - normal*2*photon.ray.direction.dot(normal);
+		photon.ray.direction = (photon.ray.direction - normal*2*photon.ray.direction.dot(normal)).normalized();
 	
 		photon.bounce(scene, bouncesLeft-1, photon, nFrom);
 	} else if (true)

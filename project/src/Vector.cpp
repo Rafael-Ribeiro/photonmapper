@@ -1,6 +1,9 @@
 #include "Vector.hpp"
 
-#include <math.h>
+#include <cmath>
+#include <iostream>
+
+using namespace std;
 
 Vector::Vector()
 {
@@ -64,10 +67,8 @@ double Vector::norm() const
 	return sqrt(this->sqrd_norm());
 }
 
-Vector Vector::normalize()
+Vector Vector::normalized() const
 {
-	*this = *this/this->norm();
-
-	return *this;
+	return *this/this->norm();
 }
 

@@ -63,15 +63,16 @@ int main()
 	Engine engine = Engine(scene);
 
 	vector<Camera> cameras;
-	cameras.push_back(Camera(Point(0, 0, -40), Vector(0,0,1), Vector(0,1,0), M_PI/4));
+	cameras.push_back(Camera(Point(0, 0, -40), Vector(0,0,1), Vector(0,1,0), M_PI/4, WIDTH, HEIGHT));
 
 	Color* pixels;
 	vector<Camera>::iterator camera;
 	for (camera = cameras.begin(); camera != cameras.end(); camera++)
 	{
-		pixels = engine.render(*camera, WIDTH, HEIGHT);
-	
-		writePPM(pixels, WIDTH, HEIGHT, std::cout);
+		pixels = engine.render(*camera);
+		writePPM(pixels, camera->width, camera->height, std::cout);
+
+		delete pixels;
 	}
 
 	return 0;

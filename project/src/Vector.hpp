@@ -21,8 +21,9 @@ struct Vector
 	double sqrd_norm() const;
 	double norm() const;
 
-	Vector normalize();
+	Vector normalized() const;
 };
 
 typedef Vector Point;
+
 #endif
