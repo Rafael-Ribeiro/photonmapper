@@ -48,6 +48,7 @@ bool Scene::intersect(const Ray& ray, Intersection& intersect) const
 				intersect.prim = *it;
 				intersect.direction = ray.direction;
 
+				cerr << "DIR: " << intersect.direction.norm() << endl;
 				sqrd_dist = temp_dist;
 			}
 		}
