@@ -27,7 +27,9 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	if (!scene.intersect(*this, intersect))
 		return Color(0,255,0);
 
-	double angle = intersect.direction.angle(intersect.prim->normal(intersect.point));
+	normal = intersect.prim->normal(intersect.point);
+
+	double angle = intersect.direction.angle(normal);
 	if (angle > M_PI/2)
 		angle = M_PI-angle;	 /* abs(-(M_PI - angle)) */
 
@@ -38,17 +40,9 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	{
 		Ray reflectedRay;
 
-		normal = intersect.prim->normal(reflectedRay.origin);
 		reflectedRay.origin = intersect.point;
-
 		reflectedRay.direction = (this->direction - normal * 2 * this->direction.dot(normal));
 
-		cerr << this->direction.norm() << " " << normal.norm() << endl;
-		cerr << reflectedRay.origin.x << " " << reflectedRay.origin.y << " " << reflectedRay.origin.z << endl;
-		cerr << reflectedRay.direction.x << " " << reflectedRay.direction.y << " " << reflectedRay.direction.z << endl;
-		cerr << this->direction.x << " " << this->direction.y << " " << this->direction.z << endl;
-		cerr << endl;
-		
 		// TODO: roughness
 		// reflected ray gives the axis of a cone (higher roughness -> larger cone)
 		// cast N rays
