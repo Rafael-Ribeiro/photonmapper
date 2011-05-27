@@ -5,6 +5,7 @@
 
 struct Camera
 {
+	Camera();
 	Camera(Point origin, Vector direction, Vector top, double fovy);
 
 	Point origin;
