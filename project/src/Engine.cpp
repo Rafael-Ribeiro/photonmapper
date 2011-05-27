@@ -6,6 +6,10 @@
 
 using namespace std;
 
+Engine::Engine()
+{
+}
+
 Engine::Engine(Scene& scene)
 	: scene(scene)
 {

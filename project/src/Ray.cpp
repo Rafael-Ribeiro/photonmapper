@@ -23,8 +23,6 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	Vector normal;
 	vector<const Photon*> photons;
 	vector<const Photon*>::const_iterator photon, end;
-
-
 	double angle, reflectance, refractance, intensity;
 		
 
@@ -66,10 +64,8 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	}
 
 	/* TODO: instead of material color, get KNN photons and use the averaged color * irrandiance */
-	intensity = 0;
 	photons = scene.getNearestPhotons(intersect.point, Engine::MAX_GATHER_DISTANCE);
-
-	c = c*(1-intersect.prim->mat.roughness) + intersect.prim->mat.color*(intersect.prim->mat.roughness);
+	c = c*(1-intersect.prim->mat.roughness);
 
 	return c;
 }

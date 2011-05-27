@@ -27,7 +27,13 @@
 
 int main()
 {
+	Engine engine;
 	Scene scene;
+
+	vector<Camera> cameras;
+	vector<Camera>::iterator camera;
+
+	Color* pixels;
 
 	/* Materials */
 	Material light =			Material(Color(255, 255, 255),		1.0, 0.0, 1.0, 0.0);
@@ -60,13 +66,10 @@ int main()
 	scene.primitives.push_back(&p4);
 	scene.primitives.push_back(&p5);
 
-	Engine engine = Engine(scene);
+	engine = Engine(scene);
 
-	vector<Camera> cameras;
 	cameras.push_back(Camera(Point(0, 0, -40), Vector(0,0,1), Vector(0,1,0), M_PI/4, WIDTH, HEIGHT));
 
-	Color* pixels;
-	vector<Camera>::iterator camera;
 	for (camera = cameras.begin(); camera != cameras.end(); camera++)
 	{
 		pixels = engine.render(*camera);

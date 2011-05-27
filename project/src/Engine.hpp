@@ -8,7 +8,7 @@
 
 struct Engine
 {
-	static const int MAX_PHOTONS = 1000;
+	static const int MAX_PHOTONS = 100;
 	static const int MAX_PHOTON_BOUNCE = 10;
 	static const int MAX_RAY_BOUNCE = 10;
 	static const double MAX_GATHER_DISTANCE = 5.0;
@@ -17,6 +17,7 @@ struct Engine
 	int nPhotons;
 	int nPhotonBounce;
 
+	Engine();
 	Engine(Scene& scene);
 
 	Color* render(Camera camera);
