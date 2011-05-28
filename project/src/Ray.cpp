@@ -24,7 +24,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	Vector normal;
 	vector<const Photon*> photons;
 	vector<const Photon*>::const_iterator photon, end;
-	double angle, reflectance, refractance, intensity;
+	double angle, reflectance, refractance, intensity, distance;
 
 	if (maxdepth == 0 || !scene.intersect(*this, intersect))
 		return self;
@@ -94,7 +94,13 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 
 	for (photon = photons.begin(), end = photons.end(); photon != end; photon++)
 	{
-		intensity = 1/(1 + (intersect.point - (*photon)->ray.origin).norm()/16) * Engine::EXPOSURE;
+		distance = (intersect.point - (*photon)->ray.origin).norm();
+		intensity = Engine::EXPOSURE /
+		(
+			Engine::CONSTANT_LIGHT_ATTENUATION +
+			distance * Engine::LINEAR_LIGHT_ATTENUATION +
+			distance * distance * Engine::QUADRATIC_LIGHT_ATTENUATION
+		);
 		self = self + (*photon)->color * intensity;
 	}
 

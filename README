@@ -1,9 +1,9 @@
+Normal calculated with noise
+
 Photon Mapping:
-	Roughness noise on reflection/refraction (applied to the primitive's normal)
 	Refraction
 
 Ray-tracing:
-	Roughness noise on reflection/refraction (applied to the primitive's normal)
 	Refraction
 
 Extras TODO:
