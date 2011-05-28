@@ -27,11 +27,11 @@ Color* Engine::render(Camera camera)
 
 	this->scene.buildPhotonMap(nPhotons, nPhotonBounce);
 	
-	for (i = 0; i < camera.height; i++)
+	/*for (i = 0; i < camera.height; i++)
 		for (j = 0; j < camera.width; j++)
 			pixels[i * camera.width + j] = camera.rayTroughPixel(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, N_AIR);
 	
-	/*
+	*/
 	for (i = 0; i < camera.height; i++)
 	{
 		for (j = 0; j < camera.width; j++)
@@ -49,7 +49,7 @@ Color* Engine::render(Camera camera)
 		if (x>= 0 && y >= 0 && x < camera.width && y < camera.height)
 			pixels[y*camera.width+x] = it->color;
 	}
-	*/
+	
 
 	/* TODO anti-aliasing */
 
