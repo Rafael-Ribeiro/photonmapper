@@ -36,8 +36,10 @@ bool Sphere::intersect(Ray r, Point& p) const
 	return true;
 }
 
-Vector Sphere::normal(Point p) const
+Vector Sphere::normal(Point p, double noise) const
 {
+	/*	TODO: random point in cone (axis = normal, radius = noise*M_PI/2) */ 
+
 	return (p - this->center)/this->radius;
 }
 
@@ -59,7 +61,7 @@ Photon Sphere::randomPhoton() const
 	p = Point(this->center.x + r*cos(theta), this->center.y + this->radius*cos(phi), this->center.z + r*sin(theta));
 
 	/* TODO: just for white light, and not quite, see http://en.wikipedia.org/wiki/Planck%27s_law_of_black_body_radiation */
-	ray = Ray(p, this->normal(p));
+	ray = Ray(p, this->normal(p, 0));
 
 	return Photon(ray, this->mat.color);
 }

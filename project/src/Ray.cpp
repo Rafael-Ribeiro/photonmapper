@@ -24,7 +24,6 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	vector<const Photon*> photons;
 	vector<const Photon*>::const_iterator photon, end;
 	double angle, reflectance, refractance, intensity;
-		
 
 	if (maxdepth == 0)
 		return c;
@@ -32,7 +31,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	if (!scene.intersect(*this, intersect))
 		return Color(0,255,0);
 
-	normal = intersect.prim->normal(intersect.point);
+	normal = intersect.prim->normal(intersect.point, intersect.prim->mat.roughness);
 
 	angle = intersect.direction.angle(normal);
 	if (angle > M_PI/2)
@@ -41,31 +40,40 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	reflectance = intersect.prim->mat.reflectance(angle, nFrom);
 	refractance = intersect.prim->mat.refractance;
 
-	if (reflectance > 0)
+	if (intersect.prim->mat.albedo < 1.0)
 	{
-		Ray reflectedRay;
+		if (reflectance > 0)
+		{
+			Ray reflectedRay;
 
-		reflectedRay.origin = intersect.point;
-		reflectedRay.direction = (this->direction - normal * 2 * this->direction.dot(normal));
+			reflectedRay.origin = intersect.point;
+			reflectedRay.direction = (this->direction - normal * 2 * this->direction.dot(normal));
 
-		// TODO: roughness
-		// reflected ray gives the axis of a cone (higher roughness -> larger cone)
-		// cast N rays
-		c = c + reflectedRay.getColor(scene, maxdepth-1, nFrom) * reflectance;
+			// TODO: roughness
+			// reflected ray gives the axis of a cone (higher roughness -> larger cone)
+			// cast N rays
+			c = c + reflectedRay.getColor(scene, maxdepth-1, nFrom) * reflectance;
+		}
+
+		if (refractance > 0)
+		{
+			Ray refractedRay;
+
+			/* TODO: calc ray */
+			//c += refracteddRay.getColor()*(1-reflectance)*refractance;
+			/* remember nFrom changes */
+		}
 	}
 
-	if (refractance > 0)
-	{
-		Ray refractedRay;
-
-		/* TODO: calc ray */
-		//c += refracteddRay.getColor()*(1-reflectance)*refractance;
-		/* remember nFrom changes */
-	}
-
-	/* TODO: instead of material color, get KNN photons and use the averaged color * irrandiance */
 	photons = scene.getNearestPhotons(intersect.point, Engine::MAX_GATHER_DISTANCE);
-	c = c*(1-intersect.prim->mat.roughness);
+	c = c*(1-intersect.prim->mat.albedo);
+
+	for (photon = photons.begin(), end = photons.end(); photon != end; photon++)
+	{
+		intensity = 1/(1 + (intersect.point - (*photon)->ray.origin).norm()/16) * Engine::EXPOSURE;
+
+		c = c + (*photon)->color * intensity * intersect.prim->mat.albedo;
+	}
 
 	return c;
 }

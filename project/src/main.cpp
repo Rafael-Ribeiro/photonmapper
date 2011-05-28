@@ -36,18 +36,19 @@ int main()
 	Color* pixels;
 
 	/* Materials */
-	Material light =			Material(Color(255, 255, 255),		1.0, 0.0, 1.0, 0.0);
+	/* Material(Color color, double roughness, double albedo, double refractance, double emittance, double n) */
+	Material light =			Material(Color(255, 255, 255),		0.02, 1.0, 0, 1.0, 1.492);
 
-	Material glass =			Material(Color(255, 255, 255),		0.02, 0.9, 0.0, 1.492);
-	Material mirror =			Material(Color(255, 255, 255),		0.02, 0.0, 0.0, 20);
+	Material glass =			Material(Color(255, 255, 255),		0.02, 0.02, 0.9, 0.0, 1.492);
+	Material mirror =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, 0.0, 20);
 
-	Material redConcrete = 		Material(Color(255, 0, 0),			0.7, 0.0, 0.0, 0.0);
-	Material grayConcrete = 	Material(Color(0xa9, 0xa9, 0xa9),	0.7, 0.0, 0.0, 0.0);
-	Material greenConcrete =	Material(Color(0, 255, 0),			0.7, 0.0, 0.0, 0.0);
+	Material redConcrete = 		Material(Color(255, 0, 0),			0.7, 0.7, 0.0, 0.0, 0.0);
+	Material grayConcrete = 	Material(Color(0xa9, 0xa9, 0xa9),	0.7, 0.7, 0.0, 0.0, 0.0);
+	Material greenConcrete =	Material(Color(0, 255, 0),			0.7, 0.7, 0.0, 0.0, 0.0);
 
 	/* Primitives */
-	Sphere s1 = Sphere(glass,		Point(-20.0, -20.0, 20.0),	20);
-	Sphere l1 = Sphere(light,		Point(0, 39.94, 0),			0.05);
+	Sphere s1 = Sphere(glass,		Point(-20.0, -20.0, 20.0),	20.0);
+	Sphere l1 = Sphere(light,		Point(0, +30, 0),			10.0);
 
 	Plane p1 = Plane(grayConcrete,	Point(0.0, -40.0, 0.0),	Vector(0.0, 1.0, 0.0)); 		/* floor */
 	Plane p2 = Plane(grayConcrete,	Point(0.0, +40.0, 0.0),	Vector(0.0, -1.0, 0.0));	 	/* ceil */

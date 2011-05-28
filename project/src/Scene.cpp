@@ -96,7 +96,7 @@ vector<const Photon*> Scene::getNearestPhotons(Point p, double distance) const
 	sqrd_distance = distance*distance;
 
 	for (it = this->photonMap.begin(), end = this->photonMap.end(); it != end; it++)
-		if ((it->ray.origin - p).sqrd_norm() > sqrd_distance)
+		if ((it->ray.origin - p).sqrd_norm() < sqrd_distance)
 			knn.push_back(&(*it));
 
 	return knn;

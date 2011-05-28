@@ -1,5 +1,6 @@
 #include "Photon.hpp"
 #include "Scene.hpp"
+#include "utils.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -31,42 +32,41 @@ Photon::Photon(Ray& ray, Color color) /* double wavelength */
 /* nFrom refers to the light speed in the medium from where the photon comes */
 void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, double nFrom)
 {
-	if (bouncesLeft == 0)
-	{
-		photon = *this;
-		return;
-	}
-
 	Intersection intersect;
 	Vector normal;
 
 	photon = *this;
 
-	if (!scene.intersect(this->ray, intersect))
-		return;
-
-	/* photon intersects on object */
-	photon.color.r = min(photon.color.r, intersect.prim->mat.color.r);
-	photon.color.g = min(photon.color.g, intersect.prim->mat.color.g);
-	photon.color.b = min(photon.color.b, intersect.prim->mat.color.b);
-
 	/* store this photon */
 	scene.photonMap.push_back(photon);
 
-	/* bounce it arround */		
-	 /* reflectance depends on the angle between photon's ray and the primitive's normal on the intersection point  */
-	double refl = intersect.prim->mat.reflectance(intersect.direction.angle(intersect.prim->normal(intersect.point)), nFrom);
+	if (bouncesLeft == 0 || !scene.intersect(this->ray, intersect))
+		return;
 
-	photon.ray.origin = intersect.point;
-	if (random() < refl)
+	normal = intersect.prim->normal(intersect.point, intersect.prim->mat.roughness);
+
+	/* bounce it around */		
+	/* reflectance depends on the angle between photon's ray and the primitive's normal on the intersection point  */
+	double refl = intersect.prim->mat.reflectance(intersect.direction.angle(normal), nFrom);
+
+	photon.ray.origin = intersect.point;	
+	photon.color.r = min(this->color.r, intersect.prim->mat.color.r);
+	photon.color.g = min(this->color.g, intersect.prim->mat.color.g);
+	photon.color.b = min(this->color.b, intersect.prim->mat.color.b);
+
+	if (random01() < intersect.prim->mat.albedo)
+	{
+		/* photon is absorved (an then emited) by the object */
+		photon.ray.direction = normal;
+	} else if (true)
 	{
 		/* reflection http://en.wikipedia.org/wiki/Reflection_%28mathematics%29 */
-		normal = intersect.prim->normal(intersect.point);
 		photon.ray.direction = (photon.ray.direction - normal*2*photon.ray.direction.dot(normal)).normalized();
-	
-		photon.bounce(scene, bouncesLeft-1, photon, nFrom);
+
 	} else if (true)
 	{
 		/* TODO: refraction */
 	}
+
+	photon.bounce(scene, bouncesLeft-1, photon, nFrom);
 }
