@@ -1,3 +1,5 @@
+#include <omp.h>
+
 #include "Engine.hpp"
 
 #include <vector>
@@ -23,6 +25,7 @@ Color* Engine::render(Camera camera)
 
 	this->scene.buildPhotonMap(nPhotons, nPhotonBounce);
 
+	#pragma omp parallel for
 	for (i = 0; i < camera.height; i++)
 		for (j = 0; j < camera.width; j++)
 			pixels[i * camera.width + j] = camera.rayTroughPixel(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, N_AIR);

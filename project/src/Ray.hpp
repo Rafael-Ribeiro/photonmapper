@@ -10,11 +10,13 @@
   * remove this later if possible (since dependencies may change)
   */
 struct Scene;
+struct Primitive;
 
 struct Ray
 {
 	Point origin;
 	Vector direction;
+	Primitive *inside;
 
 	Ray();
 	Ray(Point origin, Vector direction);

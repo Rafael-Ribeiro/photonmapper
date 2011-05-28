@@ -12,7 +12,7 @@ Ray::Ray()
 }
 
 Ray::Ray(Point origin, Vector direction)
-	: origin(origin), direction(direction)
+	: origin(origin), direction(direction), inside(NULL)
 {
 }
 
@@ -58,11 +58,40 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 
 	if (refractance > 0)
 	{
-		Ray refractedRay;
+		/*
+		 * Refraction implemented according to:
+		 * http://www.bramz.net/data/writings/reflection_transmission.pdf
+		 */
 
-		/* TODO: calc ray */
-		//c += refracteddRay.getColor()*(1-reflectance)*refractance;
-		/* remember nFrom changes */
+		Ray refractedRay;
+		double nTo;
+		double n, cosI, sinT2, cosT;
+
+		/* Set ray's relative location (inside or outside of a primitive (outside = air)) */
+		refractedRay.inside = (this->inside ? NULL : intersect.prim);
+
+		/* If ray is "going to be" inside of a primitive, that primitive's material n is the nTo; else we assume it's air */
+		nTo = (this->inside ? this->inside->mat.n : N_AIR);
+
+		refractedRay.origin = intersect.point;
+
+		n = nFrom / nTo;
+		cosI = normal.dot(this->direction);
+		sinT2 = n * n * (1.0 - cosI * cosI);
+
+		if (sinT2 <= 1.0) /* not inside TIR's range: this ray may be casted */
+		{
+			cosT = sqrt(1.0 - sinT2);
+
+			refractedRay.direction = this->direction * n + normal * (n * cosI - cosT);
+
+			/*
+			 * TODO:
+			 * add roughness noise
+			 */
+
+			c = c + refractedRay.getColor(scene,maxdepth-1,nTo) * (1-reflectance) * refractance;
+		}
 	}
 
 	/* TODO: instead of material color, get KNN photons and use the averaged color * irrandiance */
