@@ -99,7 +99,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	}
 
 	if (photons.size() > 0)
-		sum = self * intersect.prim->mat.albedo / (1.0 * photons.size());
+		sum = self * intersect.prim->mat.albedo;
 	
 	sum = sum + others * (1 - intersect.prim->mat.albedo);
 
