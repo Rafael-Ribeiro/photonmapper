@@ -57,6 +57,7 @@ double Plane::area() const
 Photon Plane::randomPhoton() const
 {
 	Ray r = Ray(Point(0,0,0), Vector(1,0,0));
+
 	return Photon(r, this->mat.color);
 }
 
