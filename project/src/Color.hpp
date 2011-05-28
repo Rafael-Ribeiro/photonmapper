@@ -10,6 +10,7 @@ struct Color
 
 	Color operator + (Color other) const;
 	Color operator * (double q) const;
+	Color operator / (double q) const;
 
 	Color cap() const;
 } __attribute__((aligned(1)));

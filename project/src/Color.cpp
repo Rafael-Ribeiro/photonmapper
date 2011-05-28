@@ -1,6 +1,8 @@
-#include <math.h>
+#include <algorithm>
 
 #include "Color.hpp"
+
+using namespace std;
 
 Color::Color()
 {
@@ -13,7 +15,12 @@ Color::Color(int r, int g, int b)
 
 Color Color::operator * (double q) const
 {
-	return Color(r*q, g*q, b*q); 
+	return Color(this->r*q, this->g*q, this->b*q); 
+}
+
+Color Color::operator / (double q) const
+{
+	return Color(this->r/q, this->g/q, this->b/q); 
 }
 
 Color Color::operator + (Color other) const

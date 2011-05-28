@@ -52,9 +52,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 			// reflected ray gives the axis of a cone (higher roughness -> larger cone)
 			// cast N rays
 			others = others + reflectedRay.getColor(scene, maxdepth-1, nFrom); // * reflectance!!!!
-		}
-
-		if (refractance > 0)
+		} else if (refractance > 0)
 		{
 			/*
 			 * Refraction implemented according to:
@@ -69,7 +67,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 			refractedRay.inside = (this->inside ? NULL : intersect.prim);
 
 			/* If ray is "going to be" inside of a primitive, that primitive's material n is the nTo; else we assume it's air */
-			nTo = (this->inside ? this->inside->mat.n : N_AIR);
+			nTo = (refractedRay.inside ? refractedRay.inside->mat.n : N_AIR);
 
 			refractedRay.origin = intersect.point;
 
@@ -88,7 +86,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 				 * add roughness noise
 				 */
 
-				c = c + refractedRay.getColor(scene,maxdepth-1,nTo) * (1-reflectance) * refractance;
+				others = others + refractedRay.getColor(scene,maxdepth-1,nTo) * (1-reflectance) * refractance;
 			}
 		}
 	}
@@ -97,9 +95,9 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 
 	for (photon = photons.begin(), end = photons.end(); photon != end; photon++)
 	{
-		intensity = 1/(1 + (intersect.point - (*photon)->ray.origin).norm()/16) * Engine::EXPOSURE;
+		intensity = 1/(1 + (intersect.point - (*photon)->ray.origin).norm()) * Engine::EXPOSURE;
 		self = self + (*photon)->color * intensity;
 	}
 
-	return (self * intersect.prim->mat.albedo + others * (1 - intersect.prim->mat.albedo)).cap();
+	return (self * intersect.prim->mat.albedo + others / (1.0 * photons.size()) * (1 - intersect.prim->mat.albedo)).cap();
 }
