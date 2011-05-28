@@ -94,7 +94,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 
 	for (photon = photons.begin(), end = photons.end(); photon != end; photon++)
 	{
-		intensity = 1/(1 + (intersect.point - (*photon)->ray.origin).norm()) * Engine::EXPOSURE;
+		intensity = 1/(1 + (intersect.point - (*photon)->ray.origin).norm()/16) * Engine::EXPOSURE;
 		self = self + (*photon)->color * intensity;
 	}
 
