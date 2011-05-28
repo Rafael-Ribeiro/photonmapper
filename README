@@ -1,3 +1,18 @@
-- Project's 2nd sprint (May 4th)
-- TP5 (May 19th)
+Photon Mapping:
+	Roughness noise on reflection/refraction (applied to the primitive's normal)
+	Refraction
 
+Ray-tracing:
+	Roughness noise on reflection/refraction (applied to the primitive's normal)
+	Refraction
+
+Extras TODO:
+	Convex Polygons
+		Rectangle (including area lights)
+
+	Convex Polyhedrons
+		Cube
+
+Speed-up TODO:
+	KD-Tree (including nearest neighbours by distance algorithm)
+	BSP-Tree
