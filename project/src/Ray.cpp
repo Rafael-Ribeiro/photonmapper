@@ -18,7 +18,7 @@ Ray::Ray(Point origin, Vector direction)
 
 Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 {
-	Color self = Color(0,0,0), others = Color(0,0,0);
+	Color self = Color(0, 0, 0), others = Color(0, 0, 0);
 
 	Intersection intersect;
 	Vector normal;
@@ -85,7 +85,6 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 				 * TODO:
 				 * add roughness noise
 				 */
-
 				others = others + refractedRay.getColor(scene,maxdepth-1,nTo) * (1-reflectance) * refractance;
 			}
 		}
