@@ -18,7 +18,7 @@ Ray::Ray(Point origin, Vector direction)
 
 Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 {
-	Color self = Color(0, 0, 0), others = Color(0, 0, 0);
+	Color sum = Color(0,0,0), self = Color(0, 0, 0), others = Color(0, 0, 0);
 
 	Intersection intersect;
 	Vector normal;
@@ -98,5 +98,10 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 		self = self + (*photon)->color * intensity;
 	}
 
-	return (self * intersect.prim->mat.albedo + others / (1.0 * photons.size()) * (1 - intersect.prim->mat.albedo)).cap();
+	if (photons.size() > 0)
+		sum = self * intersect.prim->mat.albedo / (1.0 * photons.size());
+	
+	sum = sum + others * (1 - intersect.prim->mat.albedo);
+
+	return sum.cap();
 }
