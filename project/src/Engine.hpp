@@ -8,11 +8,11 @@
 
 struct Engine
 {
-	static const int MAX_PHOTONS = 100;
-	static const int MAX_PHOTON_BOUNCE = 2;
+	static const int MAX_PHOTONS = 1000;
+	static const int MAX_PHOTON_BOUNCE = 10;
 	static const int MAX_RAY_BOUNCE = 5;
 	static const double MAX_GATHER_DISTANCE = 50.0;
-	static const double EXPOSURE = 0.05;
+	static const double EXPOSURE = 0.01;
 	static const double EPS = 1e-14;
 
 	Scene scene;
