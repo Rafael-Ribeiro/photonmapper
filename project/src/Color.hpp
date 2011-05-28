@@ -13,6 +13,6 @@ struct Color
 	Color operator / (double q) const;
 
 	Color cap() const;
-} __attribute__((aligned(1)));
+};
 
 #endif

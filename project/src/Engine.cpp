@@ -44,7 +44,7 @@ Color* Engine::render(Camera camera)
 	for (it = this->scene.photonMap.begin(); it != this->scene.photonMap.end(); it++)
 	{
 		cerr 	<< it->ray.origin.x << " " << it->ray.origin.y << " " << it->ray.origin.z << " | "
-				<< (int)it->color.r << " " << (int)it->color.g << " " << (int)it->color.b << " | " <<endl;
+				<< it->color.r << " " << it->color.g << " " << it->color.b << " | " <<endl;
 
 		int x = (it->ray.origin.x + 60)*512.0/200;
 		int y = (it->ray.origin.z + 120)*512.0/200;
@@ -52,8 +52,8 @@ Color* Engine::render(Camera camera)
 		if (x>= 0 && y >= 0 && x < camera.width && y < camera.height)
 			pixels[y*camera.width+x] = it->color;
 	}
+	
 	*/
-
 	/* TODO anti-aliasing */
 
 	return pixels;

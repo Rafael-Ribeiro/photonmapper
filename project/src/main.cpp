@@ -43,7 +43,7 @@ int main()
 	Material mirror =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, 0.0, 20);
 
 	Material redConcrete = 		Material(Color(255, 0, 0),			0.7, 0.7, 0.0, 0.0, 0.0);
-	Material grayConcrete = 	Material(Color(0xa9, 0xa9, 0xa9),	0.7, 0.7, 0.0, 0.0, 0.0);
+	Material grayConcrete = 	Material(Color(0, 0, 0),	0.7, 0.7, 0.0, 0.0, 0.0);
 	Material greenConcrete =	Material(Color(0, 255, 0),			0.7, 0.7, 0.0, 0.0, 0.0);
 
 	/* Primitives */
