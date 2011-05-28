@@ -21,23 +21,31 @@ Engine::Engine(Scene& scene)
 
 Color* Engine::render(Camera camera)
 {
-	Color* pixels;
 	int i, j;
+	int pixelCounter = 0, nPixels = camera.height * camera.width;
+
+	Color* pixels;
 	vector<Photon>::iterator it;
 
 	pixels = new Color[camera.width * camera.height];
 
+	cerr << "Building Photon Map" << endl;
 	this->scene.buildPhotonMap(nPhotons, nPhotonBounce);
 
-	int pixelCounter = 0, nPixels = camera.height * camera.width;
-	#pragma omp parallel for collapse(2)
+	#pragma omp parallel for private(j)
 	for (i = 0; i < camera.height; i++)
+	{
 		for (j = 0; j < camera.width; j++)
-		{
 			pixels[i * camera.width + j] = camera.rayTroughPixel(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, N_AIR);
-			#pragma omp critical
-				printf("%d%%\n",++pixelCounter * 100.0 / nPixels);
+
+		#pragma omp critical
+		{
+			cerr << "\r                                \r"; /* 30 spaces to cleanup the line and assure cursor is on last_char_pos + 1 */
+			cerr << "Raytracing (progress: " << (pixelCounter += camera.width) * 100.0 / nPixels << "%)";
+			cerr.flush();
 		}
+	}
+	cerr << endl;
 	
 	/*
 	for (i = 0; i < camera.height; i++)

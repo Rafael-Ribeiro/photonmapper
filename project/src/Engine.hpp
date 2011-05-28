@@ -15,8 +15,8 @@ struct Engine
 	static const double EXPOSURE = 0.008;
 	static const double EPS = 1e-14;
 	static const double CONSTANT_LIGHT_ATTENUATION = 1.0;
-	static const double LINEAR_LIGHT_ATTENUATION = 0.022;
-	static const double QUADRATIC_LIGHT_ATTENUATION = 0.0019;
+	static const double LINEAR_LIGHT_ATTENUATION = 0.04;
+	static const double QUADRATIC_LIGHT_ATTENUATION = 0.0009;
 
 	Scene scene;
 	int nPhotons;
