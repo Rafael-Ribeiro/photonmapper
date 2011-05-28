@@ -29,10 +29,15 @@ Color* Engine::render(Camera camera)
 
 	this->scene.buildPhotonMap(nPhotons, nPhotonBounce);
 
+	int pixelCounter = 0, nPixels = camera.height * camera.width;
 	#pragma omp parallel for collapse(2)
 	for (i = 0; i < camera.height; i++)
 		for (j = 0; j < camera.width; j++)
+		{
 			pixels[i * camera.width + j] = camera.rayTroughPixel(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, N_AIR);
+			#pragma omp critical
+				printf("%d%%\n",++pixelCounter * 100.0 / nPixels);
+		}
 	
 	/*
 	for (i = 0; i < camera.height; i++)

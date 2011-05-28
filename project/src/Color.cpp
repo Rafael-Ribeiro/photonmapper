@@ -14,6 +14,16 @@ Color::Color(int r, int g, int b)
 {
 }
 
+bool Color::operator == (const Color other) const
+{
+	return this->r == other.r && this->g == other.g && this->b == other.b;
+}
+
+Color Color::operator + (const Color other) const
+{
+	return Color(this->r + other.r, this->g + other.g, this->b + other.b); 
+}
+
 Color Color::operator * (double q) const
 {
 	return Color(this->r*q, this->g*q, this->b*q); 
@@ -22,11 +32,6 @@ Color Color::operator * (double q) const
 Color Color::operator / (double q) const
 {
 	return Color(this->r/q, this->g/q, this->b/q); 
-}
-
-Color Color::operator + (Color other) const
-{
-	return Color(this->r + other.r, this->g + other.g, this->b + other.b); 
 }
 
 Color Color::cap() const

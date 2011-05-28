@@ -8,7 +8,8 @@ struct Color
 	Color();
 	Color(int r, int g, int b);
 
-	Color operator + (Color other) const;
+	bool operator == (const Color other) const;
+	Color operator + (const Color other) const;
 	Color operator * (double q) const;
 	Color operator / (double q) const;
 

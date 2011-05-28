@@ -37,6 +37,9 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 
 	photon = *this;
 
+	if (photon.color == Color(0,0,0))
+		return;
+
 	/* store this photon */
 	scene.photonMap.push_back(photon);
 
