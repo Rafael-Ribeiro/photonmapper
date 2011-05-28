@@ -18,18 +18,16 @@ Ray::Ray(Point origin, Vector direction)
 
 Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 {
-	Color c = Color(0,0,0);
+	Color self = Color(0,0,0), others = Color(0,0,0);
+
 	Intersection intersect;
 	Vector normal;
 	vector<const Photon*> photons;
 	vector<const Photon*>::const_iterator photon, end;
 	double angle, reflectance, refractance, intensity;
 
-	if (maxdepth == 0)
-		return c;
-
-	if (!scene.intersect(*this, intersect))
-		return Color(0,255,0);
+	if (maxdepth == 0 || !scene.intersect(*this, intersect))
+		return self;
 
 	normal = intersect.prim->normal(intersect.point, intersect.prim->mat.roughness);
 
@@ -42,7 +40,8 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 
 	if (intersect.prim->mat.albedo < 1.0)
 	{
-		if (reflectance > 0)
+		/*if (reflectance > 0)*/
+		if (true)
 		{
 			Ray reflectedRay;
 
@@ -52,7 +51,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 			// TODO: roughness
 			// reflected ray gives the axis of a cone (higher roughness -> larger cone)
 			// cast N rays
-			c = c + reflectedRay.getColor(scene, maxdepth-1, nFrom) * reflectance;
+			others = others + reflectedRay.getColor(scene, maxdepth-1, nFrom); // * reflectance!!!!
 		}
 
 		if (refractance > 0)
@@ -66,14 +65,12 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	}
 
 	photons = scene.getNearestPhotons(intersect.point, Engine::MAX_GATHER_DISTANCE);
-	c = c*(1-intersect.prim->mat.albedo);
 
 	for (photon = photons.begin(), end = photons.end(); photon != end; photon++)
 	{
 		intensity = 1/(1 + (intersect.point - (*photon)->ray.origin).norm()/16) * Engine::EXPOSURE;
-
-		c = c + (*photon)->color * intensity * intersect.prim->mat.albedo;
+		self = self + (*photon)->color * intensity;
 	}
 
-	return c;
+	return (self * intersect.prim->mat.albedo + others * (1 - intersect.prim->mat.albedo)).cap();
 }

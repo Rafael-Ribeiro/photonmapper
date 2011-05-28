@@ -45,7 +45,6 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 
 	normal = intersect.prim->normal(intersect.point, intersect.prim->mat.roughness);
 
-	/* bounce it around */		
 	/* reflectance depends on the angle between photon's ray and the primitive's normal on the intersection point  */
 	double refl = intersect.prim->mat.reflectance(intersect.direction.angle(normal), nFrom);
 

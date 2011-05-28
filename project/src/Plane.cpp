@@ -1,8 +1,9 @@
-#include <math.h>
+#include <iostream>
+#include <cmath>
 
 #include "Plane.hpp"
+#include "Engine.hpp"
 
-#include <iostream>
 using namespace std;
 
 Plane::Plane(Material mat, Point p, Vector normal)
@@ -21,7 +22,7 @@ bool Plane::intersect(Ray r, Point& p) const
 		return false;
 
 	b = this->m_normal.dot(this->point - r.origin);
-	if (a*b <= 0) /* point is behind the ray's origin */
+	if (a*b <= Engine::EPS) /* point is behind the ray's origin */
 		return false;
 
 	offset = r.direction * (b/a);

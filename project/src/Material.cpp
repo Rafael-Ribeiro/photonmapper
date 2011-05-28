@@ -35,7 +35,7 @@ double Material::reflectance(double angle, double nFrom)
 		temp2 *= temp2; /* forth */
 		temp *= temp2; /* fifth */
 
-		return (R0 + (1 - R0) * temp)*this->albedo;
+		return (R0 + (1 - R0) * temp)*(1-this->albedo);
 	} else if (angle > asin(this->n/nFrom)) /* TIR's formula: asin(n2/n1) */
 	{
 		/*
@@ -51,8 +51,8 @@ double Material::reflectance(double angle, double nFrom)
 		temp2 *= temp2; /* forth */
 		temp *= temp2; /* fifth */
 
-		return (R0 + (1 - R0) * temp)*this->albedo;
+		return (R0 + (1 - R0) * temp)*(1-this->albedo);
 	}
 
-	return 1.0*this->albedo;
+	return (1-this->albedo);
 }

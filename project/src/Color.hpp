@@ -3,14 +3,15 @@
 
 struct Color
 {
-	unsigned char r,g,b; 
+	int r,g,b; 
 
 	Color();
-	Color(unsigned char r, unsigned char g, unsigned char b);
+	Color(int r, int g, int b);
 
 	Color operator + (Color other) const;
 	Color operator * (double q) const;
 
+	Color cap() const;
 } __attribute__((aligned(1)));
 
 #endif
