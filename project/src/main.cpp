@@ -36,7 +36,7 @@ int main()
 	Color* pixels;
 
 	/* Materials */
-	/* Material(Color color, double roughness, double albedo, double refractance, double emittance, double n) */
+	/* Material(Color color, double roughness, double absorvance, double refractance, double emittance, double n) */
 	Material light =			Material(Color(255, 255, 255),		0.02, 1.0, 0, 1.0, 1.492);
 
 	Material glass =			Material(Color(255, 255, 255),		0.02, 0.02, 0.9, 0.0, 1.492);

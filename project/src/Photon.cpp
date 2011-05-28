@@ -53,7 +53,7 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 	photon.color.g = min(this->color.g, intersect.prim->mat.color.g);
 	photon.color.b = min(this->color.b, intersect.prim->mat.color.b);
 
-	if (random01() < intersect.prim->mat.albedo)
+	if (random01() < intersect.prim->mat.absorvance)
 	{
 		/* photon is absorved (an then emited) by the object */
 		photon.ray.direction = normal;

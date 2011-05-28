@@ -38,7 +38,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	reflectance = intersect.prim->mat.reflectance(angle, nFrom);
 	refractance = intersect.prim->mat.refractance;
 
-	if (intersect.prim->mat.albedo < 1.0)
+	if (intersect.prim->mat.absorvance < 1.0)
 	{
 		/*if (reflectance > 0)*/
 		if (true)
@@ -99,9 +99,9 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom) const
 	}
 
 	if (photons.size() > 0)
-		sum = self * intersect.prim->mat.albedo;
+		sum = self * intersect.prim->mat.absorvance;
 	
-	sum = sum + others * (1 - intersect.prim->mat.albedo);
+	sum = sum + others * (1 - intersect.prim->mat.absorvance);
 
 	return sum.cap();
 }
