@@ -17,11 +17,11 @@ bool Plane::intersect(Ray r, Point& p) const
 	Vector offset;
 
 	a = this->m_normal.dot(r.direction);
-	if (a == 0)	/* Ray and Plane are paralel -> no intersection or Line intersection FIXME */
+	if (a == 0)	/* Ray and Plane are parallel -> no intersection or Line intersection FIXME */
 		return false;
 
 	b = this->m_normal.dot(this->point - r.origin);
-	if (a*b < 0) /* point is behind the point */
+	if (a*b <= 0) /* point is behind the ray's origin */
 		return false;
 
 	offset = r.direction * (b/a);
@@ -30,8 +30,21 @@ bool Plane::intersect(Ray r, Point& p) const
 	return true;
 }
 
-Vector Plane::normal(Point p) const
+Vector Plane::normal(Point p, double noise) const
 {
+	//double theta, phi;
+
+	if (noise == 0)
+		return this->m_normal;
+	/*
+		TODO: random point in cone (axis = normal, radius = noise*M_PI/2) 
+
+		theta = random01()*2*M_PI;
+		phi = acos(2*random01()-1);
+
+		r = this->radius+*sin(phi);
+		p = Point(this->center.x + r*cos(theta), this->center.y + this->radius*cos(phi), this->center.z + r*sin(theta));
+	*/
 	return this->m_normal;
 }
 

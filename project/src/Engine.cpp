@@ -8,6 +8,10 @@
 
 using namespace std;
 
+Engine::Engine()
+{
+}
+
 Engine::Engine(Scene& scene)
 	: scene(scene)
 {
@@ -19,7 +23,7 @@ Color* Engine::render(Camera camera)
 {
 	Color* pixels;
 	int i, j;
-	//vector<Photon>::iterator it;
+	vector<Photon>::iterator it;
 
 	pixels = new Color[camera.width * camera.height];
 
@@ -29,23 +33,27 @@ Color* Engine::render(Camera camera)
 	for (i = 0; i < camera.height; i++)
 		for (j = 0; j < camera.width; j++)
 			pixels[i * camera.width + j] = camera.rayTroughPixel(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, N_AIR);
-
-/*
-	for (i = 0; i < height; i++)
+	
+	/*
+	for (i = 0; i < camera.height; i++)
 	{
-		for (j = 0; j < width; j++)
-			pixels[i*width + j] = Color(0,0,0);
+		for (j = 0; j < camera.width; j++)
+			pixels[i*camera.width + j] = Color(0,0,0);
 	}
 
 	for (it = this->scene.photonMap.begin(); it != this->scene.photonMap.end(); it++)
 	{
-		int x = (it->ray.origin.x + 60)*512.0/80;
-		int y = (it->ray.origin.z + 120)*256.0/80;
+		cerr 	<< it->ray.origin.x << " " << it->ray.origin.y << " " << it->ray.origin.z << " | "
+				<< (int)it->color.r << " " << (int)it->color.g << " " << (int)it->color.b << " | " <<endl;
 
-		if (x>= 0 && y >= 0 && x < width && y < height)
-			pixels[y*width+x] = it->color;
+		int x = (it->ray.origin.x + 60)*512.0/200;
+		int y = (it->ray.origin.z + 120)*512.0/200;
+
+		if (x>= 0 && y >= 0 && x < camera.width && y < camera.height)
+			pixels[y*camera.width+x] = it->color;
 	}
-*/	
+	*/
+
 	/* TODO anti-aliasing */
 
 	return pixels;

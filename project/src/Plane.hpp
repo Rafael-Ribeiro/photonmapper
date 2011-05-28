@@ -12,7 +12,7 @@ struct Plane : public Primitive
 	Plane(Material mat, Point point, Vector normal);
 
 	bool intersect(Ray r, Point& p) const;
-	Vector normal(Point p) const;
+	Vector normal(Point p, double noise) const;
 	double area() const;
 
 	Photon randomPhoton() const;

@@ -13,7 +13,15 @@ Color::Color(unsigned char r, unsigned char g, unsigned char b)
 
 Color Color::operator * (double q) const
 {
-	return Color(this->r*q, this->g*q, this->b*q); 
+	unsigned int r = this->r*q;
+	unsigned int g = this->g*q;
+	unsigned int b = this->b*q;
+
+	if (r > ((unsigned char)255)) r = ((unsigned char)255);
+	if (g > ((unsigned char)255)) g = ((unsigned char)255);
+	if (b > ((unsigned char)255)) b = ((unsigned char)255);
+
+	return Color(r, g, b); 
 }
 
 Color Color::operator + (Color other) const
