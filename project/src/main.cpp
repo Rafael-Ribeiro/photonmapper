@@ -51,9 +51,10 @@ int main()
 	Material blueConcrete = 	Material(Color(0, 0, 255),			0.7, 0.7, 0.0, 0.0);
 
 	/* Primitives */
-	Sphere s1 	= Sphere(glass,		Point(0.0, 0.0, 0.0),		20.0);
-	Sphere s2 	= Sphere(mirror,		Point(+30.0, -30.0, 30.0),	10.0);
-	Quad q1 	= Quad(light, Point(-10, 39, -10), Point(-10, 39, 10), Point(10, 39, -10));
+	Sphere s1 	= Sphere(glass,		Point(-20.0, -20.0, +20.0),	20.0);
+	Sphere s2 	= Sphere(mirror,	Point(+30.0, -30.0, 30.0),	10.0);
+	Sphere l1 	= Sphere(light,		Point(0.0, +30.0, 0.0),		2.0);
+	//Quad q1 	= Quad(light, Point(-10, 39, -10), Point(-10, 39, 10), Point(10, 39, -10));
 
 	Plane p1 = Plane(grayConcrete,	Point(0.0, -40.0, 0.0),	Vector(0.0, 1.0, 0.0)); 		/* floor */
 	Plane p2 = Plane(grayConcrete,	Point(0.0, +40.0, 0.0),	Vector(0.0, -1.0, 0.0));	 	/* ceil */
@@ -62,9 +63,9 @@ int main()
 	Plane p5 = Plane(blueConcrete,	Point(0.0, 0.0, +40),	Vector(0.0, 0.0, -1.0)); 		/* front */
 	Plane p6 = Plane(blackConcrete,	Point(0.0, 0.0, -41),	Vector(0.0, 0.0, 1.0)); 		/* back */
 
-	scene.lights.push_back(&q1);
+	scene.lights.push_back(&l1);
 
-	scene.primitives.push_back(&q1);
+	scene.primitives.push_back(&l1);
 	scene.primitives.push_back(&s1);
 	scene.primitives.push_back(&s2);
 

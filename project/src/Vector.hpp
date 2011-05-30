@@ -23,6 +23,8 @@ struct Vector
 	double norm() const;
 
 	Vector normalized() const;
+
+	Vector noise(double noise) const;
 };
 
 typedef Vector Point;

@@ -1,4 +1,6 @@
 #include "Vector.hpp"
+#include "Engine.hpp"
+#include "utils.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -77,3 +79,25 @@ Vector Vector::normalized() const
 	return *this/this->norm();
 }
 
+Vector Vector::noise(double noise) const
+{
+	//	TODO! if (noise < Engine::EPS)
+		return Vector(*this);
+
+	double radius, theta, a, b, norm;
+	Vector u, v, z;
+
+	/* point a, b, inside circle (biased noise towards the center, just how we like it) */
+	norm = this->norm();
+	radius = random01() * norm * noise;
+	theta = random01() * (M_PI * 2);
+	a = radius * cos(theta);
+	b = radius * sin(theta); 
+	
+	/* u and v and this are ortonormal */
+	z = *this/norm;
+ 	u = z.cross(Engine::top);
+	v = z.cross(u);
+
+	return z*(norm - radius) + u*a + v*b;
+}

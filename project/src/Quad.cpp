@@ -59,10 +59,8 @@ bool Quad::intersect(const Ray& r, Point& p) const
 	return true;
 }
 
-Vector Quad::normal(const Point& p, double noise) const
+Vector Quad::normal(const Point& p) const
 {
-	if (noise != 0)
-		return this->m_normal;
 	return this->m_normal;
 }
 
@@ -80,6 +78,6 @@ Photon Quad::randomPhoton() const
 	beta = random01();
 	p = this->a + this->u*alpha + this->v*alpha;
 	
-	return Photon(Ray(p, this->normal(p, this->mat.roughness)), this->mat.color);
+	return Photon(Ray(p, this->m_normal.noise(this->mat.roughness)), this->mat.color);
 }
 
