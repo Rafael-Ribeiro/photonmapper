@@ -1,7 +1,7 @@
 FLAGS = -O3 -fopenmp -Wall -ansi -g
 
-all: clean main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o
-	g++ main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o -o renderer ${FLAGS}
+all: clean main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o
+	g++ main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o -o renderer ${FLAGS}
 
 main.o: main.cpp
 	g++ main.cpp -c -o main.o ${FLAGS}
@@ -26,6 +26,9 @@ Plane.o: Plane.cpp Plane.hpp
 
 Sphere.o: Sphere.cpp Sphere.hpp
 	g++ Sphere.cpp -c -o Sphere.o ${FLAGS}
+
+Quad.o: Quad.cpp Quad.hpp
+	g++ Quad.cpp -c -o Quad.o ${FLAGS}
 
 Scene.o: Scene.cpp Scene.hpp
 	g++ Scene.cpp -c -o Scene.o ${FLAGS}

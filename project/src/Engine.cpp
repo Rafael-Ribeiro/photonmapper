@@ -8,6 +8,8 @@
 
 using namespace std;
 
+const Vector Engine::top = Vector(0, 1, 0);
+
 Engine::Engine()
 {
 }

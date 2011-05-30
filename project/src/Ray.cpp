@@ -31,7 +31,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 	if (maxdepth == 0 || relevance < Engine::EPS || !scene.intersect(*this, intersect))
 		return self;
 
-	normal = intersect.prim->normal(intersect.point, intersect.prim->mat.roughness);
+	normal = intersect.prim->normal(intersect.point).noise(intersect.prim->mat.roughness);
 	if (this->inside)
 		normal = -normal;
 
@@ -76,10 +76,6 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 		else
 			refractedRay.direction = intersect.prim->mat.refractionDirection(this->direction,normal,scene.environment); /* from scene's environment to primitive's material */
 
-		/*
-		 * TODO:
-		 * add roughness noise
-		 */
 		others = others + refractedRay.getColor(scene, maxdepth-1, relevance*refractance) * refractance;
 	}
 

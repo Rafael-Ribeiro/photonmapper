@@ -8,6 +8,7 @@
 #include "utils.hpp"
 #include "Sphere.hpp"
 #include "Plane.hpp"
+#include "Quad.hpp"
 
 #define WIDTH 400
 #define HEIGHT 400
@@ -50,9 +51,10 @@ int main()
 	Material blueConcrete = 	Material(Color(0, 0, 255),			0.7, 0.7, 0.0, 0.0);
 
 	/* Primitives */
-	Sphere s1 = Sphere(glass,		Point(0.0, 0.0, 0.0),		20.0);
-	Sphere s2 = Sphere(mirror,		Point(+30.0, -30.0, 30.0),	10.0);
-	Sphere l1 = Sphere(light,		Point(0, +30, 0),			2.0);
+	Sphere s1 	= Sphere(glass,		Point(-20.0, -20.0, +20.0),	20.0);
+	Sphere s2 	= Sphere(mirror,	Point(+30.0, -30.0, 30.0),	10.0);
+	Sphere l1 	= Sphere(light,		Point(0.0, +30.0, 0.0),		2.0);
+	//Quad q1 	= Quad(light, Point(-10, 39, -10), Point(-10, 39, 10), Point(10, 39, -10));
 
 	Plane p1 = Plane(grayConcrete,	Point(0.0, -40.0, 0.0),	Vector(0.0, 1.0, 0.0)); 		/* floor */
 	Plane p2 = Plane(grayConcrete,	Point(0.0, +40.0, 0.0),	Vector(0.0, -1.0, 0.0));	 	/* ceil */
@@ -85,9 +87,6 @@ int main()
 
 		delete pixels;
 	}
-
-	/* Ray r = Ray(Point(0,0,0), Vector(0, 0, 1));
-	r.getColor(scene, 10, 1.33, 1.0); */
 
 	return 0;
 }

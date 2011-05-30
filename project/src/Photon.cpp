@@ -32,7 +32,7 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 	if (bouncesLeft == 0 || !scene.intersect(this->ray, intersect))
 		return;
 
-	normal = intersect.prim->normal(intersect.point, intersect.prim->mat.roughness);
+	normal = intersect.prim->normal(intersect.point).noise(intersect.prim->mat.roughness);
 
 	/* absorvance + reflectance + refractance = 1 */
 	absorvance = intersect.prim->mat.absorvance;
