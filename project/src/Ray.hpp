@@ -21,7 +21,7 @@ struct Ray
 	Ray();
 	Ray(const Point& origin, const Vector& direction);
 
-	Color getColor(const Scene& scene, int maxdepth, double nFrom, double relevance) const;
+	Color getColor(const Scene& scene, int maxdepth, double relevance) const;
 };
 
 #endif

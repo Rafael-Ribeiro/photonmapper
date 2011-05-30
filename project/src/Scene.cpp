@@ -8,6 +8,7 @@
 using namespace std;
 
 Scene::Scene()
+	 : environment(Material(Color(0,0,0),0.0,0.0,0.0,N_AIR))
 {
 }
 

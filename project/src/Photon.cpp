@@ -21,7 +21,6 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 {
 	Intersection intersect;
 	Vector normal;
-	double angle;
 	double reflectance, refractance, absorvance;
 	double r;
 
@@ -34,11 +33,15 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, doub
 		return;
 
 	normal = intersect.prim->normal(intersect.point, intersect.prim->mat.roughness);
-	angle = intersect.direction.angle(normal);
 
 	/* absorvance + reflectance + refractance = 1 */
 	absorvance = intersect.prim->mat.absorvance;
-	reflectance = intersect.prim->mat.reflectance(angle, nFrom);
+
+	if (this->ray.inside)
+		reflectance = scene.environment.reflectance(this->ray.direction, normal, intersect.prim->mat);
+	else
+		reflectance = intersect.prim->mat.reflectance(this->ray.direction, normal, scene.environment);
+
 	refractance = (1-absorvance)*(1-reflectance);
 	reflectance = (1-absorvance)*reflectance;
 

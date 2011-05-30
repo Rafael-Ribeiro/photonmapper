@@ -31,6 +31,7 @@ Ray Camera::rayTroughPixel(int x, int y)
 
 	ray.origin = this->origin;
 	ray.direction = (this->direction + this->top*dy + this->right*dx).normalized();
+	ray.inside = NULL;
 
 	return ray;
 }

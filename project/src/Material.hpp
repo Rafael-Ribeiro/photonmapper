@@ -3,6 +3,7 @@
 
 #include "Vector.hpp"
 #include "Color.hpp"
+#include "Ray.hpp"
 
 struct Material
 {
@@ -18,7 +19,9 @@ struct Material
 
 	Material(const Color& color, double roughness, double absorvance, double emittance, double n);
 
-	double reflectance(double angle, double nFrom);
+	double reflectance(const Vector &direction, const Vector &normal, const Material &fromMaterial) const;
+	Vector reflectionDirection(const Vector &direction, const Vector &normal) const;
+	Vector refractionDirection(const Vector &direction, const Vector &normal, const Material &fromMaterial) const;
 };
 
 #endif

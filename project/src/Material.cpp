@@ -10,52 +10,45 @@ Material::Material(const Color& color, double roughness, double absorvance, doub
 {
 }
 
-/*
- * Reflectance according to Schlick’s approximation:
- * http://en.wikipedia.org/wiki/Schlick's_approximation
- * 
- * For a more detailed version (function implemented according to this reference's extension):
- * http://www.bramz.net/data/writings/reflection_transmission.pdf
- */
-double Material::reflectance(double angle, double nFrom)
+double Material::reflectance(const Vector &direction, const Vector &normal, const Material &fromMaterial) const
 {
-	/* Note that:
-	 * n1 = nFrom
-	 * n2 = this->n (the medium where the photon is "entering")
-	 * θi = angle
-	 * θf needs to be calculated if n1 > n2 and angle > TIR
+	/*
+	 * Reflectance according to http://www.bramz.net/data/writings/reflection_transmission.pdf
 	 */
 
-	double temp, temp2;
-	double R0 = (nFrom - this->n)/(nFrom + this->n);
-	R0 *= R0;
+	double n = fromMaterial.n / this->n;
+	double cosI = -(normal.dot(direction));
+	double sinT2 = n * n * (1.0 - cosI * cosI);
 
-	if (nFrom <= this->n)
-	{
-		temp = (1 - cos(angle));
-		temp2 = temp * temp; /* square */
+	if (sinT2 > 1.0) /* inside TIR */
+		return 1.0;
 
-		temp2 *= temp2; /* forth */
-		temp *= temp2; /* fifth */
+	double cosT = sqrt(1.0 - sinT2);
+	double rOrth = (fromMaterial.n * cosI - this->n * cosT) / (fromMaterial.n * cosI + this->n * cosT);
+	double rPar = (this->n * cosI - fromMaterial.n * cosT) / (this->n * cosI + fromMaterial.n * cosT);
 
-		return (R0 + (1 - R0) * temp);
-	} else if (angle < asin(this->n/nFrom)) /* TIR's formula: asin(n2/n1) */
-	{
-		/*
-		 * θf is calculated using Snell's law:
-		 * http://en.wikipedia.org/wiki/Snell's_law
-		 */
+	return (rOrth * rOrth + rPar * rPar) / 2.0;
+}
 
-		double theta_f = asin((sin(angle) * nFrom)/this->n);
+Vector Material::reflectionDirection(const Vector &direction, const Vector &normal) const
+{
+	return direction - normal * 2 * direction.dot(normal);
+}
 
-		temp = (1 - cos(theta_f));
-		temp2 = temp * temp; /* square */
+Vector Material::refractionDirection(const Vector &direction, const Vector &normal, const Material &fromMaterial) const
+{
+	/*
+	 * Refraction direction according to http://www.bramz.net/data/writings/reflection_transmission.pdf
+	 */
 
-		temp2 *= temp2; /* forth */
-		temp *= temp2; /* fifth */
+	double n = fromMaterial.n / this->n;
+	double cosI = -normal.dot(direction);
+	double sinT2 = n * n * (1.0 - cosI * cosI);
 
-		return (R0 + (1 - R0) * temp);
-	}
+	if (sinT2 > 1.0) /* inside TIR's range: 100% reflection MUST occur */
+		cerr << "ERROR: Invalid refraction (check Material.cpp)" << endl;
 
-	return 1.0;
+	double cosT = sqrt(1.0 - sinT2);
+
+	return (direction * n + normal * (n * cosI - cosT)).normalized();
 }

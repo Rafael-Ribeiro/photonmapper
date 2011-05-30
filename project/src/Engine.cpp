@@ -32,11 +32,13 @@ Color* Engine::render(Camera& camera)
 	cerr << "Building Photon Map" << endl;
 	this->scene.buildPhotonMap(nPhotons, nPhotonBounce);
 
+	cerr << scene.photonMap.size() << endl;
+
 	#pragma omp parallel for private(j)
 	for (i = 0; i < camera.height; i++)
 	{
 		for (j = 0; j < camera.width; j++)
-			pixels[i * camera.width + j] = camera.rayTroughPixel(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, N_AIR, 1.0);
+			pixels[i * camera.width + j] = camera.rayTroughPixel(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
 
 		#pragma omp critical
 		{

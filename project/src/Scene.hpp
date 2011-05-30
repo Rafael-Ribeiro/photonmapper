@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Primitive.hpp"
+#include "Material.hpp"
 
 #define N_AIR ((double)1.0) /* light of speed in the air is approximately the same as in vacuum */
 
@@ -11,7 +12,7 @@ using namespace std;
 
 struct Intersection
 {
-	Primitive* prim;
+	Primitive *prim;
 	Point point;
 	Vector direction;
 };
@@ -24,6 +25,8 @@ struct Scene
 
 	vector<Primitive*> primitives;
 	vector<Primitive*> lights;
+
+	Material environment;
 
 	/* TODO: kd-tree */
 	bool intersect(const Ray& p, Intersection& intersect) const;

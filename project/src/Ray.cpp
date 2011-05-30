@@ -8,15 +8,16 @@
 using namespace std;
 
 Ray::Ray()
+	: inside(NULL)
 {
 }
 
 Ray::Ray(const Point& origin, const Vector& direction)
-	: origin(origin), direction(direction), inside(NULL)
+	: origin(origin), direction(direction), inside(NULL) /* Ray begins outside of a primitive (on scene's environment) by default */
 {
 }
 
-Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom, double relevance) const
+Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 {
 	Color sum = Color(0,0,0), self = Color(0, 0, 0), others = Color(0, 0, 0);
 
@@ -31,15 +32,18 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom, double relev
 		return self;
 
 	normal = intersect.prim->normal(intersect.point, intersect.prim->mat.roughness);
+	if (this->inside)
+		normal = -normal;
 
-	angle = intersect.direction.angle(normal);
-	if (angle > M_PI/2)
-		angle = M_PI-angle;	 /* abs(-(M_PI - angle)) */
-	
 	/* emitance + absorvance + reflectance + refractance = 1 */
 	emittance = intersect.prim->mat.emittance;
 	absorvance = intersect.prim->mat.absorvance*(1-emittance);
-	reflectance = intersect.prim->mat.reflectance(angle, nFrom);
+
+	if (this->inside)
+		reflectance = scene.environment.reflectance(this->direction, normal, intersect.prim->mat);
+	else
+		reflectance = intersect.prim->mat.reflectance(this->direction, normal, scene.environment);
+
 	refractance = (1-absorvance)*(1-reflectance);
 	reflectance = (1-absorvance)*reflectance;
 
@@ -48,54 +52,35 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom, double relev
 		Ray reflectedRay;
 
 		reflectedRay.origin = intersect.point;
-		reflectedRay.direction = (this->direction - normal * 2 * this->direction.dot(normal));
+		reflectedRay.direction = intersect.prim->mat.reflectionDirection(this->direction,normal);
+		reflectedRay.inside = this->inside;
 
 		// TODO: roughness
 		// reflected ray gives the axis of a cone (higher roughness -> larger cone)
 		// cast N rays
-		others = others + reflectedRay.getColor(scene, maxdepth-1, nFrom, relevance*reflectance) * reflectance;
+		others = others + reflectedRay.getColor(scene, maxdepth-1, relevance*reflectance) * reflectance;
 	}
 
 	if (refractance > 0)
 	{
-		/*
-		 * Refraction implemented according to:
-		 * http://www.bramz.net/data/writings/reflection_transmission.pdf
-		 */
-
 		Ray refractedRay;
-		double nTo;
-		double n, cosI, sinT2, cosT;
+
+		refractedRay.origin = intersect.point;
 
 		/* Set ray's relative location (inside or outside of a primitive (outside = air)) */
 		refractedRay.inside = (this->inside ? NULL : intersect.prim);
 
-		/* If ray is "going to be" inside of a primitive, that primitive's material n is the nTo; else we assume it's air */
-		nTo = (refractedRay.inside ? refractedRay.inside->mat.n : N_AIR);
+		/* Check whether the ray is inside (= refracted ray going out) or outside (= refracted ray coming in) a primitive */
+		if (this->inside)
+			refractedRay.direction = scene.environment.refractionDirection(this->direction,normal,intersect.prim->mat); /* from primitive's material to scene's environment */
+		else
+			refractedRay.direction = intersect.prim->mat.refractionDirection(this->direction,normal,scene.environment); /* from scene's environment to primitive's material */
 
-		refractedRay.origin = intersect.point;
-
-		n = nFrom / nTo;
-		cosI = -normal.dot(this->direction);
-		sinT2 = n * n * (1.0 - cosI * cosI);
-
-		if (sinT2 <= 1.0) /* not inside TIR's range: this ray may be casted */
-		{
-			cosT = sqrt(1.0 - sinT2);
-
-			refractedRay.direction = (this->direction * n + normal * (n * cosI - cosT)).normalized();
-
-			/*
-			 * TODO:
-			 * add roughness noise
-			 */
-			others = others + refractedRay.getColor(scene, maxdepth-1, nTo, relevance*refractance) * refractance;
-		} else
-			cerr << "Bode: " << sinT2 << " " << cosI << " refractance " << refractance << endl
-				 << "Normal: " << normal.x << " " << normal.y << " " << normal.z << " | " << normal.norm() << endl
-				 << "Direction: " << this->direction.x << " " << this->direction.y << " " << this->direction.z << " | " << this->direction.norm() << endl
-				 << "Intersection: " << intersect.point.x << " " << intersect.point.y << " " << intersect.point.z << endl
-				 << "nFrom: " << nFrom << " nTo: " << nTo << " angle: " << angle << " | " << acos(normal.dot(this->direction)) << endl;
+		/*
+		 * TODO:
+		 * add roughness noise
+		 */
+		others = others + refractedRay.getColor(scene, maxdepth-1, relevance*refractance) * refractance;
 	}
 
 	if (absorvance > 0)
