@@ -46,7 +46,10 @@ Vector Material::refractionDirection(const Vector &direction, const Vector &norm
 	double sinT2 = n * n * (1.0 - cosI * cosI);
 
 	if (sinT2 > 1.0) /* inside TIR's range: 100% reflection MUST occur */
+	{
 		cerr << "ERROR: Invalid refraction (check Material.cpp)" << endl;
+		return Vector(0.0,0.0,0.0);
+	}
 
 	double cosT = sqrt(1.0 - sinT2);
 
