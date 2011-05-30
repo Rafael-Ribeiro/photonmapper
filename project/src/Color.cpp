@@ -14,12 +14,12 @@ Color::Color(int r, int g, int b)
 {
 }
 
-bool Color::operator == (const Color other) const
+bool Color::operator == (const Color& other) const
 {
 	return this->r == other.r && this->g == other.g && this->b == other.b;
 }
 
-Color Color::operator + (const Color other) const
+Color Color::operator + (const Color& other) const
 {
 	return Color(this->r + other.r, this->g + other.g, this->b + other.b); 
 }

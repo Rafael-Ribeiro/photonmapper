@@ -16,7 +16,7 @@ public:
 	int width, height;
 
 	Camera();
-	Camera(Point origin, Vector direction, Vector top, double fovy, int width, int height);
+	Camera(const Point& origin, const Vector& direction, const Vector& top, double fovy, int width, int height);
 
 	Ray rayTroughPixel(int x, int y);
 };

@@ -1,9 +1,12 @@
 #include "Material.hpp"
 
 #include <math.h>
+#include <iostream>
 
-Material::Material(Color color, double roughness, double absorvance, double refractance, double emittance, double n)
-	: color(color), absorvance(absorvance), roughness(roughness), refractance(refractance), emittance(emittance), n(n)
+using namespace std;
+
+Material::Material(const Color& color, double roughness, double absorvance, double emittance, double n)
+	: color(color), absorvance(absorvance), roughness(roughness), emittance(emittance), n(n)
 {
 }
 
@@ -35,8 +38,8 @@ double Material::reflectance(double angle, double nFrom)
 		temp2 *= temp2; /* forth */
 		temp *= temp2; /* fifth */
 
-		return (R0 + (1 - R0) * temp)*(1-this->absorvance);
-	} else if (angle > asin(this->n/nFrom)) /* TIR's formula: asin(n2/n1) */
+		return (R0 + (1 - R0) * temp);
+	} else if (angle < asin(this->n/nFrom)) /* TIR's formula: asin(n2/n1) */
 	{
 		/*
 		 * θf is calculated using Snell's law:
@@ -51,8 +54,8 @@ double Material::reflectance(double angle, double nFrom)
 		temp2 *= temp2; /* forth */
 		temp *= temp2; /* fifth */
 
-		return (R0 + (1 - R0) * temp)*(1-this->absorvance);
+		return (R0 + (1 - R0) * temp);
 	}
 
-	return (1-this->absorvance);
+	return 1.0;
 }

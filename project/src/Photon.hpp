@@ -21,7 +21,7 @@ struct Photon
 	Color color;
 
 	Photon();
-	Photon(Ray& ray, Color color);
+	Photon(const Ray& ray, const Color& color);
 	void bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, double nFrom);
 };
 

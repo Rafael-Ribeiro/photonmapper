@@ -6,12 +6,12 @@
 
 using namespace std;
 
-Plane::Plane(Material mat, Point p, Vector normal)
+Plane::Plane(const Material& mat, const Point& p, const Vector& normal)
 	: Primitive(mat), point(p), m_normal(normal)
 {
 }
 
-bool Plane::intersect(Ray r, Point& p) const
+bool Plane::intersect(const Ray& r, Point& p) const
 {
 	/* http://en.wikipedia.org/wiki/Line-plane_intersection*/
 	double a, b;
@@ -34,7 +34,7 @@ bool Plane::intersect(Ray r, Point& p) const
 	return true;
 }
 
-Vector Plane::normal(Point p, double noise) const
+Vector Plane::normal(const Point& p, double noise) const
 {
 	//double theta, phi;
 

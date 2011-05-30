@@ -8,9 +8,10 @@ struct Vector
 	Vector();
 	Vector(double x, double y, double z);
 
+	Vector operator - () const;
+
 	Vector operator + (const Vector& v) const;
 	Vector operator - (const Vector& v) const;
-
 	Vector operator * (double q) const;
 	Vector operator / (double q) const;
 

@@ -5,6 +5,7 @@ Photon Mapping:
 
 Ray-tracing:
 	Refraction
+	Calculate intensity using average?? :x
 
 Extras TODO:
 	Convex Polygons

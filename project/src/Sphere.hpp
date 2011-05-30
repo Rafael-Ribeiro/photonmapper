@@ -13,10 +13,10 @@ public:
 	Vector center;
 	double radius;
 
-	Sphere(Material mat, Vector center, double radius);
+	Sphere(const Material& mat, const Vector& center, double radius);
 
-	bool intersect(Ray r, Point& p) const;
-	Vector normal(Point p, double noise) const;
+	bool intersect(const Ray& r, Point& p) const;
+	Vector normal(const Point& p, double noise) const;
 	double area() const;
 
 	Photon randomPhoton() const;

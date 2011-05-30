@@ -15,7 +15,7 @@ struct PointDistanceComparator
 {
 	Point p;
 
-	PointDistanceComparator(Point p)
+	PointDistanceComparator(const Point& p)
 		: p(p)
 	{
 	}
@@ -86,7 +86,7 @@ void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
  * (which is a vector at the moment) and sorting Photon* by their distance to p,
  * to return the first k Photon* of the sort
  */
-vector<const Photon*> Scene::getNearestPhotons(Point p, double distance) const
+vector<const Photon*> Scene::getNearestPhotons(const Point& p, double distance) const
 {
 	vector<const Photon*> knn;
 	vector<Photon>::const_iterator it, end;

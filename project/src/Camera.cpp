@@ -10,7 +10,7 @@ Camera::Camera()
 {
 }
 
-Camera::Camera(Point origin, Vector direction, Vector top, double fovy, int width, int height)
+Camera::Camera(const Point& origin, const Vector& direction, const Vector& top, double fovy, int width, int height)
 		: origin(origin), direction(direction), width(width), height(height)
 {	
 	this->aspect = (1.0 * width) / height;

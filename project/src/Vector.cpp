@@ -20,6 +20,11 @@ Vector Vector::operator + (const Vector& v) const
 	return Vector(this->x + v.x, this->y + v.y, this->z + v.z); 
 }
 
+Vector Vector::operator - () const
+{
+	return Vector(-this->x, -this->y, -this->z);
+}
+
 Vector Vector::operator - (const Vector& v) const
 {
 	return Vector(this->x - v.x, this->y - v.y, this->z - v.z); 

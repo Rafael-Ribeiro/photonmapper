@@ -1,6 +1,6 @@
 #include "Primitive.hpp"
 
-Primitive::Primitive(Material& mat)
+Primitive::Primitive(const Material& mat)
 	: mat(mat)
 {
 }

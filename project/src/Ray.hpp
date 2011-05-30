@@ -19,9 +19,9 @@ struct Ray
 	Primitive *inside;
 
 	Ray();
-	Ray(Point origin, Vector direction);
+	Ray(const Point& origin, const Vector& direction);
 
-	Color getColor(const Scene& scene, int maxdepth, double nFrom) const;
+	Color getColor(const Scene& scene, int maxdepth, double nFrom, double relevance) const;
 };
 
 #endif

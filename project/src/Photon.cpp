@@ -11,63 +11,60 @@ Photon::Photon()
 {
 }
 
-Photon::Photon(Ray& ray, Color color) /* double wavelength */
+Photon::Photon(const Ray& ray, const Color& color) /* double wavelength */
 	: ray(ray), color(color)
 {
 }
-
-/*
-	pseudo-algorithm for ray tracing:
-
-	based on incident angle AND roughness -> calc reflectance
-	if not reflected
-		if refractance
-			refract
-		else
-			absorve
-	else
-		reflect
-*/
 
 /* nFrom refers to the light speed in the medium from where the photon comes */
 void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, double nFrom)
 {
 	Intersection intersect;
 	Vector normal;
+	double angle;
+	double reflectance, refractance, absorvance;
+	double r;
 
 	photon = *this;
 
 	if (photon.color == Color(0,0,0))
 		return;
 
-	/* store this photon */
-	scene.photonMap.push_back(photon);
-
 	if (bouncesLeft == 0 || !scene.intersect(this->ray, intersect))
 		return;
 
 	normal = intersect.prim->normal(intersect.point, intersect.prim->mat.roughness);
+	angle = intersect.direction.angle(normal);
 
-	/* reflectance depends on the angle between photon's ray and the primitive's normal on the intersection point  */
-	double refl = intersect.prim->mat.reflectance(intersect.direction.angle(normal), nFrom);
+	/* absorvance + reflectance + refractance = 1 */
+	absorvance = intersect.prim->mat.absorvance;
+	reflectance = intersect.prim->mat.reflectance(angle, nFrom);
+	refractance = (1-absorvance)*(1-reflectance);
+	reflectance = (1-absorvance)*reflectance;
 
-	photon.ray.origin = intersect.point;	
-	photon.color.r = min(this->color.r, intersect.prim->mat.color.r);
-	photon.color.g = min(this->color.g, intersect.prim->mat.color.g);
-	photon.color.b = min(this->color.b, intersect.prim->mat.color.b);
-
-	if (random01() < intersect.prim->mat.absorvance)
+	r = random01();
+	if (r < absorvance)
 	{
 		/* photon is absorved (an then emited) by the object */
+		photon.ray.origin = intersect.point;	
+		photon.color.r = min(this->color.r, intersect.prim->mat.color.r);
+		photon.color.g = min(this->color.g, intersect.prim->mat.color.g);
+		photon.color.b = min(this->color.b, intersect.prim->mat.color.b);
+
+		/* store this photon */
+		photon.ray.direction = -normal;
+		scene.photonMap.push_back(photon);
+
 		photon.ray.direction = normal;
-	} else if (true)
+
+	} else if (r < absorvance + reflectance) /* random01() < refl */
 	{
 		/* reflection http://en.wikipedia.org/wiki/Reflection_%28mathematics%29 */
 		photon.ray.direction = (photon.ray.direction - normal*2*photon.ray.direction.dot(normal)).normalized();
-
-	} else if (true)
+	} else
 	{
 		/* TODO: refraction */
+		photon.ray.direction = (photon.ray.direction - normal*2*photon.ray.direction.dot(normal)).normalized();
 	}
 
 	photon.bounce(scene, bouncesLeft-1, photon, nFrom);

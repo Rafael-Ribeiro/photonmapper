@@ -19,7 +19,7 @@ Engine::Engine(Scene& scene)
 	this->nPhotonBounce = Engine::MAX_PHOTON_BOUNCE;
 }
 
-Color* Engine::render(Camera camera)
+Color* Engine::render(Camera& camera)
 {
 	int i, j;
 	int pixelCounter = 0, nPixels = camera.height * camera.width;
@@ -36,7 +36,7 @@ Color* Engine::render(Camera camera)
 	for (i = 0; i < camera.height; i++)
 	{
 		for (j = 0; j < camera.width; j++)
-			pixels[i * camera.width + j] = camera.rayTroughPixel(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, N_AIR);
+			pixels[i * camera.width + j] = camera.rayTroughPixel(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, N_AIR, 1.0);
 
 		#pragma omp critical
 		{
