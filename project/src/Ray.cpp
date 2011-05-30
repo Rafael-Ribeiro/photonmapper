@@ -90,12 +90,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double nFrom, double relev
 			 * add roughness noise
 			 */
 			others = others + refractedRay.getColor(scene, maxdepth-1, nTo, relevance*refractance) * refractance;
-		} else
-			cerr << "Bode: " << sinT2 << " " << cosI << " refractance " << refractance << endl
-				 << "Normal: " << normal.x << " " << normal.y << " " << normal.z << " | " << normal.norm() << endl
-				 << "Direction: " << this->direction.x << " " << this->direction.y << " " << this->direction.z << " | " << this->direction.norm() << endl
-				 << "Intersection: " << intersect.point.x << " " << intersect.point.y << " " << intersect.point.z << endl
-				 << "nFrom: " << nFrom << " nTo: " << nTo << " angle: " << angle << " | " << acos(normal.dot(this->direction)) << endl;
+		}
 	}
 
 	if (absorvance > 0)
