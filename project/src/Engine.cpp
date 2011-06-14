@@ -100,7 +100,7 @@ void Engine::antialias(const Camera& camera)
 				pixelColorAvg = pixelColorAvg + camera.rayThrough(x + 0.25, y - 0.25).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
 				pixelColorAvg = pixelColorAvg + camera.rayThrough(x + 0.25, y + 0.25).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
 
-				pixelColorAvg = (pixelColorAvg / 4).cap();
+				pixelColorAvg = pixelColorAvg / 4;
 
 				this->pixels[y * camera.width + x] = pixelColorAvg;
 			}
