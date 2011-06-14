@@ -45,12 +45,12 @@ int main()
 	Material glass =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, 1.492);
 	Material mirror =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, infinity);
 
-	Material grayConcrete = 	Material(Color(0xa6, 0xa6, 0xa6),	0.3, 0.95, 0.0, infinity);
-	Material blackConcrete = 	Material(Color(0, 0, 0),			0.3, 0.95, 0.0, infinity);
+	Material grayConcrete = 	Material(Color(0xa6, 0xa6, 0xa6),	0.3, 0.98, 0.0, infinity);
+	Material blackConcrete = 	Material(Color(0, 0, 0),			0.3, 0.98, 0.0, infinity);
 
-	Material redConcrete = 		Material(Color(255, 0, 0),	0.3, 0.95, 0.0, infinity);
-	Material greenConcrete =	Material(Color(0, 255, 0),	0.3, 0.95, 0.0, infinity);
-	Material blueConcrete = 	Material(Color(0, 0, 255),	0.3, 0.95, 0.0, infinity);
+	Material redConcrete = 		Material(Color(255, 0, 0),	0.3, 0.98, 0.0, infinity);
+	Material greenConcrete =	Material(Color(0, 255, 0),	0.3, 0.98, 0.0, infinity);
+	Material blueConcrete = 	Material(Color(0, 0, 255),	0.3, 0.98, 0.0, infinity);
 
 	/* Primitives */
 	Sphere s1 	= Sphere(glass,		Point(-30.0, 	-20.0, 20.0),	5.0);
@@ -92,7 +92,7 @@ int main()
 
 	engine = Engine(scene);
 
-	cameras.push_back(Camera(Point(0, 0, -40), Vector(0,0,1), Vector(0,1,0), M_PI/4, WIDTH, HEIGHT));
+	cameras.push_back(Camera(Point(0, 1, -40.02), Vector(0,0,1), Vector(0,1,0), M_PI/4, WIDTH, HEIGHT));
 
 	for (camera = cameras.begin(); camera != cameras.end(); camera++)
 	{
