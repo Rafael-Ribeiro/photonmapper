@@ -70,7 +70,7 @@ void Engine::antialias(const Camera& camera)
 	 * Sobel operator:
 	 * Convolution is being applied pixel by pixel.
 	 */
-	#pragma omp parallel for private(x, i,j, pixelColorAvg)
+	#pragma omp parallel for private(x, i,j, sumX,sumY, g, pixelColorAvg)
 	for (y = 1; y < heightLimit; y++)
 	{
 		for (x = 1; x < widthLimit; x++)
