@@ -34,14 +34,15 @@ void Engine::antialias(const Camera& camera)
 	int i, j;
 	int heightLimit = camera.height - 2, widthLimit = camera.width - 2;
 
+	int pixelCounter = 0, nPixels = (heightLimit - 1) * (widthLimit - 1);
+
 	double sumX, sumY;
 
 	double pixelAvg;
 	double g;
 
-	Color subpixelColors[4];
-
 	Color *pixelsCpy = new Color[camera.height * camera.width];
+	Color pixelColorAvg;
 
 	/*
 	 * Matrixes are inverted for memory access
@@ -69,7 +70,7 @@ void Engine::antialias(const Camera& camera)
 	 * Sobel operator:
 	 * Convolution is being applied pixel by pixel.
 	 */
-	#pragma omp parallel for private(x)
+	#pragma omp parallel for private(x, i,j, pixelColorAvg)
 	for (y = 1; y < heightLimit; y++)
 	{
 		for (x = 1; x < widthLimit; x++)
@@ -93,16 +94,26 @@ void Engine::antialias(const Camera& camera)
 			if (g > Engine::ANTIALIAS_THRESHOLD * 255)
 			{
 				/* cast rays to the pixel's corners */
-				subpixelColors[0] = camera.rayThrough(j - 0.5, i - 0.5).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
-				subpixelColors[1] = camera.rayThrough(j - 0.5, i + 0.5).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
-				subpixelColors[2] = camera.rayThrough(j + 0.5, i - 0.5).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
-				subpixelColors[3] = camera.rayThrough(j + 0.5, i + 0.5).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
-
 				/* pixel's color becomes the average */
-				this->pixels[y * camera.width + x] = (subpixelColors[0] + subpixelColors[1] + subpixelColors[2] + subpixelColors[3]) / 4;
+				pixelColorAvg = camera.rayThrough(x - 0.25, y - 0.25).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
+				pixelColorAvg = pixelColorAvg + camera.rayThrough(x - 0.25, y + 0.25).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
+				pixelColorAvg = pixelColorAvg + camera.rayThrough(x + 0.25, y - 0.25).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
+				pixelColorAvg = pixelColorAvg + camera.rayThrough(x + 0.25, y + 0.25).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
+
+				pixelColorAvg = (pixelColorAvg / 4).cap();
+
+				this->pixels[y * camera.width + x] = pixelColorAvg;
 			}
 		}
+
+		#pragma omp critical
+		{
+			cerr << "\r                                     \r"; /* 35 spaces to cleanup the line and assure cursor is on last_char_pos + 1 */
+			cerr << "Anti-Aliasing (progress: " << (pixelCounter += widthLimit - 1) * 100.0 / nPixels << "%)";
+			cerr.flush();
+		}
 	}
+	cerr << endl;
 
 	delete pixelsCpy;
 }
