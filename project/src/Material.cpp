@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
@@ -15,6 +16,10 @@ double Material::reflectance(const Vector &direction, const Vector &normal, cons
 	/*
 	 * Reflectance according to http://www.bramz.net/data/writings/reflection_transmission.pdf
 	 */
+
+	/* TODO FIXME IMPROVE */
+	if (this->n == numeric_limits<double>::infinity())
+		return 1.0;
 
 	double n = fromMaterial.n / this->n;
 	double cosI = -(normal.dot(direction));
@@ -40,15 +45,14 @@ Vector Material::refractionDirection(const Vector &direction, const Vector &norm
 	/*
 	 * Refraction direction according to http://www.bramz.net/data/writings/reflection_transmission.pdf
 	 */
-
 	double n = fromMaterial.n / this->n;
-	double cosI = -normal.dot(direction);
+	double cosI = -(normal.dot(direction));
 	double sinT2 = n * n * (1.0 - cosI * cosI);
 
 	if (sinT2 > 1.0) /* inside TIR's range: 100% reflection MUST occur */
 	{
-		cerr << "ERROR: Invalid refraction (check Material.cpp)" << endl;
-		return Vector(0.0,0.0,0.0);
+		cerr << "ERROR: Invalid refraction (check Material.cpp: " << __LINE__ << ")" << endl;
+		return Vector(0.0, 0.0, 0.0);
 	}
 
 	double cosT = sqrt(1.0 - sinT2);

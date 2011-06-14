@@ -22,7 +22,7 @@ struct Photon
 
 	Photon();
 	Photon(const Ray& ray, const Color& color);
-	void bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon, double nFrom);
+	void bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon);
 };
 
 #endif

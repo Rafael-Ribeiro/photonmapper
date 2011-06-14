@@ -8,7 +8,7 @@
 using namespace std;
 
 Scene::Scene()
-	 : environment(Material(Color(0,0,0),0.0,0.0,0.0,N_AIR))
+	 : environment(Material(Color(0xFF,0xFF,0xFF), 0.0, 0.0, 0.0, N_AIR))
 {
 }
 
@@ -75,7 +75,7 @@ void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
 		n = this->lights[i]->area() * this->lights[i]->mat.emittance*nPhotons/sum;
 	
 		for (j = 0; j < n; j++)
-			this->lights[i]->randomPhoton().bounce(*this, nPhotonBounce, photon, N_AIR);	
+			this->lights[i]->randomPhoton().bounce(*this, nPhotonBounce, photon);	
 	}
 
 }

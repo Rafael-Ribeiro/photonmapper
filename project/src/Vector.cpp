@@ -81,7 +81,7 @@ Vector Vector::normalized() const
 
 Vector Vector::noise(double noise) const
 {
-	//	TODO! if (noise < Engine::EPS)
+	if (noise < Engine::EPS)
 		return Vector(*this);
 
 	double radius, theta, a, b, norm;
@@ -93,11 +93,13 @@ Vector Vector::noise(double noise) const
 	theta = random01() * (M_PI * 2);
 	a = radius * cos(theta);
 	b = radius * sin(theta); 
-	
-	/* u and v and this are ortonormal */
-	z = *this/norm;
- 	u = z.cross(Engine::top);
-	v = z.cross(u);
 
-	return z*(norm - radius) + u*a + v*b;
+	/* u and v and this are ortonormal */
+	u = this->cross(Engine::top);
+	if (u.sqrd_norm() != 1)
+		u = this->cross(Engine::right);
+
+	v = this->cross(u);
+
+	return (*this * (norm - radius) + u*a + v*b).normalized();
 }

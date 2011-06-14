@@ -10,6 +10,7 @@
 using namespace std;
 
 const Vector Engine::top = Vector(0, 1, 0);
+const Vector Engine::right = Vector(1, 0, 0);
 
 Engine::Engine()
 {
@@ -37,8 +38,6 @@ void Engine::antialias(const Camera& camera)
 
 	double pixelAvg;
 	double g;
-
-	double threshold = 0.7; /* TODO: turn this into a global */
 
 	Color subpixelColors[4];
 
@@ -70,7 +69,6 @@ void Engine::antialias(const Camera& camera)
 	 * Sobel operator:
 	 * Convolution is being applied pixel by pixel.
 	 */
-
 	#pragma omp parallel for private(x)
 	for (y = 1; y < heightLimit; y++)
 	{
@@ -92,7 +90,7 @@ void Engine::antialias(const Camera& camera)
 
 			g = sqrt(sumX * sumX + sumY * sumY);
 
-			if (g > threshold * 255)
+			if (g > Engine::ANTIALIAS_THRESHOLD * 255)
 			{
 				/* cast rays to the pixel's corners */
 				subpixelColors[0] = camera.rayThrough(j - 0.5, i - 0.5).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
@@ -122,7 +120,7 @@ Color* Engine::render(const Camera& camera)
 	this->scene.buildPhotonMap(nPhotons, nPhotonBounce);
 
 	cerr << scene.photonMap.size() << endl;
-
+	
 	#pragma omp parallel for private(j)
 	for (i = 0; i < camera.height; i++)
 	{

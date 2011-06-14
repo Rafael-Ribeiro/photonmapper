@@ -76,7 +76,7 @@ Photon Quad::randomPhoton() const
 	
 	alpha = random01();
 	beta = random01();
-	p = this->a + this->u*alpha + this->v*alpha;
+	p = this->a + this->u*alpha + this->v*beta;
 	
 	return Photon(Ray(p, this->m_normal.noise(this->mat.roughness)), this->mat.color);
 }

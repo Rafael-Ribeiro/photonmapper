@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -31,7 +32,8 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 	if (maxdepth == 0 || relevance < Engine::EPS || !scene.intersect(*this, intersect))
 		return self;
 
-	normal = intersect.prim->normal(intersect.point).noise(intersect.prim->mat.roughness);
+	/* TODO / FIXME roughness calculations */
+	normal = intersect.prim->normal(intersect.point);
 	if (this->inside)
 		normal = -normal;
 
@@ -44,9 +46,9 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 	else
 		reflectance = intersect.prim->mat.reflectance(this->direction, normal, scene.environment);
 
-	refractance = (1-absorvance)*(1-reflectance);
-	reflectance = (1-absorvance)*reflectance;
-
+	refractance = (1-absorvance - emittance)*(1-reflectance);
+	reflectance = (1-absorvance - emittance)*reflectance;
+	
 	if (reflectance > 0)
 	{
 		Ray reflectedRay;
@@ -55,26 +57,23 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 		reflectedRay.direction = intersect.prim->mat.reflectionDirection(this->direction,normal);
 		reflectedRay.inside = this->inside;
 
-		// TODO: roughness
-		// reflected ray gives the axis of a cone (higher roughness -> larger cone)
-		// cast N rays
 		others = others + reflectedRay.getColor(scene, maxdepth-1, relevance*reflectance) * reflectance;
 	}
-
+	
 	if (refractance > 0)
 	{
 		Ray refractedRay;
 
 		refractedRay.origin = intersect.point;
 
-		/* Set ray's relative location (inside or outside of a primitive (outside = air)) */
-		refractedRay.inside = (this->inside ? NULL : intersect.prim);
-
 		/* Check whether the ray is inside (= refracted ray going out) or outside (= refracted ray coming in) a primitive */
 		if (this->inside)
 			refractedRay.direction = scene.environment.refractionDirection(this->direction,normal,intersect.prim->mat); /* from primitive's material to scene's environment */
 		else
 			refractedRay.direction = intersect.prim->mat.refractionDirection(this->direction,normal,scene.environment); /* from scene's environment to primitive's material */
+
+		/* Set ray's relative location (inside or outside of a primitive (outside = air)) */
+		refractedRay.inside = (this->inside ? NULL : intersect.prim);
 
 		others = others + refractedRay.getColor(scene, maxdepth-1, relevance*refractance) * refractance;
 	}
