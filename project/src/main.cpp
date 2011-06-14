@@ -48,13 +48,19 @@ int main()
 	Material grayConcrete = 	Material(Color(0xa6, 0xa6, 0xa6),	0.3, 0.95, 0.0, infinity);
 	Material blackConcrete = 	Material(Color(0, 0, 0),			0.3, 0.95, 0.0, infinity);
 
-	Material redConcrete = 		Material(Color(255, 0xa6, 0xa6),	0.3, 0.95, 0.0, infinity);
-	Material greenConcrete =	Material(Color(0xa6, 255, 0xa6),	0.3, 0.95, 0.0, infinity);
-	Material blueConcrete = 	Material(Color(0xa6, 0xa6, 255),	0.3, 0.95, 0.0, infinity);
+	Material redConcrete = 		Material(Color(255, 0, 0),	0.3, 0.95, 0.0, infinity);
+	Material greenConcrete =	Material(Color(0, 255, 0),	0.3, 0.95, 0.0, infinity);
+	Material blueConcrete = 	Material(Color(0, 0, 255),	0.3, 0.95, 0.0, infinity);
 
 	/* Primitives */
-	Sphere s1 	= Sphere(glass,		Point(0.0, -0.0, 0.0),	20.0);
-	Sphere s2 	= Sphere(mirror,	Point(+30.0, -30.0, 30.0),	10.0);
+	Sphere s1 	= Sphere(glass,		Point(-30.0, 	-20.0, 20.0),	5.0);
+	Sphere s2 	= Sphere(mirror,	Point(-20.0, 	-20.0, 20.0),	5.0);
+	Sphere s3 	= Sphere(glass,		Point(-10.0, 	-20.0, 20.0),	5.0);
+	Sphere s4 	= Sphere(mirror,	Point(0.0, 		-20.0, 20.0),	5.0);
+	Sphere s5 	= Sphere(glass,		Point(10.0, 	-20.0, 20.0),	5.0);
+	Sphere s6 	= Sphere(mirror,	Point(20.0, 	-20.0, 20.0),	5.0);
+	Sphere s7 	= Sphere(glass,		Point(30.0, 	-20.0, 20.0),	5.0);
+
 	Quad q1 	= Quad(light, 		Point(10, 39, 10), Point(-10, 39, 10), Point(10, 39, -10));
 
 	Plane p1 = Plane(grayConcrete,	Point(0.0, -40.0, 0.0),	Vector(0.0, 1.0, 0.0)); 		/* floor */
@@ -67,8 +73,15 @@ int main()
 	scene.lights.push_back(&q1);
 
 	scene.primitives.push_back(&q1);	
+
 	scene.primitives.push_back(&s1);
 	scene.primitives.push_back(&s2);
+	scene.primitives.push_back(&s2);
+	scene.primitives.push_back(&s3);
+	scene.primitives.push_back(&s4);
+	scene.primitives.push_back(&s5);
+	scene.primitives.push_back(&s6);
+	scene.primitives.push_back(&s7);
 
 	scene.primitives.push_back(&p1);
 	scene.primitives.push_back(&p2);

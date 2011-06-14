@@ -30,9 +30,10 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 	double angle, intensity, distance;
 
 	if (maxdepth == 0 || relevance < Engine::EPS || !scene.intersect(*this, intersect))
-		return self;
+		return Color(255,0,0);
+	//	return self;
 
-	/* TODO / FIXME roughness calculations */
+	/* TODO / FIXME roughness calculations, for (i = 0; i < ENGINE::cenas = 3; i++) */
 	normal = intersect.prim->normal(intersect.point);
 	if (this->inside)
 		normal = -normal;
@@ -85,6 +86,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 		for (photon = photons.begin(), end = photons.end(); photon != end; photon++)
 		{	
 			/* TODO: maybe this should take into account not only the direction of the photon but its position too */
+			/* TODO: make this take into account rougness for angle attenuation*/
 			angle = (*photon)->ray.direction.dot(normal);
 			if (angle < 0)
 			{

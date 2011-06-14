@@ -64,9 +64,11 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 		photon.ray.direction = normal.noise(intersect.prim->mat.roughness);
 	} else if (r < absorvance + reflectance) /* random01() < refl */
 	{
+		// TODO: add noise here
 		photon.ray.direction = intersect.prim->mat.reflectionDirection(this->ray.direction, normal);
 	} else
 	{
+		// TODO: add noise here
 		/* Check whether the ray is inside (= refracted ray going out) or outside (= refracted ray coming in) a primitive */
 		if (this->ray.inside)
 			this->ray.direction = scene.environment.refractionDirection(this->ray.direction, normal, intersect.prim->mat); /* from primitive's material to scene's environment */
