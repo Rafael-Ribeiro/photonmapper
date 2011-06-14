@@ -21,7 +21,7 @@ Camera::Camera(const Point& origin, const Vector& direction, const Vector& top, 
 	this->right = this->direction.cross(top) * tan(fovy) * (-this->aspect);
 }
 
-Ray Camera::rayTroughPixel(int x, int y)
+Ray Camera::rayThrough(double x, double y) const
 {
 	Ray ray;
 	double dx, dy;
