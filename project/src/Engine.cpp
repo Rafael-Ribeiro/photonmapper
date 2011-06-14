@@ -9,6 +9,7 @@
 using namespace std;
 
 const Vector Engine::top = Vector(0, 1, 0);
+const Vector Engine::right = Vector(1, 0, 0);
 
 Engine::Engine()
 {
@@ -35,7 +36,7 @@ Color* Engine::render(Camera& camera)
 	this->scene.buildPhotonMap(nPhotons, nPhotonBounce);
 
 	cerr << scene.photonMap.size() << endl;
-
+	
 	#pragma omp parallel for private(j)
 	for (i = 0; i < camera.height; i++)
 	{
