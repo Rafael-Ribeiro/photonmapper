@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <cstring>
 
 using namespace std;
 
@@ -21,15 +22,101 @@ Engine::Engine(Scene& scene)
 	this->nPhotonBounce = Engine::MAX_PHOTON_BOUNCE;
 }
 
-Color* Engine::render(Camera& camera)
+
+void Engine::antialias(const Camera& camera)
+{
+	/*
+	 * Sobel Operator: http://en.wikipedia.org/wiki/Sobel_operator
+	 */
+
+	int x, y;
+	int i, j;
+	int heightLimit = camera.height - 2, widthLimit = camera.width - 2;
+
+	double sumX, sumY;
+
+	double pixelAvg;
+	double g;
+
+	double threshold = 0.7; /* TODO: turn this into a global */
+
+	Color subpixelColors[4];
+
+	Color *pixelsCpy = new Color[camera.height * camera.width];
+
+	/*
+	 * Matrixes are inverted for memory access
+	 */
+	int gx[3][3] =
+	{
+		{	 1,	 0,	-1	},
+		{	 2,	 0,	-2	},
+		{	 1,	 0,	-1	}
+	};
+
+	int gy[3][3] =
+	{
+		{	 1,	 2,	 1	},
+		{	 0,	 0,	 0	},
+		{	-1,	-2,	-1	}
+	};
+
+	/*
+	 * Backup original image since Sobel operator modifies this->pixels directly.
+	 */
+	memcpy(pixelsCpy, this->pixels, camera.height * camera.width * sizeof(Color));
+
+	/*
+	 * Sobel operator:
+	 * Convolution is being applied pixel by pixel.
+	 */
+
+	#pragma omp parallel for private(x)
+	for (y = 1; y < heightLimit; y++)
+	{
+		for (x = 1; x < widthLimit; x++)
+		{
+			sumX = 0, sumY = 0;
+
+			for (i = -1; i <= 1; i++)
+			{
+				for (j = -1; j <= 1; j++)
+				{
+					/* Calculate pixel's average color intensity */
+					pixelAvg = (pixelsCpy[(y + i) * camera.width + x + j].r + pixelsCpy[(y + i) * camera.width + x + j].g + pixelsCpy[(y + i) * camera.width + x + j].b) / 3.0;
+
+					sumX += pixelAvg * gx[i + 1][j + 1];
+					sumY += pixelAvg * gy[i + 1][j + 1];
+				}
+			}
+
+			g = sqrt(sumX * sumX + sumY * sumY);
+
+			if (g > threshold * 255)
+			{
+				/* cast rays to the pixel's corners */
+				subpixelColors[0] = camera.rayThrough(j - 0.5, i - 0.5).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
+				subpixelColors[1] = camera.rayThrough(j - 0.5, i + 0.5).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
+				subpixelColors[2] = camera.rayThrough(j + 0.5, i - 0.5).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
+				subpixelColors[3] = camera.rayThrough(j + 0.5, i + 0.5).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
+
+				/* pixel's color becomes the average */
+				this->pixels[y * camera.width + x] = (subpixelColors[0] + subpixelColors[1] + subpixelColors[2] + subpixelColors[3]) / 4;
+			}
+		}
+	}
+
+	delete pixelsCpy;
+}
+
+Color* Engine::render(const Camera& camera)
 {
 	int i, j;
 	int pixelCounter = 0, nPixels = camera.height * camera.width;
 
-	Color* pixels;
 	vector<Photon>::iterator it;
 
-	pixels = new Color[camera.width * camera.height];
+	this->pixels = new Color[camera.width * camera.height];
 
 	cerr << "Building Photon Map" << endl;
 	this->scene.buildPhotonMap(nPhotons, nPhotonBounce);
@@ -40,7 +127,7 @@ Color* Engine::render(Camera& camera)
 	for (i = 0; i < camera.height; i++)
 	{
 		for (j = 0; j < camera.width; j++)
-			pixels[i * camera.width + j] = camera.rayTroughPixel(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
+			this->pixels[i * camera.width + j] = camera.rayThrough(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
 
 		#pragma omp critical
 		{
@@ -55,7 +142,7 @@ Color* Engine::render(Camera& camera)
 	for (i = 0; i < camera.height; i++)
 	{
 		for (j = 0; j < camera.width; j++)
-			pixels[i*camera.width + j] = Color(0,0,0);
+			this->pixels[i*camera.width + j] = Color(0,0,0);
 	}
 
 	for (it = this->scene.photonMap.begin(); it != this->scene.photonMap.end(); it++)
@@ -71,7 +158,8 @@ Color* Engine::render(Camera& camera)
 	}
 	
 	*/
-	/* TODO anti-aliasing */
+
+	this->antialias(camera);
 
 	return pixels;
 }

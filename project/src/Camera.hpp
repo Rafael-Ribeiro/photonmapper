@@ -18,7 +18,7 @@ public:
 	Camera();
 	Camera(const Point& origin, const Vector& direction, const Vector& top, double fovy, int width, int height);
 
-	Ray rayTroughPixel(int x, int y);
+	Ray rayThrough(double x, double y) const;
 };
 
 #endif
