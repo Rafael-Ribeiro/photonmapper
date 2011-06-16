@@ -59,9 +59,9 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 
 		/* store this photon */
 		photon.ray.direction = -normal;
-		scene.photonMap.push_back(photon);
+		scene.photonMap.insert(photon);
 
-		photon.ray.direction = normal.noise(intersect.prim->mat.roughness);
+		//photon.ray.direction = normal.noise(intersect.prim->mat.roughness);
 	} else if (r < absorvance + reflectance) /* random01() < refl */
 	{
 		// TODO: add noise here
@@ -80,4 +80,27 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 	}
 
 	photon.bounce(scene, bouncesLeft-1, photon);
+}
+
+/* kd-tree */
+Photon::value_type Photon::operator[] (size_t n) const
+{
+	if (n == 0)
+		return this->ray.origin.x;
+	else if (n == 1)
+		return this->ray.origin.y;
+	else
+		return this->ray.origin.z;
+}
+
+Photon::value_type Photon::distance_to(Photon const& p) const
+{
+	/* unused? */
+	double dx, dy, dz;
+
+	dx = this->ray.origin.x - p.ray.origin.x;
+	dy = this->ray.origin.y - p.ray.origin.y;
+	dz = this->ray.origin.z - p.ray.origin.z;
+
+	return std::sqrt(dx*dx + dy*dy + dz*dz);
 }

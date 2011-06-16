@@ -40,17 +40,17 @@ int main()
 
 	/* Materials */
 	/* Material(Color color, double roughness, double absorvance, double emittance, double n) */
-	Material light =			Material(Color(255, 255, 255),		0.3, 1.0, 1.0, 1.492);
+	Material light =			Material(Color(255, 255, 255),		1.0, 1.0, 1.0, 1.492);
 
 	Material glass =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, 1.492);
 	Material mirror =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, infinity);
 
-	Material grayConcrete = 	Material(Color(0xa6, 0xa6, 0xa6),	0.3, 0.98, 0.0, infinity);
-	Material blackConcrete = 	Material(Color(0, 0, 0),			0.3, 0.98, 0.0, infinity);
+	Material grayConcrete = 	Material(Color(0xa6, 0xa6, 0xa6),	0.7, 0.95, 0.0, infinity);
+	Material blackConcrete = 	Material(Color(0, 0, 0),			0.7, 0.95, 0.0, infinity);
 
-	Material redConcrete = 		Material(Color(255, 0, 0),	0.3, 0.98, 0.0, infinity);
-	Material greenConcrete =	Material(Color(0, 255, 0),	0.3, 0.98, 0.0, infinity);
-	Material blueConcrete = 	Material(Color(0, 0, 255),	0.3, 0.98, 0.0, infinity);
+	Material redConcrete = 		Material(Color(255, 0, 0),	0.7, 0.95, 0.0, infinity);
+	Material greenConcrete =	Material(Color(0, 255, 0),	0.7, 0.95, 0.0, infinity);
+	Material blueConcrete = 	Material(Color(0, 0, 255),	0.7, 0.95, 0.0, infinity);
 
 	/* Primitives */
 	Sphere s1 	= Sphere(glass,		Point(-30.0, 	-20.0, 20.0),	5.0);

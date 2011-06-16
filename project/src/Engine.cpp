@@ -130,7 +130,7 @@ Color* Engine::render(const Camera& camera)
 	cerr << "Building Photon Map" << endl;
 	this->scene.buildPhotonMap(nPhotons, nPhotonBounce);
 
-	cerr << scene.photonMap.size() << endl;
+	//cerr << scene.photonMap.size() << endl;
 	
 	#pragma omp parallel for private(j)
 	for (i = 0; i < camera.height; i++)

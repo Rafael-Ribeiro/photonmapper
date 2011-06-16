@@ -1,6 +1,8 @@
 #ifndef PHOTON_HPP
 #define PHOTON_HPP
 
+#include <stdlib.h>
+
 #include "Ray.hpp"
 #include "Color.hpp"
 
@@ -23,6 +25,11 @@ struct Photon
 	Photon();
 	Photon(const Ray& ray, const Color& color);
 	void bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon);
+
+	/* kd-tree */
+	typedef double value_type;
+ 	value_type operator[] (size_t n) const;
+	double distance_to(Photon const& x) const;
 };
 
 #endif

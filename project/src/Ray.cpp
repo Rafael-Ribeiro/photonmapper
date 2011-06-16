@@ -24,8 +24,8 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 
 	Intersection intersect;
 	Vector normal;
-	vector<const Photon*> photons;
-	vector<const Photon*>::const_iterator photon, end;
+	vector<Photon> photons;
+	vector<Photon>::const_iterator photon, end;
 	double reflectance, refractance, absorvance, emittance;
 	double angle, intensity, distance;
 
@@ -55,7 +55,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 		Ray reflectedRay;
 
 		reflectedRay.origin = intersect.point;
-		reflectedRay.direction = intersect.prim->mat.reflectionDirection(this->direction,normal);
+		reflectedRay.direction = intersect.prim->mat.reflectionDirection(this->direction, normal);
 		reflectedRay.inside = this->inside;
 
 		others = others + reflectedRay.getColor(scene, maxdepth-1, relevance*reflectance) * reflectance;
@@ -87,17 +87,17 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 		{	
 			/* TODO: maybe this should take into account not only the direction of the photon but its position too */
 			/* TODO: make this take into account rougness for angle attenuation*/
-			angle = (*photon)->ray.direction.dot(normal);
+			angle = (*photon).ray.direction.dot(normal);
 			if (angle < 0)
 			{
-				distance = (intersect.point - (*photon)->ray.origin).norm();
+				distance = (intersect.point - (*photon).ray.origin).norm();
 				intensity = Engine::EXPOSURE /
 				(
 					Engine::CONSTANT_LIGHT_ATTENUATION +
 					distance * Engine::LINEAR_LIGHT_ATTENUATION +
 					distance * distance * Engine::QUADRATIC_LIGHT_ATTENUATION
 				);
-				self = self + (*photon)->color * intensity * (-angle);
+				self = self + (*photon).color * intensity * (-angle);
 			}
 		}
 
