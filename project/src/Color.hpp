@@ -11,6 +11,7 @@ struct Color
 	bool operator == (const Color& other) const;
 	Color operator + (const Color& other) const;
 	Color operator * (double q) const;
+	Color operator * (Color c) const;
 	Color operator / (double q) const;
 
 	Color cap() const;

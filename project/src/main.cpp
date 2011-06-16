@@ -42,24 +42,29 @@ int main()
 	/* Material(Color color, double roughness, double absorvance, double emittance, double n) */
 	Material light =			Material(Color(255, 255, 255),		0.3, 1.0, 1.0, 1.492);
 
-	Material glass =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, 1.492);
+	Material glass =			Material(Color(255, 255, 255),		0.75, 0.5, 0.0, 1.492);
 	Material mirror =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, infinity);
 
-	Material grayConcrete = 	Material(Color(0xa6, 0xa6, 0xa6),	0.3, 0.98, 0.0, infinity);
-	Material blackConcrete = 	Material(Color(0, 0, 0),			0.3, 0.98, 0.0, infinity);
+	Material redGlass =			Material(Color(255,   0,   0),		0.02, 0.02, 0.0, 1.492);
+	Material greenGlass =		Material(Color(  0, 255,   0),		0.02, 0.02, 0.0, 1.492);
+	Material blueGlass =		Material(Color(  0,   0, 255),		0.02, 0.02, 0.0, 1.492);
+	Material blackGlass =		Material(Color(  0,   0, 0),		0.02, 0.02, 0.0, 1.492);
 
-	Material redConcrete = 		Material(Color(255, 0, 0),	0.3, 0.98, 0.0, infinity);
-	Material greenConcrete =	Material(Color(0, 255, 0),	0.3, 0.98, 0.0, infinity);
-	Material blueConcrete = 	Material(Color(0, 0, 255),	0.3, 0.98, 0.0, infinity);
+	Material grayConcrete = 	Material(Color(0xa6, 0xa6, 0xa6),	0.05, 0.80, 0.0, infinity);
+	Material blackConcrete = 	Material(Color(0, 0, 0),			0.05, 0.80, 0.0, infinity);
+
+	Material redConcrete = 		Material(Color(255, 0, 0),	0.05, 0.80, 0.0, infinity);
+	Material greenConcrete =	Material(Color(0, 255, 0),	0.05, 0.80, 0.0, infinity);
+	Material blueConcrete = 	Material(Color(0, 0, 255),	0.05, 0.80, 0.0, infinity);
 
 	/* Primitives */
-	Sphere s1 	= Sphere(glass,		Point(-30.0, 	-20.0, 20.0),	5.0);
-	Sphere s2 	= Sphere(mirror,	Point(-20.0, 	-20.0, 20.0),	5.0);
-	Sphere s3 	= Sphere(glass,		Point(-10.0, 	-20.0, 20.0),	5.0);
-	Sphere s4 	= Sphere(mirror,	Point(0.0, 		-20.0, 20.0),	5.0);
-	Sphere s5 	= Sphere(glass,		Point(10.0, 	-20.0, 20.0),	5.0);
-	Sphere s6 	= Sphere(mirror,	Point(20.0, 	-20.0, 20.0),	5.0);
-	Sphere s7 	= Sphere(glass,		Point(30.0, 	-20.0, 20.0),	5.0);
+	//Sphere s1 	= Sphere(glass,		Point(-30.0,	0.0,	0.0),	5.0);
+	//Sphere s2 	= Sphere(mirror,	Point(-20.0,	0.0,	0.0),	5.0);
+	//Sphere s3 	= Sphere(glass,		Point(-10.0,	0.0,	0.0),	5.0);
+	Sphere s4 	= Sphere(mirror,	Point(  -5.0,	0.0,	0.0),	5.0);
+	Sphere s5 	= Sphere(glass,		Point(	5.0,	0.0,	0.0),	5.0); //Point( 10.0,	0.0,	0.0),	5.0)
+	//Sphere s6 	= Sphere(mirror,	Point( 20.0,	0.0,	0.0),	5.0);
+	//Sphere s7 	= Sphere(glass,		Point( 30.0,	0.0,	0.0),	5.0);
 
 	Quad q1 	= Quad(light, 		Point(10, 39, 10), Point(-10, 39, 10), Point(10, 39, -10));
 
@@ -67,21 +72,20 @@ int main()
 	Plane p2 = Plane(grayConcrete,	Point(0.0, +40.0, 0.0),	Vector(0.0, -1.0, 0.0));	 	/* ceil */
 	Plane p3 = Plane(redConcrete,	Point(-40.0, 0.0, 0.0),	Vector(1.0, 0.0, 0.0)); 		/* left */
 	Plane p4 = Plane(greenConcrete,	Point(+40.0, 0.0, 0.0),	Vector(-1.0, 0.0, 0.0));	 	/* right */
-	Plane p5 = Plane(blueConcrete,	Point(0.0, 0.0, +40),	Vector(0.0, 0.0, -1.0)); 		/* front */
-	Plane p6 = Plane(blackConcrete,	Point(0.0, 0.0, -41),	Vector(0.0, 0.0, 1.0)); 		/* back */
+	Plane p5 = Plane(blueConcrete,	Point(  0.0, 0.0, +40),	Vector(0.0, 0.0, -1.0)); 		/* front */
+	Plane p6 = Plane(blackConcrete,	Point(  0.0, 0.0, -41),	Vector(0.0, 0.0, 1.0)); 		/* back */
 
 	scene.lights.push_back(&q1);
 
 	scene.primitives.push_back(&q1);	
 
-	scene.primitives.push_back(&s1);
-	scene.primitives.push_back(&s2);
-	scene.primitives.push_back(&s2);
-	scene.primitives.push_back(&s3);
+	//scene.primitives.push_back(&s1);
+	//scene.primitives.push_back(&s2);
+	//scene.primitives.push_back(&s3);
 	scene.primitives.push_back(&s4);
 	scene.primitives.push_back(&s5);
-	scene.primitives.push_back(&s6);
-	scene.primitives.push_back(&s7);
+	//scene.primitives.push_back(&s6);
+	//scene.primitives.push_back(&s7);
 
 	scene.primitives.push_back(&p1);
 	scene.primitives.push_back(&p2);

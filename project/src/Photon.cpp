@@ -69,10 +69,17 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 	} else
 	{
 		// TODO: add noise here
+
 		/* Check whether the ray is inside (= refracted ray going out) or outside (= refracted ray coming in) a primitive */
 		if (this->ray.inside)
+		{
 			this->ray.direction = scene.environment.refractionDirection(this->ray.direction, normal, intersect.prim->mat); /* from primitive's material to scene's environment */
-		else
+
+			/* FIXME/TODO Absorvance based on distance */
+			photon.color.r = min(this->color.r, intersect.prim->mat.color.r);
+			photon.color.g = min(this->color.g, intersect.prim->mat.color.g);
+			photon.color.b = min(this->color.b, intersect.prim->mat.color.b);
+		} else
 			this->ray.direction = intersect.prim->mat.refractionDirection(this->ray.direction, normal, scene.environment); /* from scene's environment to primitive's material */
 
 		/* Set ray's relative location (inside or outside of a primitive (outside = air)) */

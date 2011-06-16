@@ -120,7 +120,7 @@ void Engine::antialias(const Camera& camera)
 
 Color* Engine::render(const Camera& camera)
 {
-	int i, j;
+	int i;
 	int pixelCounter = 0, nPixels = camera.height * camera.width;
 
 	vector<Photon>::iterator it;
@@ -132,17 +132,19 @@ Color* Engine::render(const Camera& camera)
 
 	cerr << scene.photonMap.size() << endl;
 	
-	#pragma omp parallel for private(j)
-	for (i = 0; i < camera.height; i++)
+	#pragma omp parallel for
+	for (i = 0; i < nPixels; i++)
 	{
-		for (j = 0; j < camera.width; j++)
-			this->pixels[i * camera.width + j] = camera.rayThrough(j, i).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
+		this->pixels[i] = camera.rayThrough(i % camera.width, i / camera.width).getColor(scene, Engine::MAX_RAY_BOUNCE, 1.0);
 
-		#pragma omp critical
+		if (!(i % camera.width))
 		{
-			cerr << "\r                                \r"; /* 30 spaces to cleanup the line and assure cursor is on last_char_pos + 1 */
-			cerr << "Raytracing (progress: " << (pixelCounter += camera.width) * 100.0 / nPixels << "%)";
-			cerr.flush();
+			#pragma omp critical
+			{
+				cerr << "\r                                \r"; /* 30 spaces to cleanup the line and assure cursor is on last_char_pos + 1 */
+				cerr << "Raytracing (progress: " << (pixelCounter += camera.width) * 100.0 / nPixels << "%)";
+				cerr.flush();
+			}
 		}
 	}
 	cerr << endl;
