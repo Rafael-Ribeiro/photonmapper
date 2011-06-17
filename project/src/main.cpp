@@ -42,7 +42,7 @@ int main()
 	/* Material(Color color, double roughness, double absorvance, double emittance, double n) */
 	Material light =			Material(Color(255, 255, 255),		0.3, 1.0, 1.0, 1.492);
 
-	Material glass =			Material(Color(255, 255, 255),		0.75, 0.5, 0.0, 1.492);
+	Material glass =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, 1.492);
 	Material mirror =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, infinity);
 
 	Material redGlass =			Material(Color(255,   0,   0),		0.02, 0.02, 0.0, 1.492);
@@ -61,8 +61,8 @@ int main()
 	//Sphere s1 	= Sphere(glass,		Point(-30.0,	0.0,	0.0),	5.0);
 	//Sphere s2 	= Sphere(mirror,	Point(-20.0,	0.0,	0.0),	5.0);
 	//Sphere s3 	= Sphere(glass,		Point(-10.0,	0.0,	0.0),	5.0);
-	Sphere s4 	= Sphere(mirror,	Point(  -5.0,	0.0,	0.0),	5.0);
-	Sphere s5 	= Sphere(glass,		Point(	5.0,	0.0,	0.0),	5.0); //Point( 10.0,	0.0,	0.0),	5.0)
+	Sphere s4 	= Sphere(mirror,	Point(  -5.0,	-25.0,	0.0),	5.0);
+	Sphere s5 	= Sphere(glass,		Point(	5.0,	-25.0,	0.0),	5.0); //Point( 10.0,	0.0,	0.0),	5.0)
 	//Sphere s6 	= Sphere(mirror,	Point( 20.0,	0.0,	0.0),	5.0);
 	//Sphere s7 	= Sphere(glass,		Point( 30.0,	0.0,	0.0),	5.0);
 

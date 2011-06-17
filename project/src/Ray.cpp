@@ -81,7 +81,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 				reflectedRay.direction = rayDirection.noise(intersect.prim->mat.roughness);
 				reflectedRay.inside = this->inside;
 
-				avgReflectionColor = avgReflectionColor + reflectedRay.getColor(scene, 3, relevance * reflectance / diffuseRays);
+				avgReflectionColor = avgReflectionColor + reflectedRay.getColor(scene, 2, relevance * reflectance / diffuseRays);
 			}
 
 			if (diffuseRays > 1)
@@ -123,7 +123,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 				refractedRay.direction = rayDirection.noise(intersect.prim->mat.roughness);
 				refractedRay.inside = (this->inside ? NULL : intersect.prim); /* Set ray's relative location (inside or outside of a primitive (outside = air)) */
 
-				avgRefractionColor = avgRefractionColor + refractedRay.getColor(scene, 3, relevance*refractance);
+				avgRefractionColor = avgRefractionColor + refractedRay.getColor(scene, 2, relevance*refractance);
 			}
 
 			if (diffuseRays > 1)
