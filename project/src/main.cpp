@@ -61,8 +61,8 @@ int main()
 	//Sphere s1 	= Sphere(glass,		Point(-30.0,	0.0,	0.0),	5.0);
 	//Sphere s2 	= Sphere(mirror,	Point(-20.0,	0.0,	0.0),	5.0);
 	//Sphere s3 	= Sphere(glass,		Point(-10.0,	0.0,	0.0),	5.0);
-	Sphere s4 	= Sphere(mirror,	Point(  -15.0,	-30.0,	0.0),	10.0);
-	Sphere s5 	= Sphere(glass,		Point(	15.0,	-30.0,	0.0),	10.0); //Point( 10.0,	0.0,	0.0),	5.0)
+	Sphere s4 	= Sphere(mirror,	Point(  -10.0,	-30.0,	5.0),	10.0);
+	Sphere s5 	= Sphere(glass,		Point(	15.0,	-30.0,	5.0),	10.0); //Point( 10.0,	0.0,	0.0),	5.0)
 	//Sphere s6 	= Sphere(mirror,	Point( 20.0,	0.0,	0.0),	5.0);
 	//Sphere s7 	= Sphere(glass,		Point( 30.0,	0.0,	0.0),	5.0);
 
