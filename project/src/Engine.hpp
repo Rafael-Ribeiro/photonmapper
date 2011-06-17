@@ -11,8 +11,8 @@ struct Engine
 	static const int MAX_PHOTONS = 4000000;
 	static const int MAX_PHOTON_BOUNCE = 10;
 	static const int MAX_RAY_BOUNCE = 10;
-	static const double MAX_GATHER_DISTANCE = 3;
-	static const double MAX_GATHER_DISTANCE_SQRD = 9;
+	static const double MAX_GATHER_DISTANCE = 2;
+	static const double MAX_GATHER_DISTANCE_SQRD = 4;
 	static const double EXPOSURE = 0.02;
 	static const double EPS = 1e-10;
 	static const double CONSTANT_LIGHT_ATTENUATION = 1.0;
