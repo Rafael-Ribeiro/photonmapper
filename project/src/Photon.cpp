@@ -21,7 +21,7 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 {
 	Intersection intersect;
 	Vector normal;
-	double reflectance, refractance, absorvance;
+	double reflectance, refractance, absorvance, roughness;
 	double r;
 
 	photon = *this;
@@ -37,6 +37,7 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 		normal = -normal;
 
 	absorvance = intersect.prim->mat.absorvance;
+	roughness = intersect.prim->mat.roughness;
 
 	if (this->ray.inside)
 		reflectance = scene.environment.reflectance(this->ray.direction, normal, intersect.prim->mat);
@@ -51,24 +52,27 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 	photon.ray.origin = intersect.point;
 
 	if (r < absorvance)
+		return;
+
+	if (r < absorvance + reflectance) /* reflection */
 	{
-		/* photon is absorved (an then emited) by the object */
 		photon.color.r = min(this->color.r, intersect.prim->mat.color.r);
 		photon.color.g = min(this->color.g, intersect.prim->mat.color.g);
 		photon.color.b = min(this->color.b, intersect.prim->mat.color.b);
 
-		/* store this photon */
-		photon.ray.direction = -normal;
-		scene.photonMap.push_back(photon);
+		if ((r - absorvance)/reflectance < roughness)
+		{
+			/* diffuse reflection */
+			photon.ray.direction = normal.noise(roughness);
 
-		photon.ray.direction = normal.noise(intersect.prim->mat.roughness);
-	} else if (r < absorvance + reflectance) /* random01() < refl */
-	{
-		// TODO: add noise here
-		photon.ray.direction = intersect.prim->mat.reflectionDirection(this->ray.direction, normal);
+			scene.storePhoton(photon);
+		} else
+			photon.ray.direction = intersect.prim->mat.reflectionDirection(this->ray.direction, normal);
+
+		/* diffuse and specular reflection */
 	} else
 	{
-		// TODO: add noise here
+		/* TODO: diffuse refraction? */
 
 		/* Check whether the ray is inside (= refracted ray going out) or outside (= refracted ray coming in) a primitive */
 		if (this->ray.inside)
@@ -86,5 +90,28 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 		this->ray.inside = (this->ray.inside ? NULL : intersect.prim);
 	}
 
-	photon.bounce(scene, bouncesLeft-1, photon);
+	photon.bounce(scene, bouncesLeft - 1, photon);
+}
+
+/* kd-tree */
+Photon::value_type Photon::operator[] (size_t n) const
+{
+	if (n == 0)
+		return this->ray.origin.x;
+	else if (n == 1)
+		return this->ray.origin.y;
+	else
+		return this->ray.origin.z;
+}
+
+Photon::value_type Photon::distance_to(Photon const& p) const
+{
+	/* unused? */
+	double dx, dy, dz;
+
+	dx = this->ray.origin.x - p.ray.origin.x;
+	dy = this->ray.origin.y - p.ray.origin.y;
+	dz = this->ray.origin.z - p.ray.origin.z;
+
+	return std::sqrt(dx*dx + dy*dy + dz*dz);
 }

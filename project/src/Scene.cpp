@@ -5,10 +5,12 @@
 #include "Scene.hpp"
 #include "Primitive.hpp"
 
+#include "kdtree++/kdtree.hpp"
+
 using namespace std;
 
 Scene::Scene()
-	 : environment(Material(Color(0xFF,0xFF,0xFF), 0.0, 0.0, 0.0, N_AIR))
+	 : nPhotons(0), environment(Material(Color(0xFF,0xFF,0xFF), 0.0, 0.0, 0.0, N_AIR))
 {
 }
 
@@ -64,8 +66,6 @@ void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
 	double sum;
 	Photon photon;
 
-	this->photonMap.clear();
-
 	sum = 0;
 	for (i = 0; i < this->lights.size(); i++)
 		sum += this->lights[i]->area() * this->lights[i]->mat.emittance;
@@ -78,6 +78,14 @@ void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
 			this->lights[i]->randomPhoton().bounce(*this, nPhotonBounce, photon);	
 	}
 
+	cerr << "No. of photons: " << this->nPhotons << endl; 
+	this->photonMap.optimise();
+}
+
+void Scene::storePhoton(Photon photon)
+{
+	this->photonMap.insert(photon);
+	this->nPhotons++;
 }
 
 /*
@@ -87,18 +95,12 @@ void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
  * (which is a vector at the moment) and sorting Photon* by their distance to p,
  * to return the first k Photon* of the sort
  */
-vector<const Photon*> Scene::getNearestPhotons(const Point& p, double distance) const
+vector<Photon> Scene::getNearestPhotons(const Point& p, double distance) const
 {
-	vector<const Photon*> knn;
-	vector<Photon>::const_iterator it, end;
+	vector<Photon> photons;
+	Photon photon(Ray(p, Vector(0,0,0)), Color(0,0,0));
 
-	double sqrd_distance;
+	this->photonMap.find_within_range(photon, distance, back_insert_iterator<vector<Photon> >(photons));
 
-	sqrd_distance = distance*distance;
-
-	for (it = this->photonMap.begin(), end = this->photonMap.end(); it != end; it++)
-		if ((it->ray.origin - p).sqrd_norm() < sqrd_distance)
-			knn.push_back(&(*it));
-
-	return knn;
+	return photons;
 }

@@ -40,7 +40,7 @@ int main()
 
 	/* Materials */
 	/* Material(Color color, double roughness, double absorvance, double emittance, double n) */
-	Material light =			Material(Color(255, 255, 255),		0.3, 1.0, 1.0, 1.492);
+	Material light =			Material(Color(255, 255, 255),		1.0, 1.0, 1.0, 1.492);
 
 	Material glass =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, 1.492);
 	Material mirror =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, infinity);
@@ -50,19 +50,19 @@ int main()
 	Material blueGlass =		Material(Color(  0,   0, 255),		0.02, 0.02, 0.0, 1.492);
 	Material blackGlass =		Material(Color(  0,   0, 0),		0.02, 0.02, 0.0, 1.492);
 
-	Material grayConcrete = 	Material(Color(0xa6, 0xa6, 0xa6),	0.05, 0.80, 0.0, infinity);
-	Material blackConcrete = 	Material(Color(0, 0, 0),			0.05, 0.80, 0.0, infinity);
+	Material grayConcrete = 	Material(Color(0xa6, 0xa6, 0xa6),	0.98, 0.80, 0.0, infinity);
+	Material blackConcrete = 	Material(Color(0, 0, 0),			0.98, 0.80, 0.0, infinity);
 
-	Material redConcrete = 		Material(Color(255, 0, 0),	0.05, 0.80, 0.0, infinity);
-	Material greenConcrete =	Material(Color(0, 255, 0),	0.05, 0.80, 0.0, infinity);
-	Material blueConcrete = 	Material(Color(0, 0, 255),	0.05, 0.80, 0.0, infinity);
+	Material redConcrete = 		Material(Color(255, 0, 0),			0.98, 0.80, 0.0, infinity);
+	Material greenConcrete =	Material(Color(0, 255, 0),			0.98, 0.80, 0.0, infinity);
+	Material blueConcrete = 	Material(Color(0, 0, 255),			0.98, 0.80, 0.0, infinity);
 
 	/* Primitives */
 	//Sphere s1 	= Sphere(glass,		Point(-30.0,	0.0,	0.0),	5.0);
 	//Sphere s2 	= Sphere(mirror,	Point(-20.0,	0.0,	0.0),	5.0);
 	//Sphere s3 	= Sphere(glass,		Point(-10.0,	0.0,	0.0),	5.0);
-	Sphere s4 	= Sphere(mirror,	Point(  -5.0,	-25.0,	0.0),	5.0);
-	Sphere s5 	= Sphere(glass,		Point(	5.0,	-25.0,	0.0),	5.0); //Point( 10.0,	0.0,	0.0),	5.0)
+	Sphere s4 	= Sphere(mirror,	Point(  -10.0,	-30.0,	5.0),	10.0);
+	Sphere s5 	= Sphere(glass,		Point(	15.0,	-30.0,	5.0),	10.0); //Point( 10.0,	0.0,	0.0),	5.0)
 	//Sphere s6 	= Sphere(mirror,	Point( 20.0,	0.0,	0.0),	5.0);
 	//Sphere s7 	= Sphere(glass,		Point( 30.0,	0.0,	0.0),	5.0);
 

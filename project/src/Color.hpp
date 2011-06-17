@@ -1,6 +1,10 @@
 #ifndef COLOR_HPP
 #define COLOR_HPP
 
+#include <iostream>
+
+using namespace std;
+
 struct Color
 {
 	int r,g,b; 
@@ -15,6 +19,8 @@ struct Color
 	Color operator / (double q) const;
 
 	Color cap() const;
+
+	friend ostream &operator << (ostream &stream, Color c);
 };
 
 #endif
