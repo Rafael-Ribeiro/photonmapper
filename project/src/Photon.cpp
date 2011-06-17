@@ -21,7 +21,7 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 {
 	Intersection intersect;
 	Vector normal;
-	double reflectance, refractance, absorvance;
+	double reflectance, refractance, absorvance, roughness;
 	double r;
 
 	photon = *this;
@@ -37,6 +37,7 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 		normal = -normal;
 
 	absorvance = intersect.prim->mat.absorvance;
+	roughness = intersect.prim->mat.roughness;
 
 	if (this->ray.inside)
 		reflectance = scene.environment.reflectance(this->ray.direction, normal, intersect.prim->mat);
@@ -51,35 +52,45 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 	photon.ray.origin = intersect.point;
 
 	if (r < absorvance)
+		return;
+
+	if (r < absorvance + reflectance) /* reflection */
 	{
-		/* photon is absorved (an then emited) by the object */
 		photon.color.r = min(this->color.r, intersect.prim->mat.color.r);
 		photon.color.g = min(this->color.g, intersect.prim->mat.color.g);
 		photon.color.b = min(this->color.b, intersect.prim->mat.color.b);
 
-		/* store this photon */
-		photon.ray.direction = -normal;
-		scene.photonMap.insert(photon);
+		if ((r - absorvance)/reflectance < roughness)
+		{
+			/* diffuse reflection */
+			photon.ray.direction = normal.noise(roughness);
 
-		//photon.ray.direction = normal.noise(intersect.prim->mat.roughness);
-	} else if (r < absorvance + reflectance) /* random01() < refl */
-	{
-		// TODO: add noise here
-		photon.ray.direction = intersect.prim->mat.reflectionDirection(this->ray.direction, normal);
+			scene.storePhoton(photon);
+		} else
+			photon.ray.direction = intersect.prim->mat.reflectionDirection(this->ray.direction, normal);
+
+		/* diffuse and specular reflection */
 	} else
 	{
-		// TODO: add noise here
+		/* TODO: diffuse refraction? */
+
 		/* Check whether the ray is inside (= refracted ray going out) or outside (= refracted ray coming in) a primitive */
 		if (this->ray.inside)
+		{
 			this->ray.direction = scene.environment.refractionDirection(this->ray.direction, normal, intersect.prim->mat); /* from primitive's material to scene's environment */
-		else
+
+			/* FIXME/TODO Absorvance based on distance */
+			photon.color.r = min(this->color.r, intersect.prim->mat.color.r);
+			photon.color.g = min(this->color.g, intersect.prim->mat.color.g);
+			photon.color.b = min(this->color.b, intersect.prim->mat.color.b);
+		} else
 			this->ray.direction = intersect.prim->mat.refractionDirection(this->ray.direction, normal, scene.environment); /* from scene's environment to primitive's material */
 
 		/* Set ray's relative location (inside or outside of a primitive (outside = air)) */
 		this->ray.inside = (this->ray.inside ? NULL : intersect.prim);
 	}
 
-	photon.bounce(scene, bouncesLeft-1, photon);
+	photon.bounce(scene, bouncesLeft - 1, photon);
 }
 
 /* kd-tree */

@@ -27,6 +27,7 @@ struct Scene
 	Scene();
 
 	tree_type photonMap; /* TODO: kd_tree<Photon> photons; */
+	int nPhotons;
 
 	vector<Primitive*> primitives;
 	vector<Primitive*> lights;
@@ -36,6 +37,7 @@ struct Scene
 	/* TODO: kd-tree */
 	bool intersect(const Ray& p, Intersection& intersect) const;
 	void buildPhotonMap(int nPhotons, int nPhotonBounce);
+	void storePhoton(Photon photon);
 	vector<Photon> getNearestPhotons(const Point& p, double distance) const;
 };
 

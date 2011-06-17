@@ -10,7 +10,7 @@
 using namespace std;
 
 Scene::Scene()
-	 : environment(Material(Color(0xFF,0xFF,0xFF), 0.0, 0.0, 0.0, N_AIR))
+	 : nPhotons(0), environment(Material(Color(0xFF,0xFF,0xFF), 0.0, 0.0, 0.0, N_AIR))
 {
 }
 
@@ -78,7 +78,14 @@ void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
 			this->lights[i]->randomPhoton().bounce(*this, nPhotonBounce, photon);	
 	}
 
+	cerr << "No. of photons: " << this->nPhotons << endl; 
 	this->photonMap.optimise();
+}
+
+void Scene::storePhoton(Photon photon)
+{
+	this->photonMap.insert(photon);
+	this->nPhotons++;
 }
 
 /*
