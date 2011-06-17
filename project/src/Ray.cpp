@@ -97,7 +97,15 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 		{
 			rayDirection = scene.environment.refractionDirection(this->direction,normal,intersect.prim->mat); /* from primitive's material to scene's environment */
 
-			/* TODO/FIXME Absorvance based on distance */
+			/*
+			 * TODO/FIXME Absorvance based on distance
+			 * 
+			 * According to the Wikipedia's article on transmittance (http://en.wikipedia.org/wiki/Transmittance):
+			 * Transmittance is literally the fraction of light that passes through a sample.
+			 * 
+			 * Only the Beer-Lambert law relates the transmittance with the path length, but this only applies to gases.
+			 */
+
 			colorRefraction = intersect.prim->mat.color;
 		} else
 		{
