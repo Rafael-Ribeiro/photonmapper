@@ -6,6 +6,10 @@
 
 using namespace std;
 
+Material::Material()
+{
+}
+
 Material::Material(const Color& color, double roughness, double absorvance, double emittance, double n)
 	: color(color), absorvance(absorvance), roughness(roughness), emittance(emittance), n(n)
 {

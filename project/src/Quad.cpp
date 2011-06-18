@@ -9,6 +9,10 @@
 
 using namespace std;
 
+Quad::Quad()
+{
+}
+
 Quad::Quad(const Material& mat, const Point& a, const Point& b, const Point& c)
 	: Primitive(mat), a(a), b(b), c(c)
 {

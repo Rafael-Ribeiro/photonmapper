@@ -10,6 +10,7 @@ struct Primitive
 {
 	Material mat;
 
+	Primitive();
 	Primitive(const Material& mat);
 
 	virtual bool intersect(const Ray& r, Point& p) const = 0;

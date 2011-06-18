@@ -10,6 +10,7 @@
 #include "Sphere.hpp"
 #include "Plane.hpp"
 #include "Quad.hpp"
+#include "Box.hpp"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -50,43 +51,37 @@ int main()
 	Material blueGlass =		Material(Color(  0,   0, 255),		0.02, 0.02, 0.0, 1.492);
 	Material blackGlass =		Material(Color(  0,   0, 0),		0.02, 0.02, 0.0, 1.492);
 
-	Material grayConcrete = 	Material(Color(0xa6, 0xa6, 0xa6),	0.98, 0.80, 0.0, infinity);
+	Material glossyWhite = 		Material(Color(255, 255, 255),		0.6, 0.30, 0.0, infinity);
+
+	Material grayConcrete = 	Material(Color(0xa6, 0xa6, 0xa6),	0.98, 0.40, 0.0, infinity);
 	Material blackConcrete = 	Material(Color(0, 0, 0),			0.98, 0.80, 0.0, infinity);
 
-	Material redConcrete = 		Material(Color(255, 0, 0),			0.98, 0.80, 0.0, infinity);
-	Material greenConcrete =	Material(Color(0, 255, 0),			0.98, 0.80, 0.0, infinity);
-	Material blueConcrete = 	Material(Color(0, 0, 255),			0.98, 0.80, 0.0, infinity);
+	Material redConcrete = 		Material(Color(255, 0, 0),			0.98, 0.60, 0.0, infinity);
+	Material greenConcrete =	Material(Color(0, 255, 0),			0.98, 0.60, 0.0, infinity);
+	Material blueConcrete = 	Material(Color(0, 0, 255),			0.98, 0.60, 0.0, infinity);
 
 	/* Primitives */
-	//Sphere s1 	= Sphere(glass,		Point(-30.0,	0.0,	0.0),	5.0);
-	//Sphere s2 	= Sphere(mirror,	Point(-20.0,	0.0,	0.0),	5.0);
-	//Sphere s3 	= Sphere(glass,		Point(-10.0,	0.0,	0.0),	5.0);
-	Sphere s4 	= Sphere(mirror,	Point(  -10.0,	-30.0,	5.0),	10.0);
-	Sphere s5 	= Sphere(glass,		Point(	15.0,	-30.0,	5.0),	10.0); //Point( 10.0,	0.0,	0.0),	5.0)
-	//Sphere s6 	= Sphere(mirror,	Point( 20.0,	0.0,	0.0),	5.0);
-	//Sphere s7 	= Sphere(glass,		Point( 30.0,	0.0,	0.0),	5.0);
-
-	Quad q1 	= Quad(light, 		Point(10, 39, 10), Point(-10, 39, 10), Point(10, 39, -10));
-
-	Plane p1 = Plane(grayConcrete,	Point(0.0, -40.0, 0.0),	Vector(0.0, 1.0, 0.0)); 		/* floor */
-	Plane p2 = Plane(grayConcrete,	Point(0.0, +40.0, 0.0),	Vector(0.0, -1.0, 0.0));	 	/* ceil */
-	Plane p3 = Plane(redConcrete,	Point(-40.0, 0.0, 0.0),	Vector(1.0, 0.0, 0.0)); 		/* left */
-	Plane p4 = Plane(greenConcrete,	Point(+40.0, 0.0, 0.0),	Vector(-1.0, 0.0, 0.0));	 	/* right */
-	Plane p5 = Plane(blueConcrete,	Point(  0.0, 0.0, +40),	Vector(0.0, 0.0, -1.0)); 		/* front */
-	Plane p6 = Plane(blackConcrete,	Point(  0.0, 0.0, -41),	Vector(0.0, 0.0, 1.0)); 		/* back */
+	Quad q1 	= Quad(light, Point(10, 39, 10), Point(-10, 39, 10), Point(10, 39, -10));
+	
+	Sphere s0 	= Sphere(glass,		Point(  20.0,	-25.0,	20.0),	15.0);
+	Sphere s1 	= Sphere(mirror,	Point(	-5.0,	-33.0,	10.0),	7.0); //Point( 10.0,	0.0,	0.0),	5.0)
+	Box b1		= Box(glossyWhite, Point( -20, -39.99, 20), Vector(0, 40.0, 0), Vector(-15, 0.0, 10), Vector(10, 0, 15)); 
+	
+	Plane p1 = Plane(grayConcrete,		Point(0.0, -40.0, 0.0),	Vector(0.0, 1.0, 0.0)); 		/* floor */
+	Plane p2 = Plane(grayConcrete,		Point(0.0, +40.0, 0.0),	Vector(0.0, -1.0, 0.0));	 	/* ceil */
+	Plane p3 = Plane(redConcrete,		Point(-40.0, 0.0, 0.0),	Vector(1.0, 0.0, 0.0)); 		/* left */
+	Plane p4 = Plane(greenConcrete,		Point(+40.0, 0.0, 0.0),	Vector(-1.0, 0.0, 0.0));	 	/* right */
+	Plane p5 = Plane(grayConcrete,		Point(  0.0, 0.0, +40),	Vector(0.0, 0.0, -1.0)); 		/* front */
+	Plane p6 = Plane(grayConcrete,		Point(  0.0, 0.0, -41),	Vector(0.0, 0.0, 1.0)); 		/* back */
 
 	scene.lights.push_back(&q1);
+	scene.primitives.push_back(&q1);
 
-	scene.primitives.push_back(&q1);	
+	scene.primitives.push_back(&b1);
 
-	//scene.primitives.push_back(&s1);
-	//scene.primitives.push_back(&s2);
-	//scene.primitives.push_back(&s3);
-	scene.primitives.push_back(&s4);
-	scene.primitives.push_back(&s5);
-	//scene.primitives.push_back(&s6);
-	//scene.primitives.push_back(&s7);
-
+	scene.primitives.push_back(&s0);
+	scene.primitives.push_back(&s1);
+	
 	scene.primitives.push_back(&p1);
 	scene.primitives.push_back(&p2);
 	scene.primitives.push_back(&p3);

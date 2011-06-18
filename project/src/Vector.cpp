@@ -103,3 +103,9 @@ Vector Vector::noise(double noise) const
 
 	return (*this * (norm - radius) + u*a + v*b).normalized();
 }
+
+ostream &operator << (ostream &stream, Vector v)
+{
+	stream << "Vector: (" << v.x << ", " << v.y << ", " << v.z << ")";
+	return stream;
+}

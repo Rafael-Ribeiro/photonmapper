@@ -17,6 +17,7 @@ struct Material
 	/* depende de lambda TODO: http://en.wikipedia.org/wiki/Sellmeier_equation */
 	double n; /* TODO: for refractions; light speed in natural unit 1 = 3*10^8 */
 
+	Material();
 	Material(const Color& color, double roughness, double absorvance, double emittance, double n);
 
 	double reflectance(const Vector &direction, const Vector &normal, const Material &fromMaterial) const;

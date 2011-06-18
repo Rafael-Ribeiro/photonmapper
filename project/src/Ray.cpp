@@ -38,7 +38,7 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 	double angle;
 
 	if (maxdepth == 0 || relevance < Engine::EPS || !scene.intersect(*this, intersect))
-		return Color(255,0,0);
+		return Color(0,0,0);
 
 	normal = intersect.prim->normal(intersect.point);
 	if (this->inside)
