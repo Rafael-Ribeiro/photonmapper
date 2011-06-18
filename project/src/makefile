@@ -47,6 +47,6 @@ Photon.o: Photon.cpp Photon.hpp
 
 Box.o: Box.cpp Box.hpp
 	g++ Box.cpp -c -o Box.o ${FLAGS}
-
+	
 clean:
 	rm -f *.o ~* renderer

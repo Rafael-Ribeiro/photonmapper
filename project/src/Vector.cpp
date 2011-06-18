@@ -84,13 +84,16 @@ Vector Vector::noise(double noise) const
 	if (noise < Engine::EPS)
 		return Vector(*this);
 
-	double radius, theta, a, b, norm;
+	double radius, theta, r, a, b, norm;
 	Vector u, v, z;
 
-	/* point a, b, inside circle (biased noise towards the center, just how we like it) */
+	/* point a, b, inside circle */
 	norm = this->norm();
-	radius = random01() * norm * noise;
-	theta = random01() * (M_PI * 2);
+
+	theta = M_PI * 2 * random01();
+	r = random01()+random01();
+	radius = norm * noise * (r > 1 ? 2 - r : r);
+
 	a = radius * cos(theta);
 	b = radius * sin(theta); 
 
