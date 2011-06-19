@@ -53,7 +53,7 @@ int main()
 
 	Material glossyBlue = 		Material(Color(0, 0, 255),			0.4,  0.60, 0.0, infinity);
 
-	Material grayConcrete = 	Material(Color(200, 200, 200),		1.0, 0.40, 0.0, infinity);
+	Material whiteConcrete = 	Material(Color(255, 255, 255),		1.0, 0.60, 0.0, infinity);
 	Material blackConcrete = 	Material(Color(0, 0, 0),			1.0, 0.80, 0.0, infinity);
 
 	Material redConcrete = 		Material(Color(255, 0, 0),			1.0, 0.60, 0.0, infinity);
@@ -67,12 +67,12 @@ int main()
 	Sphere s1 	= Sphere(mirror,	Point(	20.0,	-33.0,	0),	7.0); //Point( 10.0,	0.0,	0.0),	5.0)
 	Box b1		= Box(glossyBlue, 	Point( -20, -39.99, 20), Vector(0, 40.0, 0), Vector(-15, 0.0, 10), Vector(10, 0, 15)); 
 	
-	Plane p1 = Plane(grayConcrete,		Point(0.0, -40.0, 0.0),	Vector(0.0, 1.0, 0.0)); 		/* floor */
-	Plane p2 = Plane(grayConcrete,		Point(0.0, +40.0, 0.0),	Vector(0.0, -1.0, 0.0));	 	/* ceil */
+	Plane p1 = Plane(whiteConcrete,		Point(0.0, -40.0, 0.0),	Vector(0.0, 1.0, 0.0)); 		/* floor */
+	Plane p2 = Plane(whiteConcrete,		Point(0.0, +40.0, 0.0),	Vector(0.0, -1.0, 0.0));	 	/* ceil */
 	Plane p3 = Plane(redConcrete,		Point(-40.0, 0.0, 0.0),	Vector(1.0, 0.0, 0.0)); 		/* left */
 	Plane p4 = Plane(greenConcrete,		Point(+40.0, 0.0, 0.0),	Vector(-1.0, 0.0, 0.0));	 	/* right */
-	Plane p5 = Plane(grayConcrete,		Point(  0.0, 0.0, +40),	Vector(0.0, 0.0, -1.0)); 		/* front */
-	Plane p6 = Plane(grayConcrete,		Point(  0.0, 0.0, -80),	Vector(0.0, 0.0, 1.0)); 		/* back */
+	Plane p5 = Plane(whiteConcrete,		Point(  0.0, 0.0, +40),	Vector(0.0, 0.0, -1.0)); 		/* front */
+	Plane p6 = Plane(whiteConcrete,		Point(  0.0, 0.0, -80),	Vector(0.0, 0.0, 1.0)); 		/* back */
 
 	scene.lights.push_back(&q1);
 	scene.primitives.push_back(&q1);

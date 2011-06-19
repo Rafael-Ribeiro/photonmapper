@@ -84,7 +84,7 @@ Vector Vector::noise(double noise, bool biased) const
 	if (noise < Engine::EPS)
 		return Vector(*this);
 
-	double radius, theta, r, a, b, norm;
+	double radius, theta, a, b, norm;
 	Vector u, v, z;
 
 	/* point a, b, inside circle */
