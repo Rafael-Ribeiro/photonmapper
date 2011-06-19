@@ -47,11 +47,20 @@
 \setlength{\parskip}{0.3cm}
 
 \section{Introduction}
-\indent \indent 
+\indent \indent O \emph{ray-tracing} é uma técnica de renderização de imagens que tem como principal objectivo o fotorealismo.
+O funcionamento básico deste conciste na projecção de raios, através de uma grelha no espaço que representa o ecrã.
+Estes raios são reflectidos e refractados até atingirem uma superfície difusa. Quando tal acontece a cor do raio é
+calculada através da proximidade ás luzes e da cor do objecto.
 
-% TODO diferença entre Ray-tracing e Photon mapping
-% entre raio e fotao
+\indent O \emph{photon-mapping} é uma melhoria a este método. Numa fase de pre-processamento são emitidos fotões
+das luzes presentes na cena. Esses fotões são estocásticamente distribuidos, reflectidos, refractados, e absorvidos
+sendo apenas armazenados quando são reflectidos de forma difusa, pois apenas neste caso serão uteis armazenar.
+Posteriormente, na fase de \emph{ray-tracing} a cor dos raios é obtida através da soma da cor dos fotões mais próximos.
+O processo de pré-processamento só é efectuado uma vez por cena, podendo-se reutilizar o \emph{photon-map}
+para a renderização de outros ângulos. 
 
+\indent Este método é 
+ 
 \cleardoublepage
 \section{Implementation}
 \indent \indent Desde o início do projecto, um aspecto fulcral nas decisões tomadas foi a performance. Com

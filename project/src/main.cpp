@@ -63,9 +63,11 @@ int main()
 	/* Primitives */
 	Quad q1 	= Quad(light, Point(10, 39, 10), Point(-10, 39, 10), Point(10, 39, -10));
 	
-	Sphere s0 	= Sphere(glass,		Point(  -5.0,	-25.0,	0),	15.0);
-	Sphere s1 	= Sphere(mirror,	Point(	20.0,	-33.0,	0),	7.0); //Point( 10.0,	0.0,	0.0),	5.0)
-	Box b1		= Box(glossyBlue, 	Point( -20, -39.99, 20), Vector(0, 40.0, 0), Vector(-15, 0.0, 10), Vector(10, 0, 15)); 
+	Sphere s0 	= Sphere(glass,		Point(  -15.0,	-30.0,	-10),	10.0);
+	Sphere s1 	= Sphere(mirror,	Point(	5,		-30.0,	0),	10.0); //Point( 10.0,	0.0,	0.0),	5.0)
+	Sphere s2 	= Sphere(redGlass,	Point(	15.0,	-30.0,	10),	10.0); //Point( 10.0,	0.0,	0.0),	5.0)
+
+	Box b1		= Box(glossyBlue, 	Point( -30, -39.99, 30), Vector(0, 60.0, 0), Vector(-25, 0.0, 20), Vector(20, 0, 25)); 
 	
 	Plane p1 = Plane(whiteConcrete,		Point(0.0, -40.0, 0.0),	Vector(0.0, 1.0, 0.0)); 		/* floor */
 	Plane p2 = Plane(whiteConcrete,		Point(0.0, +40.0, 0.0),	Vector(0.0, -1.0, 0.0));	 	/* ceil */
