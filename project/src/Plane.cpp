@@ -88,4 +88,3 @@ Photon Plane::randomPhoton() const
 
 	return Photon(r, this->mat.color);
 }
-

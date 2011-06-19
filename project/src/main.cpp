@@ -11,6 +11,7 @@
 #include "Sphere.hpp"
 #include "Plane.hpp"
 #include "Quad.hpp"
+#include "Box.hpp"
 
 #include "jsonbox/inc/JsonBox.h"
 
@@ -77,8 +78,6 @@ int main()
 
 		cameras.push_back(camera);
 	}
-
-	//Camera(Point(0, 1, -40.02), Vector(0,0,1), Vector(0,1,0), M_PI/4, WIDTH, HEIGHT)
 
 	/* Parsing was successful. */
 

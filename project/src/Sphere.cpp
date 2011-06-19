@@ -106,7 +106,7 @@ Photon Sphere::randomPhoton() const
 	r = this->radius*sin(phi);
 	p = Point(this->center.x + r*cos(theta), this->center.y + this->radius*cos(phi), this->center.z + r*sin(theta));
 
-	ray = Ray(p, this->normal(p).noise(this->mat.roughness));
+	ray = Ray(p, this->normal(p).noise(this->mat.roughness, true));
 
 	return Photon(ray, this->mat.color);
 }
