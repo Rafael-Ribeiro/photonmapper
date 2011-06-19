@@ -7,12 +7,53 @@
 #include "Engine.hpp"
 #include "utils.hpp"
 
+#include "jsonbox/inc/JsonBox.h"
+
 using namespace std;
+
+Sphere::Sphere()
+	: Primitive()
+{
+}
 
 Sphere::Sphere(const Material& mat, const Vector& center, double radius)
 	: Primitive(mat), center(center), radius(radius)
 {
 	this->radius2 = radius*radius;
+}
+
+Sphere *Sphere::parse(const Material& mat, const JsonBox::Value &sphereVal)
+{
+	JsonBox::Object sphereObj;
+
+	if (!sphereVal.isObject())
+	{
+		cerr << "Error: Sphere must be an Object" << endl;
+		return NULL;
+	}
+
+	sphereObj = sphereVal.getObject();
+
+	if
+	(
+		!sphereObj["center"].isArray()
+		||
+		!sphereObj["center"].getArray()[0].isNumber()
+		||
+		!sphereObj["center"].getArray()[1].isNumber()
+		||
+		!sphereObj["center"].getArray()[2].isNumber()
+		||
+		!sphereObj["radius"].isNumber()
+	)
+	{
+		cerr << "Error: invalid Sphere center/radius." << endl;
+		return NULL;
+	}
+
+	Point center = Point(sphereObj["center"].getArray()[0].getNumber(), sphereObj["center"].getArray()[1].getNumber(), sphereObj["center"].getArray()[2].getNumber());
+
+	return new Sphere(mat, center, sphereObj["radius"].getNumber());
 }
 
 bool Sphere::intersect(const Ray& r, Point& p) const 

@@ -7,7 +7,14 @@
 #include "Engine.hpp"
 #include "utils.hpp"
 
+#include "jsonbox/inc/JsonBox.h"
+
 using namespace std;
+
+Quad::Quad()
+	: Primitive()
+{
+}
 
 Quad::Quad(const Material& mat, const Point& a, const Point& b, const Point& c)
 	: Primitive(mat), a(a), b(b), c(c)
@@ -16,6 +23,40 @@ Quad::Quad(const Material& mat, const Point& a, const Point& b, const Point& c)
 	this->v = c - a; 
 	this->m_area = this->u.cross(this->v).norm();
 	this->m_normal = this->u.cross(this->v).normalized();
+}
+
+Quad *Quad::parse(const Material& mat, const JsonBox::Value &quadVal)
+{
+	JsonBox::Object quadObj;
+
+	if (!quadVal.isObject())
+	{
+		cerr << "Error: Quad must be an Object" << endl;
+		return NULL;
+	}
+
+	quadObj = quadVal.getObject();
+
+	if
+	(
+		!quadObj["pointA"].isArray() || !quadObj["pointB"].isArray() || !quadObj["pointC"].isArray()
+		||
+		!quadObj["pointA"].getArray()[0].isNumber()	|| !quadObj["pointA"].getArray()[1].isNumber() || !quadObj["pointA"].getArray()[2].isNumber()
+		||
+		!quadObj["pointB"].getArray()[0].isNumber() || !quadObj["pointB"].getArray()[1].isNumber() || !quadObj["pointB"].getArray()[2].isNumber()
+		||
+		!quadObj["pointC"].getArray()[0].isNumber() || !quadObj["pointC"].getArray()[1].isNumber() || !quadObj["pointC"].getArray()[2].isNumber()
+	)
+	{
+		cerr << "Error: invalid Quad coords." << endl;
+		return NULL;
+	}
+
+	Point a = Point(quadObj["pointA"].getArray()[0].getNumber(), quadObj["pointA"].getArray()[1].getNumber(), quadObj["pointA"].getArray()[2].getNumber());
+	Point b = Point(quadObj["pointB"].getArray()[0].getNumber(), quadObj["pointB"].getArray()[1].getNumber(), quadObj["pointB"].getArray()[2].getNumber());
+	Point c = Point(quadObj["pointC"].getArray()[0].getNumber(), quadObj["pointC"].getArray()[1].getNumber(), quadObj["pointC"].getArray()[2].getNumber());
+
+	return new Quad(mat,a,b,c);
 }
 
 bool Quad::intersect(const Ray& r, Point& p) const 

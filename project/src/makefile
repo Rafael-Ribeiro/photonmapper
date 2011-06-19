@@ -1,7 +1,8 @@
 FLAGS = -O3 -fopenmp -Wall -ansi -g
+JSONBOX_FILES = jsonbox/Array.o jsonbox/Convert.o jsonbox/Object.o jsonbox/Value.o
 
-all: clean main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o
-	g++ main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o -o renderer ${FLAGS}
+all: clean main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o JsonBox
+	g++ main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o ${JSONBOX_FILES} -o renderer ${FLAGS}
 
 main.o: main.cpp
 	g++ main.cpp -c -o main.o ${FLAGS}
@@ -44,6 +45,22 @@ Ray.o: Ray.cpp Ray.hpp
 
 Photon.o: Photon.cpp Photon.hpp
 	g++ Photon.cpp -c -o Photon.o ${FLAGS}
+
+
+JsonBox: JsonBox_Array.o JsonBox_Convert.o JsonBox_Object.o JsonBox_Value.o
+
+JsonBox_Array.o:
+	g++ jsonbox/Array.cpp -c -o jsonbox/Array.o ${FLAGS}
+
+JsonBox_Convert.o:
+	g++ jsonbox/Convert.cpp -c -o jsonbox/Convert.o ${FLAGS}
+
+JsonBox_Object.o:
+	g++ jsonbox/Object.cpp -c -o jsonbox/Object.o ${FLAGS}
+
+JsonBox_Value.o:
+	g++ jsonbox/Value.cpp -c -o jsonbox/Value.o ${FLAGS}
+
 
 clean:
 	rm -f *.o ~* renderer

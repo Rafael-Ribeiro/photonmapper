@@ -1,16 +1,18 @@
-#include <float.h>
 #include <iostream>
+#include <float.h>
 #include <algorithm>
+#include <map>
 
 #include "Scene.hpp"
 #include "Primitive.hpp"
 
 #include "kdtree++/kdtree.hpp"
+#include "jsonbox/inc/JsonBox.h"
 
 using namespace std;
 
 Scene::Scene()
-	 : nPhotons(0), environment(Material(Color(0xFF,0xFF,0xFF), 0.0, 0.0, 0.0, N_AIR))
+	 : nPhotons(0), environment(Material("surroundingEnvironment", Color(0xFF,0xFF,0xFF), 0.0, 0.0, 0.0, N_AIR))
 {
 }
 
@@ -28,6 +30,114 @@ struct PointDistanceComparator
 		return (p1->ray.origin - this->p).sqrd_norm() < (p2->ray.origin - this->p).sqrd_norm();
 	}
 };
+
+bool Scene::parse(const JsonBox::Value &sceneVal)
+{
+	JsonBox::Object sceneObj;
+
+	JsonBox::Value materialsVal;
+	JsonBox::Array materialsArr;
+
+	JsonBox::Value lightsVal;
+	JsonBox::Array lightsArr;
+
+	JsonBox::Value primitivesVal;
+	JsonBox::Array primitivesArr;
+
+	JsonBox::Value tempVal;
+
+	map<string,Material> materials;
+
+	JsonBox::Array::const_iterator it;
+
+	Material material;
+	Primitive *primitive;
+
+
+	if (sceneVal.isNull())
+	{
+		cerr << "Error: description file doesn't implement Scene." << endl;
+		return false;
+	}
+
+	sceneObj = sceneVal.getObject();
+
+	materialsVal = sceneObj["Materials"];
+	lightsVal = sceneObj["Lights"];
+	primitivesVal = sceneObj["Primitives"];
+	if (!materialsVal.isArray() || !lightsVal.isArray() || !primitivesVal.isArray())
+	{
+		cerr << "Error: description file must implement Scene:Materials, Scene:Lights and Scene:Primitives (maybe not Arrays?)." << endl;
+		return false;
+	}
+
+	materialsArr = materialsVal.getArray();
+	lightsArr = lightsVal.getArray();
+	primitivesArr = primitivesVal.getArray();
+
+	if (materialsArr.size() == 0 || lightsArr.size() == 0 || primitivesArr.size() == 0)
+	{
+		cerr << "Error: description file must have at least one Material, one Light and one Primitive." << endl;
+		return false;
+	}
+
+
+	/* Materials */
+	for (it = materialsArr.begin(); it != materialsArr.end(); it++)
+	{
+		if (!Material::parse(*it, material))
+			break;
+
+		materials[material.name] = material;
+	}
+
+	if (it != materialsArr.end())
+	{
+		cerr << "Error: invalid Material format." << endl;
+		return false;
+	}
+
+
+	/* Lights */
+	for (it = lightsArr.begin(); it != lightsArr.end(); it++)
+	{
+		primitive = Primitive::parse(*it, materials);
+		if (!primitive)
+			break;
+
+		this->lights.push_back(primitive);
+		this->primitives.push_back(primitive);
+	}
+
+	if (it != lightsArr.end())
+	{
+		cerr << "Error: invalid Light format." << endl;
+		return false;
+	}
+
+
+	/* Primitives */
+	for (it = primitivesArr.begin(); it != primitivesArr.end(); it++)
+	{
+		primitive = Primitive::parse(*it, materials);
+		if (!primitive)
+			break;
+
+		this->primitives.push_back(primitive);
+	}
+
+	if (it != primitivesArr.end())
+	{
+		cerr << "Error: invalid Primitive format." << endl;
+		return false;
+	}
+
+
+	/* TODO/FIXME */
+	/* Camera parsing */
+
+	return true;
+}
 
 /* TODO: make this use a kd-tree*/
 bool Scene::intersect(const Ray& ray, Intersection& intersect) const 
@@ -73,7 +183,7 @@ void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
 	for (i = 0; i < this->lights.size(); i++)
 	{
 		n = this->lights[i]->area() * this->lights[i]->mat.emittance*nPhotons/sum;
-	
+
 		for (j = 0; j < n; j++)
 			this->lights[i]->randomPhoton().bounce(*this, nPhotonBounce, photon);	
 	}
