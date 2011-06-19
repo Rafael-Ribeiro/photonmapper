@@ -1,13 +1,8 @@
 FLAGS = -O3 -fopenmp -Wall -ansi -g
 JSONBOX_FILES = jsonbox/Array.o jsonbox/Convert.o jsonbox/Object.o jsonbox/Value.o
 
-<<<<<<< HEAD
-all: clean main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o JsonBox
-	g++ main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o ${JSONBOX_FILES} -o renderer ${FLAGS}
-=======
-all: clean main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o Box.o
-	g++ main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o Box.o -o renderer ${FLAGS}
->>>>>>> 8225a7724dfd20b0e936f29739ccadbcbb69c9d4
+all: clean main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o Box.o JsonBox
+	g++ main.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o Box.o ${JSONBOX_FILES} -o renderer ${FLAGS}
 
 main.o: main.cpp
 	g++ main.cpp -c -o main.o ${FLAGS}
@@ -36,6 +31,9 @@ Sphere.o: Sphere.cpp Sphere.hpp
 Quad.o: Quad.cpp Quad.hpp
 	g++ Quad.cpp -c -o Quad.o ${FLAGS}
 
+Box.o: Box.cpp Box.hpp
+	g++ Box.cpp -c -o Box.o ${FLAGS}
+
 Scene.o: Scene.cpp Scene.hpp
 	g++ Scene.cpp -c -o Scene.o ${FLAGS}
 
@@ -51,7 +49,6 @@ Ray.o: Ray.cpp Ray.hpp
 Photon.o: Photon.cpp Photon.hpp
 	g++ Photon.cpp -c -o Photon.o ${FLAGS}
 
-<<<<<<< HEAD
 
 JsonBox: JsonBox_Array.o JsonBox_Convert.o JsonBox_Object.o JsonBox_Value.o
 
@@ -67,10 +64,6 @@ JsonBox_Object.o:
 JsonBox_Value.o:
 	g++ jsonbox/Value.cpp -c -o jsonbox/Value.o ${FLAGS}
 
-=======
-Box.o: Box.cpp Box.hpp
-	g++ Box.cpp -c -o Box.o ${FLAGS}
-	
 
 validation: box_test
 
@@ -79,7 +72,6 @@ box_test: clean validations/box_test.o Engine.o Scene.o Vector.o Camera.o Color.
 
 box_test.o: validations/box_test.cpp
 	g++ validations/box_test.cpp -c -o validations/box_test.o ${FLAGS}
->>>>>>> 8225a7724dfd20b0e936f29739ccadbcbb69c9d4
 
 clean:
 	rm -f *.o ~* renderer

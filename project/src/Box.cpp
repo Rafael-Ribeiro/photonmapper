@@ -8,7 +8,14 @@
 #include "Engine.hpp"
 #include "utils.hpp"
 
+#include "jsonbox/inc/JsonBox.h"
+
 using namespace std;
+
+Box::Box()
+	: Primitive()
+{
+}
 
 Box::Box(const Material& mat, const Point& source, const Vector& a, const Vector& b, const Vector& c)
 	: Primitive(mat), source(source), a(a), b(b), c(c)
@@ -19,6 +26,43 @@ Box::Box(const Material& mat, const Point& source, const Vector& a, const Vector
 	this->quads[3] = Quad(mat, source+c+b, source+b, source+a+b+c); // back
 	this->quads[4] = Quad(mat, source+b, source, source+a+b); // left
 	this->quads[5] = Quad(mat, source+a, source+a+b, source+a+c); // top
+}
+
+Box *Box::parse(const Material& mat, const JsonBox::Value &boxVal)
+{
+	JsonBox::Object boxObj;
+
+	if (!boxVal.isObject())
+	{
+		cerr << "Error: Box must be an Object" << endl;
+		return NULL;
+	}
+
+	boxObj = boxVal.getObject();
+
+	if
+	(
+		!boxObj["source"].isArray() || !boxObj["vectorA"].isArray() || !boxObj["vectorB"].isArray() || !boxObj["vectorC"].isArray()
+		||
+		!boxObj["source"].getArray()[0].isNumber()	|| !boxObj["source"].getArray()[1].isNumber() || !boxObj["source"].getArray()[2].isNumber()
+		||
+		!boxObj["vectorA"].getArray()[0].isNumber()	|| !boxObj["vectorA"].getArray()[1].isNumber() || !boxObj["vectorA"].getArray()[2].isNumber()
+		||
+		!boxObj["vectorB"].getArray()[0].isNumber() || !boxObj["vectorB"].getArray()[1].isNumber() || !boxObj["vectorB"].getArray()[2].isNumber()
+		||
+		!boxObj["vectorC"].getArray()[0].isNumber() || !boxObj["vectorC"].getArray()[1].isNumber() || !boxObj["vectorC"].getArray()[2].isNumber()
+	)
+	{
+		cerr << "Error: invalid Box source/vectors." << endl;
+		return NULL;
+	}
+
+	Point source = Point(boxObj["source"].getArray()[0].getNumber(), boxObj["source"].getArray()[1].getNumber(), boxObj["source"].getArray()[2].getNumber());
+	Vector a = Vector(boxObj["vectorA"].getArray()[0].getNumber(), boxObj["vectorA"].getArray()[1].getNumber(), boxObj["vectorA"].getArray()[2].getNumber());
+	Vector b = Vector(boxObj["vectorB"].getArray()[0].getNumber(), boxObj["vectorB"].getArray()[1].getNumber(), boxObj["vectorB"].getArray()[2].getNumber());
+	Vector c = Vector(boxObj["vectorC"].getArray()[0].getNumber(), boxObj["vectorC"].getArray()[1].getNumber(), boxObj["vectorC"].getArray()[2].getNumber());
+
+	return new Box(mat, source, a, b, c);
 }
 
 bool Box::intersect(const Ray& r, Point& p) const
