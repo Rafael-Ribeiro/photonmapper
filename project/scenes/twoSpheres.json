@@ -1,0 +1,99 @@
+{
+	"Scene" :
+	{
+		"Materials" :
+		[
+			{ "name" : "light",			"color" : [255, 255, 255],	"roughness" : 1.00,		"absorvance" : 1.00,	"emittance" : 1.0,	"n" : 1.492 },
+
+			{ "name" : "glass",			"color" : [255, 255, 255],	"roughness" : 0.02,		"absorvance" : 0.02,	"emittance" : 0.0,	"n" : 1.492 },
+			{ "name" : "mirror",		"color" : [255, 255, 255],	"roughness" : 0.02,		"absorvance" : 0.02,	"emittance" : 0.0,	"n" : "infinity" },
+
+			{ "name" : "redGlass",		"color" : [255, 0, 0],		"roughness" : 0.02,		"absorvance" : 0.02,	"emittance" : 0.0,	"n" : 1.492 },
+			{ "name" : "greenGlass",	"color" : [0, 255, 0],		"roughness" : 0.02,		"absorvance" : 0.02,	"emittance" : 0.0,	"n" : 1.492 },
+			{ "name" : "blueGlass",		"color" : [0, 0, 255],		"roughness" : 0.02,		"absorvance" : 0.02,	"emittance" : 0.0,	"n" : 1.492 },
+			{ "name" : "blackGlass",	"color" : [0, 0, 0],		"roughness" : 0.02,		"absorvance" : 0.02,	"emittance" : 0.0,	"n" : 1.492 },
+
+			{ "name" : "grayConcrete",	"color" : [166, 166, 166],	"roughness" : 1.00,		"absorvance" : 0.40,	"emittance" : 0.0,	"n" : "infinity" },
+			{ "name" : "blackConcrete",	"color" : [0, 0, 0],		"roughness" : 1.00,		"absorvance" : 0.80,	"emittance" : 0.0,	"n" : "infinity" },
+			{ "name" : "whiteConcrete",	"color" : [255, 255, 255],	"roughness" : 1.00,		"absorvance" : 0.40,	"emittance" : 0.0,	"n" : "infinity" },
+
+			{ "name" : "redConcrete",	"color" : [255, 0, 0],		"roughness" : 1.00,		"absorvance" : 0.60,	"emittance" : 0.0,	"n" : "infinity" },
+			{ "name" : "greenConcrete",	"color" : [0, 255, 0],		"roughness" : 1.00,		"absorvance" : 0.60,	"emittance" : 0.0,	"n" : "infinity" },
+			{ "name" : "blueConcrete",	"color" : [0, 0, 255],		"roughness" : 1.00,		"absorvance" : 0.60,	"emittance" : 0.0,	"n" : "infinity" }
+		],
+
+		"Lights" :
+		[
+			{
+				"type" : "Box",
+				"material" : "light",
+				"source" : [10, 37, 10],
+				"vectorA" : [0, 2, 0],
+				"vectorB" : [-20, 0, 0],
+				"vectorC" : [0, 0, -20],
+				"name" : "ceilingAreaLight"
+			}
+		],
+
+		"Primitives" :
+		[
+			{
+				"type" : "Sphere",
+				"material" : "mirror",
+				"center" : [-15.0, -30.0, 0.0],
+				"radius" : 10.0,
+				"name" : "sphere1"
+			},
+			{
+				"type" : "Sphere",
+				"material" : "glass",
+				"center" : [15.0, -30.0, 0.0],
+				"radius" : 10.0,
+				"name" : "sphere2"
+			},
+
+			{ "type" : "Plane", "material" : "whiteConcrete",	"point" : [0.0, -40.0, 0.0],	"normal" : [0.0, 1.0, 0.0],		"name" : "floorPlane" },
+			{ "type" : "Plane", "material" : "whiteConcrete",	"point" : [0.0, 40.0, 0.0],		"normal" : [0.0, -1.0, 0.0],	"name" : "ceilingPlane" },
+			{ "type" : "Plane", "material" : "redConcrete",		"point" : [-40.0, 0.0, 0.0],	"normal" : [1.0, 0.0, 0.0],		"name" : "leftPlane" },
+			{ "type" : "Plane", "material" : "greenConcrete",	"point" : [40.0, 0.0, 0.0],		"normal" : [-1.0, 0.0, 0.0],	"name" : "rightPlane" },
+			{ "type" : "Plane", "material" : "mirror",			"point" : [0.0, 0.0, 40],		"normal" : [0.0, 0.0, -1.0],	"name" : "frontPlane" },
+			{ "type" : "Plane", "material" : "mirror",			"point" : [0.0, 0.0, -41],		"normal" : [0.0, 0.0, 1.0],		"name" : "backPlane" }
+		]
+	},
+
+	"Cameras" :
+	[
+		{
+			"origin" : [0, 1, -40.0],
+			"direction" : [0, 0, 1],
+			"top" : [0, 1, 0],
+			"fovy" : 45.0,
+			"width" : 800,
+			"height" : 600,
+			"filename" : "../renders/front.ppm"
+		},
+		{
+			"origin" : [0, 1, -40.0],
+			"direction" : [0, 0, -1],
+			"top" : [0, 1, 0],
+			"fovy" : 45.0,
+			"width" : 800,
+			"height" : 600,
+			"filename" : "../renders/back.ppm"
+		}
+	],
+
+	"Engine" :
+	{
+		"Configurations" :
+		{
+			"MAX_PHOTONS" : 5000000,
+			"MAX_PHOTON_BOUNCE" : 10,
+			"MAX_RAY_BOUNCE" : 10,
+			"MAX_GATHER_DISTANCE" : 2,
+			"EXPOSURE" : 0.008,
+			"EPS" : 1e-10,
+			"ANTIALIAS_THRESHOLD" : 0.5
+		}
+	}
+}
