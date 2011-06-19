@@ -69,9 +69,21 @@ double Box::area() const
 
 Photon Box::randomPhoton() const
 {
-	// TODO
+	double A1, A2, A3, r;
+	int i;
 
-	Ray r = Ray(Point(0,0,0), Vector(1,0,0));
+	A1 = this->b.norm() * this->c.norm();
+	A2 = this->a.norm() * this->b.norm();
+	A3 = this->a.norm() * this->c.norm();
 
-	return Photon(r, this->mat.color);
+	r = random01()*(A1+A2+A3);
+
+	if (r < A1)
+		i = (r < A1/2) ? 0 : 5;  
+	else if (r < A1+A2)
+		i = (r - A1 < A2/2) ? 2 : 4;
+	else
+		i = (r - A1-A2 < A3/2) ? 1 : 3;
+
+	return this->quads[i].randomPhoton();
 }

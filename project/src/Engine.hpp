@@ -15,9 +15,6 @@ struct Engine
 	static const double MAX_GATHER_DISTANCE_SQRD = 4;
 	static const double EXPOSURE = 0.02;
 	static const double EPS = 1e-10;
-	static const double CONSTANT_LIGHT_ATTENUATION = 1.0;
-	static const double LINEAR_LIGHT_ATTENUATION = 0.2;
-	static const double QUADRATIC_LIGHT_ATTENUATION = 0.01;
 	static const double ANTIALIAS_THRESHOLD = 0.5;
 
 	static const Vector top; /* used for internal calculations, this is not the camera's top */

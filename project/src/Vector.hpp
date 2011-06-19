@@ -28,7 +28,7 @@ struct Vector
 
 	Vector normalized() const;
 
-	Vector noise(double noise) const;
+	Vector noise(double noise, bool biased = false) const;
 
 	friend ostream &operator << (ostream &stream, Vector c);
 };

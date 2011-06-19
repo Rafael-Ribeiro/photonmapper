@@ -79,7 +79,7 @@ Vector Vector::normalized() const
 	return *this/this->norm();
 }
 
-Vector Vector::noise(double noise) const
+Vector Vector::noise(double noise, bool biased) const
 {
 	if (noise < Engine::EPS)
 		return Vector(*this);
@@ -90,9 +90,17 @@ Vector Vector::noise(double noise) const
 	/* point a, b, inside circle */
 	norm = this->norm();
 
-	theta = M_PI * 2 * random01();
-	r = random01()+random01();
-	radius = norm * noise * (r > 1 ? 2 - r : r);
+	if (biased)
+	{
+        norm = this->norm();
+        radius = random01() * norm * noise;
+        theta = random01() * (M_PI * 2);
+	} else
+	{
+		theta = M_PI * 2 * random01();
+		r = random01()+random01();
+		radius = norm * noise * (r > 1 ? 2 - r : r);
+	}
 
 	a = radius * cos(theta);
 	b = radius * sin(theta); 

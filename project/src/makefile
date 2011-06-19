@@ -48,5 +48,14 @@ Photon.o: Photon.cpp Photon.hpp
 Box.o: Box.cpp Box.hpp
 	g++ Box.cpp -c -o Box.o ${FLAGS}
 	
+
+validation: box_test
+
+box_test: clean validations/box_test.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o Box.o
+	g++ validations/box_test.o Engine.o Scene.o Vector.o Camera.o Color.o Plane.o Sphere.o Primitive.o Material.o utils.o Ray.o Photon.o Quad.o Box.o -o validations/box_test ${FLAGS}
+
+box_test.o: validations/box_test.cpp
+	g++ validations/box_test.cpp -c -o validations/box_test.o ${FLAGS}
+
 clean:
 	rm -f *.o ~* renderer
