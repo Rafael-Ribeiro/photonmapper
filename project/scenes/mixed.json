@@ -12,8 +12,7 @@
 			{ "name" : "white_concrete",	"color" : [255, 255, 255],	"roughness" : 1.00,		"absorvance" : 0.40,	"emittance" : 0.0,	"n" : "infinity" },
 			{ "name" : "red_concrete",		"color" : [255, 0, 0],		"roughness" : 1.00,		"absorvance" : 0.60,	"emittance" : 0.0,	"n" : "infinity" },
 			{ "name" : "green_concrete",	"color" : [0, 255, 0],		"roughness" : 1.00,		"absorvance" : 0.60,	"emittance" : 0.0,	"n" : "infinity" },
-		
-			{ "name" : "blue_glossy",		"color" : [0, 0, 255],		"roughness" : 0.40,		"absorvance" : 0.60,	"emittance" : 0.0,	"n" : "infinity" },
+			{ "name" : "black_concrete",	"color" : [200, 200, 200],	"roughness" : 1.00,		"absorvance" : 0.40,	"emittance" : 0.0,	"n" : "infinity" },
 		],
 
 		"Lights" :
@@ -33,31 +32,24 @@
 			{
 				"type" : "Sphere",
 				"material" : "glass",
-				"center" : [-15.0, -30.0, -15.0],
+				"center" : [-15.0, -30.0, -10.0],
 				"radius" : 10.0,
 				"name" : "sphere1"
 			},
 			{
 				"type" : "Sphere",
 				"material" : "mirror",
-				"center" : [0.0, -30.0, 0.0],
+				"center" : [15.0, -30.0, -10.0],
 				"radius" : 10.0,
 				"name" : "sphere2"
 			},
 			{
-				"type" : "Sphere",
-				"material" : "red_glass",
-				"center" : [15.0, -30.0, 15.0],
-				"radius" : 10.0,
-				"name" : "sphere3"
-			},
-			{
 				"type" : "Box",
-				"material" : "blue_glossy",
-				"source" : [-10, -39, -5],
-				"vectorA" : [0, 60, 0],
-				"vectorB" : [-10, 0, 25],
-				"vectorC" : [25, 0, 10],
+				"material" : "black_concrete",
+				"source" : [-5, -39, -5],
+				"vectorA" : [0, 40, 0],
+				"vectorB" : [-20, 0, 25],
+				"vectorC" : [25, 0, 20],
 				"name" : "box1"
 			},
 
@@ -73,9 +65,9 @@
 	"Cameras" :
 	[
 		{
-			"origin" : [0, 1, -60.0],
-			"direction" : [0, 0, 1],
-			"top" : [0, 1, 0],
+			"origin" : [0, 20, -60.0],
+			"direction" : [0, -0.342020143325, 0.9396926207859],
+			"top" : [0, 0.9396926207859, 0.342020143325],
 			"fovy" : 45.0,
 			"width" : 800,
 			"height" : 600,
@@ -87,11 +79,11 @@
 	{
 		"Configurations" :
 		{
-			"MAX_PHOTONS" : 2000000,
+			"MAX_PHOTONS" : 5000000,
 			"MAX_PHOTON_BOUNCE" : 10,
-			"MAX_RAY_BOUNCE" : 50,
-			"MAX_GATHER_DISTANCE" : 2,
-			"EXPOSURE" : 0.02,
+			"MAX_RAY_BOUNCE" : 10,
+			"MAX_GATHER_DISTANCE" : 2.5,
+			"EXPOSURE" : 0.008,
 			"EPS" : 1e-10,
 			"ANTIALIAS_THRESHOLD" : 0.5
 		}
