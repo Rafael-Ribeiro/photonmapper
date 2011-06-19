@@ -96,7 +96,14 @@ arestas que contém este vértice.
 
 \cleardoublepage
 \subsection{Reflection}
-\indent \indent No modelo físico a componente difusa de um material corresponde à reflecção da luz numa superfície
+
+\begin{center}
+	\includegraphics[scale=0.50]{images/reflection.png}
+	\captionof{figure}{Reflection}
+	\label{fig:reflection}
+\end{center}
+
+\indent No modelo físico a componente difusa de um material corresponde à reflecção da luz numa superfície
 que contém micro-ruído. A luz ao insidir nesta superfície é espalhada para várias direcções. 
 
 \indent Este fenómeno é facilmente reproduzido na fase de \emph{photon-mapping}.
@@ -116,7 +123,13 @@ através de reflecções difusas.
 
 \cleardoublepage
 \subsection{Refraction}
-\indent \indent A refracção é um efeito visível quando a luz muda entre meios com diferentes densidades.
+\begin{center}
+	\includegraphics[scale=0.50]{images/caustics.png}
+	\captionof{figure}{Caustics}
+	\label{fig:caustics}
+\end{center}
+
+\indent A refracção é um efeito visível quando a luz muda entre meios com diferentes densidades.
 Este efeito caracteriza-se pela diferença entre a direcção do raio incidente e a direcção do raio emergente. 
 Desta forma a sua implementação adequa-se na sua totalidade ao paradigma de ray-tracing.
 
@@ -127,11 +140,17 @@ um raio ao passar pelo mesmo material obtém parte da sua cor através da cor do
 \subsubsection{Caustics}
 \indent \indent Ao sofrer sucessivas refracções, os fotões tendem a convergir, dando origem a cáusticas luminosas.
 Este efeito depende apenas do \emph{photon-mapping} pelo que sem ele (i.e.: com \emph{ray-tracing} puro)
-não são observáveis. 
+não são observáveis.
 
 \cleardoublepage
 \subsection{Anti-Alliasing}
-\indent \indent Um método de obter melhores resultados é através da sobresamplagem da imagem (ex.: projectando
+\begin{center}
+	\includegraphics[scale=0.50]{images/sobel.png}
+	\captionof{figure}{Sobel's operator result}
+	\label{fig:sobel}
+\end{center}
+
+\indent Um método de obter melhores resultados é através da sobresamplagem da imagem (ex.: projectando
 4 raios por píxel ao invés de apenas 1). No entanto este método é computacionalmente dispendioso pelo que não
 deve ser aplicado à imagem na sua totalidade.
 
