@@ -37,8 +37,10 @@ public:
 	Point source;
 	Vector a, b, c;
 
+	Box();
 	Box(const Material& mat, const Point& source, const Vector& a, const Vector& b, const Vector& c);
 
+	static Box* parse(const Material& mat, const JsonBox::Value &boxVal);
 	bool intersect(const Ray& r, Point& p) const;
 	Vector normal(const Point& p) const;
 	double area() const;

@@ -3,6 +3,7 @@
 #include "Plane.hpp"
 #include "Quad.hpp"
 #include "Sphere.hpp"
+#include "Box.hpp"
 
 #include <map>
 
@@ -47,9 +48,13 @@ Primitive *Primitive::parse(const JsonBox::Value &primitiveVal, map<string,Mater
 
 	if (primitive["type"].getString().compare("Box") == 0)
 	{
-		/* TODO/FIXME */
-		cerr << "Error: Box type not implemented yet." << endl;
-		return NULL;
+		prim = Box::parse(mat, primitiveVal);
+		if (!prim)
+		{
+			cerr << "Error: invalid Box format." << endl;
+			return NULL;
+		}
+
 	} else if (primitive["type"].getString().compare("Plane") == 0)
 	{
 		prim = Plane::parse(mat, primitiveVal);
