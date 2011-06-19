@@ -1,0 +1,91 @@
+\documentclass[a4paper]{article}
+
+\usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\newcommand{\documentTitle}{Photorealistic Graphics - Photon mapping} %Macro definition
+\newcommand{\documentAuthors}{João Rafael (2008111876, jprafael@student.dei.uc.pt) \and José Ribeiro (2008112181, jbaia@student.dei.uc.pt)} %Macro definition
+
+\title{\documentTitle}
+\author{\documentAuthors{}}
+
+\usepackage{hyperref}
+\hypersetup{
+	pdftitle = \documentTitle
+	,pdfauthor = \documentAuthors
+	,pdfsubject = {Computer Graphics Project \#2 Report}
+	,pdfkeywords = {Computer Graphics Project} {Photon Mapping} {Raytracing}
+	,pdfborder = {0 0 0}
+}
+
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{wrapfig}
+\usepackage{array}
+\usepackage{anysize}
+\usepackage{lscape}
+\usepackage[pdftex]{graphicx}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+
+\marginsize{3.5cm}{3.5cm}{3cm}{3cm}
+
+\makeatletter
+
+\begin{document}
+\renewcommand{\figurename}{Figure}
+\maketitle
+\cleardoublepage
+
+\tableofcontents
+\cleardoublepage
+
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{0.3cm}
+
+\section{Introduction}
+\indent \indent 
+
+\cleardoublepage
+\section{Implementation}
+\indent \indent 
+
+\cleardoublepage
+\subsection{Primitives}
+\indent \indent 
+
+\subsection{Anti-Alliasing}
+\indent \indent
+
+\cleardoublepage
+\subsection{Reflection}
+\subsubsection{Specular}
+\indent \indent 
+
+\subsubsection{Diffuse}
+\indent \indent No modelo físico a componente difusa de um material corresponde à reflecção da luz numa superfície
+que contém micro-ruído. A luz ao insidir nesta superfície é espalhada para várias direcções. 
+
+\indent Este fenómeno é facilmente reproduzido na fase de \emph{photon-mapping}.
+No entanto, na fase de \emph{ray-tracing} seria necessário projectar, para cada reflecção, vários ráios, o que
+é computacionalmente muito exigente.
+
+\indent Nesta fase, é portanto, utilizada uma diferente abordagem: a cor difusa inferida a partir da radiosidade local,
+isto é, pela intensidade\footnote[1]{A importância de cada fotão depende do ângulo formado entre a sua direcção e a da normal à superfície} dos fotões perto do ponto de reflecção.
+
+\indent Um efeito visível com esta técnica é o \emph{color bleeding}: transferência de cor entre duas superfícies
+através de reflecções difusas.
+
+\cleardoublepage
+\subsection{Refraction}
+\subsubsection{Transmission}
+
+\subsubsection{Caustics}
+
+\cleardoublepage
+\section{Gallery}
+\indent \indent 
+
+\end{document}
