@@ -78,11 +78,11 @@ Color Ray::getColor(const Scene& scene, int maxdepth, double relevance) const
 		{	
 			angle = (*photon).ray.direction.dot(normal);
 			if (angle > 0 && ((intersect.point - (*photon).ray.origin).sqrd_norm() < Engine::MAX_GATHER_DISTANCE_SQRD))
-				diffuseReflection = diffuseReflection + (*photon).color * Engine::EXPOSURE * angle;
+				diffuseReflection = diffuseReflection + (*photon).color * angle;
 
 		}
 
-		diffuseReflection = diffuseReflection / (M_PI * Engine::MAX_GATHER_DISTANCE_SQRD);
+		diffuseReflection = diffuseReflection * Engine::EXPOSURE / (M_PI * Engine::MAX_GATHER_DISTANCE_SQRD);
 		colorReflection =
 				(diffuseReflection * reflectance * roughness)
 				+ (specularReflection * reflectance * (1 - roughness));

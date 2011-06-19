@@ -63,9 +63,10 @@ void Photon::bounce(Scene& scene, unsigned int bouncesLeft, Photon& photon)
 		if ((r - absorvance)/reflectance < roughness)
 		{
 			/* diffuse reflection */
-			photon.ray.direction = normal.noise(roughness);
-
+			photon.ray.direction = normal;
 			scene.storePhoton(photon);
+
+			photon.ray.direction = normal.noise(roughness);
 		} else
 			photon.ray.direction = intersect.prim->mat.reflectionDirection(this->ray.direction, normal);
 
