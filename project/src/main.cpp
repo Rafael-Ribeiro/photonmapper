@@ -46,26 +46,26 @@ int main()
 	Material glass =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, 1.492);
 	Material mirror =			Material(Color(255, 255, 255),		0.02, 0.02, 0.0, infinity);
 
-	Material redGlass =			Material(Color(255,   0,   0),		0.02, 0.02, 0.0, 1.492);
-	Material greenGlass =		Material(Color(  0, 255,   0),		0.02, 0.02, 0.0, 1.492);
-	Material blueGlass =		Material(Color(  0,   0, 255),		0.02, 0.02, 0.0, 1.492);
+	Material redGlass =			Material(Color(250,   0,   0),		0.02, 0.02, 0.0, 1.492);
+	Material greenGlass =		Material(Color(  0, 250,   0),		0.02, 0.02, 0.0, 1.492);
+	Material blueGlass =		Material(Color(  0,   0, 250),		0.02, 0.02, 0.0, 1.492);
 	Material blackGlass =		Material(Color(  0,   0, 0),		0.02, 0.02, 0.0, 1.492);
 
-	Material glossyBlue = 		Material(Color(0, 0, 255),			0.4,  0.60, 0.0, infinity);
+	Material glossyBlue = 		Material(Color(0, 0, 250),			0.4,  0.60, 0.0, infinity);
 
 	Material grayConcrete = 	Material(Color(200, 200, 200),		0.98, 0.40, 0.0, infinity);
 	Material blackConcrete = 	Material(Color(0, 0, 0),			0.98, 0.80, 0.0, infinity);
 
-	Material redConcrete = 		Material(Color(255, 0, 0),			0.98, 0.60, 0.0, infinity);
-	Material greenConcrete =	Material(Color(0, 255, 0),			0.98, 0.60, 0.0, infinity);
-	Material blueConcrete = 	Material(Color(0, 0, 255),			0.98, 0.60, 0.0, infinity);
+	Material redConcrete = 		Material(Color(250, 0, 0),			0.98, 0.60, 0.0, infinity);
+	Material greenConcrete =	Material(Color(0, 250, 0),			0.98, 0.60, 0.0, infinity);
+	Material blueConcrete = 	Material(Color(0, 0, 250),			0.98, 0.60, 0.0, infinity);
 
 	/* Primitives */
 	Quad q1 	= Quad(light, Point(10, 39, 10), Point(-10, 39, 10), Point(10, 39, -10));
 	
 	Sphere s0 	= Sphere(glass,		Point(  -5.0,	-25.0,	0),	15.0);
 	Sphere s1 	= Sphere(mirror,	Point(	20.0,	-33.0,	0),	7.0); //Point( 10.0,	0.0,	0.0),	5.0)
-	Box b1		= Box(glossyBlue, 	Point( -20, -39.99, 20), Vector(0, 40.0, 0), Vector(-15, 0.0, 10), Vector(10, 0, 15)); 
+	Box b1		= Box(glossyBlue, 	Point( -20, -39.99, 20), Vector(0, 60.0, 0), Vector(-15, 0.0, 10), Vector(10, 0, 15)); 
 	
 	Plane p1 = Plane(grayConcrete,		Point(0.0, -40.0, 0.0),	Vector(0.0, 1.0, 0.0)); 		/* floor */
 	Plane p2 = Plane(grayConcrete,		Point(0.0, +40.0, 0.0),	Vector(0.0, -1.0, 0.0));	 	/* ceil */

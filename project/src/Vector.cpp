@@ -90,17 +90,8 @@ Vector Vector::noise(double noise, bool biased) const
 	/* point a, b, inside circle */
 	norm = this->norm();
 
-	if (biased)
-	{
-        norm = this->norm();
-        radius = random01() * norm * noise;
-        theta = random01() * (M_PI * 2);
-	} else
-	{
-		theta = M_PI * 2 * random01();
-		r = random01()+random01();
-		radius = norm * noise * (r > 1 ? 2 - r : r);
-	}
+    radius = random01() * norm * noise;
+    theta = random01() * (M_PI * 2);
 
 	a = radius * cos(theta);
 	b = radius * sin(theta); 
