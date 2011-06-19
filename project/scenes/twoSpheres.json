@@ -70,7 +70,16 @@
 			"fovy" : 45.0,
 			"width" : 800,
 			"height" : 600,
-			"filename" : "../renders/out.ppm"
+			"filename" : "../renders/front.ppm"
+		},
+		{
+			"origin" : [0, 1, -40.0],
+			"direction" : [0, 0, -1],
+			"top" : [0, 1, 0],
+			"fovy" : 45.0,
+			"width" : 800,
+			"height" : 600,
+			"filename" : "../renders/back.ppm"
 		}
 	],
 
