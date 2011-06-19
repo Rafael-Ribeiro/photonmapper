@@ -5,8 +5,12 @@
 #include "Color.hpp"
 #include "Ray.hpp"
 
+#include "jsonbox/inc/JsonBox.h"
+
 struct Material
 {
+	string name;
+
 	Color color;
 
 	double absorvance; /* 0..1; */
@@ -17,7 +21,9 @@ struct Material
 	double n; /* for refractions; light speed in natural unit 1 = 3*10^8 */
 
 	Material();
-	Material(const Color& color, double roughness, double absorvance, double emittance, double n);
+	Material(string name, const Color& color, double roughness, double absorvance, double emittance, double n);
+
+	static bool parse(const JsonBox::Value &materialVal, Material &material);
 
 	double reflectance(const Vector &direction, const Vector &normal, const Material &fromMaterial) const;
 	Vector reflectionDirection(const Vector &direction, const Vector &normal) const;

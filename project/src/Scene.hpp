@@ -7,6 +7,7 @@
 #include "Material.hpp"
 
 #include "kdtree++/kdtree.hpp"
+#include "jsonbox/inc/JsonBox.h"
 
 #define N_AIR ((double)1.0) /* light of speed in the air is approximately the same as in vacuum */
 
@@ -34,6 +35,7 @@ struct Scene
 
 	Material environment;
 
+	bool parse(const JsonBox::Value &sceneVal);
 	/* TODO: kd-tree */
 	bool intersect(const Ray& p, Intersection& intersect) const;
 	void buildPhotonMap(int nPhotons, int nPhotonBounce);

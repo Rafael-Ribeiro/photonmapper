@@ -12,6 +12,15 @@ using namespace std;
 const Vector Engine::top = Vector(0, 1, 0);
 const Vector Engine::right = Vector(1, 0, 0);
 
+int Engine::MAX_PHOTONS = Engine::DEFAULT_MAX_PHOTONS;
+int Engine::MAX_PHOTON_BOUNCE = Engine::DEFAULT_MAX_PHOTON_BOUNCE;
+int Engine::MAX_RAY_BOUNCE = Engine::DEFAULT_MAX_RAY_BOUNCE;
+double Engine::MAX_GATHER_DISTANCE = Engine::DEFAULT_MAX_GATHER_DISTANCE;
+double Engine::MAX_GATHER_DISTANCE_SQRD = Engine::DEFAULT_MAX_GATHER_DISTANCE_SQRD;
+double Engine::EXPOSURE = Engine::DEFAULT_EXPOSURE;
+double Engine::EPS = Engine::DEFAULT_EPS;
+double Engine::ANTIALIAS_THRESHOLD = Engine::DEFAULT_ANTIALIAS_THRESHOLD;
+
 Engine::Engine()
 {
 }
@@ -23,6 +32,71 @@ Engine::Engine(Scene& scene)
 	this->nPhotonBounce = Engine::MAX_PHOTON_BOUNCE;
 }
 
+void Engine::setup(Scene& scene)
+{
+	this->scene = scene;
+	this->nPhotons = Engine::MAX_PHOTONS;
+	this->nPhotonBounce = Engine::MAX_PHOTON_BOUNCE;
+}
+
+bool Engine::parse(const JsonBox::Value &engineVal)
+{
+	JsonBox::Object engineObj;
+	JsonBox::Value configVal;
+	JsonBox::Object configObj;
+
+	JsonBox::Value tempVal;
+
+	if (engineVal.isNull())
+	{
+		cerr << "(warning: using default Engine constants, since description file doesn't implement Engine)" << endl;
+		return false;
+	}
+
+	engineObj = engineVal.getObject();
+
+	configVal = engineObj["Configurations"];
+	if (configVal.isNull())
+	{
+		cerr << "(warning: using default Engine constants, since description file doesn't implement Engine:Configurations)" << endl;
+		return false;
+	}
+
+	configObj = configVal.getObject();
+
+	tempVal = configObj["MAX_PHOTONS"];
+	if (tempVal.isInteger())
+		Engine::MAX_PHOTONS = tempVal.getInt();
+
+	tempVal = configObj["MAX_PHOTON_BOUNCE"];
+	if (tempVal.isInteger())
+		Engine::MAX_PHOTON_BOUNCE = tempVal.getInt();
+
+	tempVal = configObj["MAX_RAY_BOUNCE"];
+	if (tempVal.isInteger())
+		Engine::MAX_RAY_BOUNCE = tempVal.getInt();
+
+	tempVal = configObj["MAX_GATHER_DISTANCE"];
+	if (tempVal.isNumber())
+	{
+		Engine::MAX_GATHER_DISTANCE = tempVal.getNumber();
+		Engine::MAX_GATHER_DISTANCE_SQRD = Engine::MAX_GATHER_DISTANCE * Engine::MAX_GATHER_DISTANCE;
+	}
+
+	tempVal = configObj["EXPOSURE"];
+	if (tempVal.isNumber())
+		Engine::EXPOSURE = tempVal.getNumber();
+
+	tempVal = configObj["EPS"];
+	if (tempVal.isNumber())
+		Engine::EPS = tempVal.getNumber();
+
+	tempVal = configObj["ANTIALIAS_THRESHOLD"];
+	if (tempVal.isNumber())
+		Engine::ANTIALIAS_THRESHOLD = tempVal.getNumber();
+
+	return true;
+}
 
 void Engine::antialias(const Camera& camera)
 {
@@ -170,7 +244,7 @@ Color* Engine::render(const Camera& camera)
 	
 	*/
 
-	//this->antialias(camera);
+	this->antialias(camera);
 
 	return pixels;
 }
