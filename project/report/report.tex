@@ -208,7 +208,15 @@ calculada através da normal à superfície, e a cor provém destes.
 
 \subsubsection{Diffuse}
 \indent Caso a reflecção seja difusa a cor é inferida a partir da radiosidade local,
-isto é, pela intensidade\footnote[1]{A importância de cada fotão depende do coseno do ângulo formado entre a sua direcção e a da normal à superfície} dos fotões perto do ponto de reflecção.
+isto é, pela intensidade\footnote{A importância de cada fotão depende do coseno do ângulo formado entre a sua direcção e a da normal à superfície} dos fotões perto do ponto de reflecção.
+
+\begin{displaymath}
+	Radiosity = \frac{E}{\pi r^{2}} \sum \limits_{p \in P}{\max(0, \vec{N} \cdot \vec{d_{p}})}
+\end{displaymath}
+
+\indent Onde $E$ é a intensidade de luz de um fotão (\emph{exposure}), $r$ é o raio de influência de um fotão,
+$P$ é o conjunto de fotões a uma distância máxima $r$ do ponto, $\vec{N}$ é o vector normal à superfície
+e $\vec{d_{p}}$ é a direcção do fotão $p$. 
 
 \indent Um efeito visível com esta técnica é o \emph{color bleeding}: transferência de cor entre duas superfícies
 através de reflecções difusas.
@@ -254,18 +262,67 @@ são sobresamplados.
 \section{Gallery}
 \subsection{Evolution}
 \begin{center}
-	\includegraphics[scale=1.00]{images/gallery/photon_projection.png}
-	\captionof{figure}{Initial projection of photons on the surface of a sphere shapped light}
+	\includegraphics[scale=0.50]{images/gallery/photon_projection.png}
+	\captionof{figure}{Initial projection of photons on the surface of a sphere shapped light.}
 	\label{fig:photon_projection}
 \end{center}
 
 \begin{center}
-	\includegraphics[scale=1.00]{images/gallery/ray_casting.png}
-	\captionof{figure}{First projection and intersection of rays and spheres}
+	\includegraphics[scale=0.50]{images/gallery/ray_casting.png}
+	\captionof{figure}{First projection and intersection of rays and spheres.}
 	\label{fig:ray_projection}
 \end{center}
 
+\begin{center}
+	\includegraphics[scale=0.45]{images/gallery/diffuse.png}
+	\captionof{figure}{Radiosity gathering of photons emitted by a white light (here still rendered black).}
+	\label{fig:diffuse}
+\end{center}
 
+\begin{center}
+	\includegraphics[scale=0.45]{images/gallery/reflection.png}
+	\captionof{figure}{Over-exposed image of a scene showing reflections.}
+	\label{fig:reflections}
+\end{center}
+
+\begin{center}
+	\includegraphics[scale=0.45]{images/gallery/color_bleed.png}
+	\captionof{figure}{Exagerated color bleeding effect.}
+	\label{fig:caustics}
+\end{center}
+
+\begin{center}
+	\includegraphics[scale=0.45]{images/gallery/caustics.png}
+	\captionof{figure}{Light refraction producing strong caustics.}
+	\label{fig:caustics}
+\end{center}
+
+\begin{center}
+	\includegraphics[scale=0.45]{images/gallery/sobel.png}
+	\captionof{figure}{Application of Sobel's edge detection operator.}
+	\label{fig:sobel}
+\end{center}
+
+\cleardoublepage
 \subsection{Final}
 
+\begin{center}
+	\includegraphics[scale=0.43]{images/gallery/balls.png}
+	\captionof{figure}{An adaptation of the Cornell box with 6 metallic spheres.}
+	\label{fig:balls}
+\end{center}
+
+\begin{center}
+	\includegraphics[scale=0.43]{images/gallery/mixed.png}
+	\captionof{figure}{Scene showing mixed proprieties and primitives.}
+	\label{fig:mixed}
+\end{center}
+
+\begin{center}
+	\includegraphics[scale=0.43]{images/gallery/rainbow.png}
+	\captionof{figure}{A scene with 7 colored glass spheres, with the colors of the rainbow.}
+	\label{fig:mixed}
+\end{center}
+
+% TODO Mirror box
 \end{document}
