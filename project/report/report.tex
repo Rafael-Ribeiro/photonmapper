@@ -148,14 +148,31 @@ O nó \texttt{Engine} foi criado como uma lista de \texttt{Objects} para permiti
 \cleardoublepage
 \subsection{Primitives}
 \label{sec:primitives}
-\indent \indent 
-%TODO
+\indent \indent Um processo importante na construção de um \emph{ray-tracer}, é a implementação de primitivas que componham a cena.
+Para cada tipo de primitiva, é necessário implementar as seguintes propriedade e métodos:
+
+\begin{description}
+	\item [\texttt{area()}] \hfill \\
+		Área total da superfície da primitiva.
+
+	\item [\texttt{intersect(ray)}] \hfill \\
+		Método que calcula, se existir, o ponto de intersecção entre o raio e a primitiva, que esteja localizado
+		mais próximo da origem do raio.
+
+	\item [\texttt{normal(point)}] \hfill \\
+		Método que devolve a normal à superfície da primitiva num ponto.
+
+	\item [\texttt{randomPhoton()}] \hfill \\
+		Método que cria um fotão á superfície da primitiva, com uma direcção pseudo-aleatória.
+ 
+\end{description}
 
 \subsubsection{Sphere}
 \indent \indent Uma esfera definida através do ponto central e do raio.   
 
 \subsubsection{Plane}
-\indent \indent Um plano definido através do um ponto pertencente e de um vector normal a este.
+\indent \indent Um plano definido através de um ponto pertencente e de um vector normal a este.
+Uma vez que a sua superfície é por definição infinita, esta não pode servir de fonte de luz.
 
 \subsubsection{Quad}
 \indent \indent Um quadrilátero definido por 3 dos 4 vértices, sendo o último calculado como indica a figura.
@@ -235,6 +252,8 @@ são sobresamplados.
 
 \cleardoublepage
 \section{Gallery}
-\indent \indent 
+\subsection{Evolution}
+
+\subsection{Final}
 
 \end{document}
