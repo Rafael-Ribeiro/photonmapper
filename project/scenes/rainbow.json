@@ -18,16 +18,16 @@
 			{ "name" : "viollet_glass",		"color" : [238, 130, 238],	"roughness" : 0.02,		"absorvance" : 0.02,	"emittance" : 0.0,	"n" : 1.492 },
 
 			{ "name" : "white_concrete",	"color" : [255, 255, 255],	"roughness" : 1.00,		"absorvance" : 0.40,	"emittance" : 0.0,	"n" : "infinity" },
+			{ "name" : "black_concrete",	"color" : [10, 10, 10],	"roughness" : 1.00,		"absorvance" : 0.60,	"emittance" : 0.0,	"n" : "infinity" },
 		],
 
 		"Lights" :
 		[
 			{
-				"type" : "Quad",
+				"type" : "Sphere",
 				"material" : "light",
-				"pointA" : [10, 39, 10],
-				"pointB" : [-10, 39, 10],
-				"pointC" : [10, 39, -10],
+				"center" : [0, 15, 0],
+				"radius" : 3,
 				"name" : "ceilingAreaLight"
 			}
 		],
@@ -85,7 +85,7 @@
 			},
 
 			{ "type" : "Plane", "material" : "white_concrete",	"point" : [0.0, -40.0, 0.0],	"normal" : [0.0, 1.0, 0.0],		"name" : "floorPlane" },
-			{ "type" : "Plane", "material" : "white_concrete",	"point" : [0.0, 40.0, 0.0],		"normal" : [0.0, -1.0, 0.0],	"name" : "ceilingPlane" },
+			{ "type" : "Plane", "material" : "black_concrete",	"point" : [0.0, 20.0, 0.0],		"normal" : [0.0, -1.0, 0.0],	"name" : "ceilingPlane" },
 			{ "type" : "Plane", "material" : "white_concrete",	"point" : [-40.0, 0.0, 0.0],	"normal" : [1.0, 0.0, 0.0],		"name" : "leftPlane" },
 			{ "type" : "Plane", "material" : "white_concrete",	"point" : [40.0, 0.0, 0.0],		"normal" : [-1.0, 0.0, 0.0],	"name" : "rightPlane" },
 			{ "type" : "Plane", "material" : "white_concrete",	"point" : [0.0, 0.0, 40],		"normal" : [0.0, 0.0, -1.0],	"name" : "frontPlane" },
@@ -96,9 +96,9 @@
 	"Cameras" :
 	[
 		{
-			"origin" : [0, 20, -60.0],
-			"direction" : [0, -0.342020143325, 0.9396926207859],
-			"top" : [0, 0.9396926207859, 0.342020143325],
+			"origin" : [0, -20, -40.0],
+			"direction" : [0, 0, 1],
+			"top" : [0, 1, 0],
 			"fovy" : 45.0,
 			"width" : 800,
 			"height" : 600,
@@ -110,11 +110,11 @@
 	{
 		"Configurations" :
 		{
-			"MAX_PHOTONS" : 5000000,
+			"MAX_PHOTONS" : 3000000,
 			"MAX_PHOTON_BOUNCE" : 10,
 			"MAX_RAY_BOUNCE" : 10,
 			"MAX_GATHER_DISTANCE" : 2.5,
-			"EXPOSURE" : 0.008,
+			"EXPOSURE" : 0.0035,
 			"EPS" : 1e-10,
 			"ANTIALIAS_THRESHOLD" : 0.5
 		}
