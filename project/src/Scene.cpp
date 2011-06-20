@@ -105,7 +105,16 @@ bool Scene::parse(const JsonBox::Value &sceneVal)
 		if (!primitive)
 			break;
 
-		this->lights.push_back(primitive);
+		JsonBox::Object primitiveObject = it->getObject();
+
+		if (primitiveObject["collidable"].isBoolean() && primitiveObject["collidable"].getBoolean() == true)
+			this->lights.push_back(primitive);
+		else
+		{
+			cerr << "Error: Light object missing collidable parameter." << endl;
+			break;
+		}
+
 		this->primitives.push_back(primitive);
 	}
 
@@ -131,10 +140,6 @@ bool Scene::parse(const JsonBox::Value &sceneVal)
 		cerr << "Error: invalid Primitive format." << endl;
 		return false;
 	}
-
-
-	/* TODO/FIXME */
-	/* Camera parsing */
 
 	return true;
 }
@@ -176,6 +181,11 @@ void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
 	double sum;
 	Photon photon;
 
+	if (this->nPhotons != 0)
+		return;
+
+	cerr << "Building Photon Map" << endl;
+
 	sum = 0;
 	for (i = 0; i < this->lights.size(); i++)
 		sum += this->lights[i]->area() * this->lights[i]->mat.emittance;
@@ -188,8 +198,8 @@ void Scene::buildPhotonMap(int nPhotons, int nPhotonBounce)
 			this->lights[i]->randomPhoton().bounce(*this, nPhotonBounce, photon);	
 	}
 
-	cerr << "No. of photons: " << this->nPhotons << endl; 
 	this->photonMap.optimise();
+	cerr << "No. of photons: " << this->nPhotons << endl;
 }
 
 void Scene::storePhoton(Photon photon)

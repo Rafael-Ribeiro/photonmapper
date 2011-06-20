@@ -27,7 +27,7 @@ struct Scene
 {
 	Scene();
 
-	tree_type photonMap; /* TODO: kd_tree<Photon> photons; */
+	tree_type photonMap;
 	int nPhotons;
 
 	vector<Primitive*> primitives;
