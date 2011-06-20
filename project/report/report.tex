@@ -4,7 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 
-\newcommand{\documentTitle}{Photorealistic Graphics - Photon mapping} %Macro definition
+\newcommand{\documentTitle}{Ray-Tracer with Photon Mapping} %Macro definition
 \newcommand{\documentAuthors}{João Rafael (2008111876, jprafael@student.dei.uc.pt) \and José Ribeiro (2008112181, jbaia@student.dei.uc.pt)} %Macro definition
 
 \title{\documentTitle}
@@ -14,7 +14,7 @@
 \hypersetup{
 	pdftitle = \documentTitle
 	,pdfauthor = \documentAuthors
-	,pdfsubject = {Computer Graphics Project \#2 Report}
+	,pdfsubject = {Computer Graphics Project Final Report}
 	,pdfkeywords = {Computer Graphics Project} {Photon Mapping} {Raytracing}
 	,pdfborder = {0 0 0}
 }
@@ -36,7 +36,10 @@
 \makeatletter
 
 \begin{document}
+
 \renewcommand{\figurename}{Figure}
+\renewcommand{\contentsname}{Contents}
+
 \maketitle
 \cleardoublepage
 
@@ -48,40 +51,103 @@
 
 \section{Introduction}
 \indent \indent O \emph{ray-tracing} é uma técnica de renderização de imagens que tem como principal objectivo o fotorealismo.
-O funcionamento básico deste conciste na projecção de raios, através de uma grelha no espaço que representa o ecrã.
+O funcionamento básico deste consiste na projecção de raios através de uma grelha no espaço que representa o ecrã.
 Estes raios são reflectidos e refractados até atingirem uma superfície difusa. Quando tal acontece a cor do raio é
-calculada através da proximidade ás luzes e da cor do objecto.
+calculada através da proximidade às luzes e da cor do objecto.
 
-\indent O \emph{photon-mapping} é uma melhoria a este método. Numa fase de pre-processamento são emitidos fotões
-das luzes presentes na cena. Esses fotões são estocásticamente distribuidos, reflectidos, refractados, e absorvidos
-sendo apenas armazenados quando são reflectidos de forma difusa, pois apenas neste caso serão uteis armazenar.
-Posteriormente, na fase de \emph{ray-tracing} a cor dos raios é obtida através da soma da cor dos fotões mais próximos.
-O processo de pré-processamento só é efectuado uma vez por cena, podendo-se reutilizar o \emph{photon-map}
-para a renderização de outros ângulos. 
+\indent O \emph{photon-mapping} é uma melhoria deste método. Numa fase de pré-processamento são emitidos fotões
+das luzes presentes na cena. Esses fotões são estocasticamente distribuídos, reflectidos, refractados e absorvidos,
+sendo apenas armazenados quando são reflectidos de forma difusa, pois apenas estes importam na fase seguinte.
+Posteriormente, na fase de \emph{ray-tracing}, a cor dos raios é obtida através da soma da cor dos fotões mais próximos.
+O pré-processamento só é efectuado uma vez por cena, podendo o \emph{photon-map} ser reutilizado para a renderização através de outras câmeras.
 
-\indent Este método permite obter maior realismo, em particular em relação à iluminação resultante. 
- 
+\indent Este método permite obter maior realismo, em particular em relação à iluminação resultante, nomeadamente cáusticas e inter-reflecção difusa.
+
 \cleardoublepage
 \section{Implementation}
-\indent \indent Desde o início do projecto, um aspecto fulcral nas decisões tomadas foi a performance. Com
-este objectivo em mente, tentando manter o código estruturado e modular, a linguagem de programação que se manifestou foi o \texttt{C++}. 
+\subsection{Performance}
+\indent \indent Desde o início do projecto que um aspecto fulcral nas decisões tomadas foi a performance. Com este objectivo em mente,
+e de forma a tentar manter o código estruturado e modular, a linguagem de programação escolhida foi o \texttt{C++}. 
 
-\indent Também com o mesmo propósito de decidímos integrar duas bibliotecas \emph{open source}:
+\indent Também com o mesmo propósito, decidimos integrar duas bibliotecas \emph{open-source}:
 
 \begin{description}
-	\item[libkdtree++] \hfill \\
-		Implementação de uma kD-Tree balanceada, mantida pela equipa da Debian. Foi utilizada com o intuito	de armazenar
-		os fotões e permitir pesquisas (\emph{range queries}) rápidas.
-	\item[OpenMP] \hfill \\
-		Após a projecção dos fotões, e dos raios primários, a restante propagação dos raios é uma tarefa altamente parelelizavel.
-		Assim, de forma a ter proveito dos recursos existentes nos processadores actuais decidimos utilizar OpenMP, uma biblioteca
-		de programação concurrente para C/C++.
+	\item[libkdtree++ (http://libkdtree.alioth.debian.org/)] \hfill \\
+		Implementação de uma kD-Tree balanceada, mantida por Paul Harris.
+		Foi utilizada com o intuito	de armazenar os fotões e permitir pesquisas (\emph{range queries}) rápidas.
+	\item[OpenMP (http://openmp.org/)] \hfill \\
+		Após a projecção dos fotões e dos raios primários, a restante propagação dos raios é uma tarefa altamente paralelizável.
+		Assim, de forma a tirar proveito dos recursos existentes nos processadores actuais, decidimos utilizar OpenMP, uma biblioteca
+		de programação concorrente para \texttt{C/C++ e Fortran}.
 \end{description}
 
-% TODO json scene
+\subsection{Scene loading}
+\indent \indent Para permitir a criação de cenas a renderizar sem a necessidade de recompilação do código decidimos implementar um formato de descrição
+de cena que fosse facilmente \emph{parsable} e de simples manutenção. Após indecisão entre os formatos de descrição de objectos de \texttt{Lua} e \texttt{JSON},
+optámos por \texttt{JSON}, dado que as \texttt{APIs} disponíveis para esta linguagem não necessitam de recorrer a bibliotecas externas.
+
+\indent Descreve-se de seguida o formato da cena:
+\begin{description}
+	\item[Scene] \hfill
+		\begin{description}
+			\item[Materials] \hfill \\
+				\texttt{Array} de \texttt{Objects} correspondentes à classe \texttt{Material}, compostos pelos seguintes parâmetros:
+				\begin{description}
+					\item[color] \hfill \\
+						Cor do material.
+					\item[roughness] \hfill \\
+						Valor de 0 a 1, correspondente ao inverso do grau de polimento.
+					\item[absorvance] \hfill \\
+						Valor de 0 a 1, correspondente à absorvância do material; isto é, a fracção de luz que atinge o material e é absorvida por este.
+					\item[emittance] \hfill \\
+						Valor de 0 a $\infty$, correspondente à luminosidade da \texttt{Primitive}.
+					\item[n] \hfill \\
+						Valor de 0 a $\infty$, correspondente ao índice de refracção do material; isto é, o valor relativo da velocidade da luz no meio em relação
+						à velocidade da luz no vácuo.
+				\end{description}
+
+				É necessário pelo menos um \texttt{Material}.
+			\item[Lights] \hfill \\
+				\texttt{Array} de \texttt{Objects} correspondentes à classe \texttt{Primitive}.
+				Os seus parâmetros dependem do tipo de \texttt{Primitive} (ver secção \ref{sec:primitives}).
+				Apenas os objectos presentes nesta secção serão usados no cálculo do mapa de fotões. \\
+				É necessário pelo menos uma \texttt{Primitive} do tipo \texttt{Light}.
+			\item[Primitives (obrigatório)] \hfill \\
+				\texttt{Array} de \texttt{Objects} correspondentes à classe \texttt{Primitive}.
+				Os seus parâmetros dependem do tipo de \texttt{Primitive} (ver secção \ref{sec:primitives}).
+		\end{description}
+	\item[Cameras] \hfill \\
+		\texttt{Array} de \texttt{Objects} correspondentes à classe \texttt{Camera}.
+		Os seus parâmetros são descritos de seguida:
+		\begin{description}
+			\item[origin] \hfill \\
+				Ponto correspondente ao ponto de origem da câmera.
+			\item[direction] \hfill \\
+				Vector normalizado correspondente à direcção da câmera.
+			\item[top] \hfill \\
+				Vector normalizado correspondente ao \emph{top} da câmera (orientação).
+			\item[fovy] \hfill \\
+				Valor em graus correspondente ao \textit{field-of-view} da câmera.
+			\item[width] \hfill \\
+				Valor em píxeis, correspondente à largura da imagem final.
+			\item[height] \hfill \\
+				Valor em píxeis, correspondente à altura da imagem final.
+			\item[filename] \hfill \\
+				Nome do ficheiro de \textit{output} da imagem \texttt{.ppm}.
+		\end{description}
+
+	\item[Engine (opcional)] \hfill
+		\begin{description}
+			\item[Configurations (opcional)] \hfill \\
+				Objecto correspondente aos valores "constantes" a executar durante o programa.
+		\end{description}
+\end{description}
+
+O nó \texttt{Engine} foi criado como uma lista de \texttt{Objects} para permitir a possível extensibilidade do formato de descrição.
 
 \cleardoublepage
 \subsection{Primitives}
+\label{sec:primitives}
 \indent \indent Um processo importante na construção de um \emph{ray-tracer}, é a implementação de primitivas que componham a cena.
 Para cada tipo de primitiva, é necessário implementar as seguintes propriedade e métodos:
 
