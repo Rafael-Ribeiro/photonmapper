@@ -107,15 +107,18 @@ bool Scene::parse(const JsonBox::Value &sceneVal)
 
 		JsonBox::Object primitiveObject = it->getObject();
 
-		if (primitiveObject["collidable"].isBoolean() && primitiveObject["collidable"].getBoolean() == true)
-			this->lights.push_back(primitive);
-		else
+		if (primitiveObject["collidable"].isBoolean())
+		{
+			if (primitiveObject["collidable"].getBoolean() == true)
+				this->primitives.push_back(primitive);
+
+		} else
 		{
 			cerr << "Error: Light object missing collidable parameter." << endl;
 			break;
 		}
 
-		this->primitives.push_back(primitive);
+		this->lights.push_back(primitive);
 	}
 
 	if (it != lightsArr.end())
