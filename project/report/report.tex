@@ -139,7 +139,23 @@ optámos por \texttt{JSON}, dado que as \texttt{APIs} disponíveis para esta lin
 	\item[Engine (opcional)] \hfill
 		\begin{description}
 			\item[Configurations (opcional)] \hfill \\
-				Objecto correspondente aos valores "constantes" a executar durante o programa.
+				Objecto correspondente aos parâmetros referentes ao \emph{Engine}.
+				\begin{description}
+					\item[MAX\_PHOTONS (opcional)] \hfill \\
+						Valor de 1 a $\infty$, correspondente ao número máximo de fotões em cena.
+					\item[MAX\_PHOTON\_BOUNCE (opcional)] \hfill \\
+						Valor de 1 a $\infty$, correspondente ao limite de recursividade relativo à reflexão de fotões.
+					\item[MAX\_RAY\_BOUNCE (opcional)] \hfill \\
+						Valor de 1 a $\infty$, correspondente ao limite de recursividade relativo à reflexão de raios.
+					\item[MAX\_GATHER\_DISTANCE (opcional)] \hfill \\
+						Valor de 0 a $\infty$, correspondente ao raio de influência de um fotão.
+					\item[EXPOSURE (opcional)] \hfill \\
+						Valor de 0 a $\infty$, correspondente à luminosidade associada a cada fotão.
+					\item[EPS (opcional)] \hfill \\
+						Valor de 0 a $\infty$, correspondente à diferença mínima para dois números de vírgula flutoante serem considerados diferentes.
+					\item[ANTIALIAS\_THRESHOLD (opcional)] \hfill \\
+						Valor de 0 a 1, correspondente ao nível de energia a partir do qual é feita oversamplagem de um dado píxel.
+				\end{description}
 		\end{description}
 \end{description}
 
