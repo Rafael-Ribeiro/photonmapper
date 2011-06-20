@@ -164,8 +164,8 @@ O nó \texttt{Engine} foi criado como uma lista de \texttt{Objects} para permiti
 \cleardoublepage
 \subsection{Primitives}
 \label{sec:primitives}
-\indent \indent Um processo importante na construção de um \emph{ray-tracer}, é a implementação de primitivas que componham a cena.
-Para cada tipo de primitiva, é necessário implementar as seguintes propriedade e métodos:
+\indent \indent Um processo importante na construção de um \emph{ray-tracer} é a implementação de primitivas que componham a cena.
+Para cada tipo de primitiva é necessário implementar as seguintes propriedade e métodos:
 
 \begin{description}
 	\item [\texttt{area()}] \hfill \\
@@ -179,7 +179,7 @@ Para cada tipo de primitiva, é necessário implementar as seguintes propriedade
 		Método que devolve a normal à superfície da primitiva num ponto.
 
 	\item [\texttt{randomPhoton()}] \hfill \\
-		Método que cria um fotão á superfície da primitiva, com uma direcção pseudo-aleatória.
+		Método que cria um fotão à superfície da primitiva, com uma direcção pseudo-aleatória.
  
 \end{description}
 
@@ -188,7 +188,7 @@ Para cada tipo de primitiva, é necessário implementar as seguintes propriedade
 
 \subsubsection{Plane}
 \indent \indent Um plano definido através de um ponto pertencente e de um vector normal a este.
-Uma vez que a sua superfície é por definição infinita, esta não pode servir de fonte de luz.
+Uma vez que a sua superfície é, por definição, infinita, esta não pode servir de fonte de luz.
 
 \subsubsection{Quad}
 \indent \indent Um quadrilátero definido por 3 dos 4 vértices, sendo o último calculado como indica a figura.
@@ -204,6 +204,7 @@ arestas que contém este vértice.
 
 \cleardoublepage
 \subsection{Reflection}
+\label{sec:reflection}
 
 \begin{center}
 	\includegraphics[scale=0.50]{images/reflection.png}
@@ -212,19 +213,52 @@ arestas que contém este vértice.
 \end{center}
 
 \indent No modelo físico a componente difusa de um material corresponde à reflecção da luz numa superfície
-que contém micro-ruído. A luz ao insidir nesta superfície é espalhada para várias direcções. 
+que contém micro-ruído. A luz ao incidir nesta superfície é espalhada para várias direcções. 
 
 \indent Este fenómeno é facilmente reproduzido na fase de \emph{photon-mapping}.
 No entanto, na fase de \emph{ray-tracing} seria necessário projectar, para cada reflecção, vários raios, o que
-é computacionalmente muito exigente, pelo que para este caso é utilizada outro método.
+é computacionalmente muito exigente, pelo que para este caso é utilizado outro método.
+
+\indent A reflectância (i.e.: a relação entre a intensidade de luz que é reflectida e a intensidade de luz que é refractada) é indicada pelas equações de Fresnel.
+No entanto, estas são computacionalmente dispendiosas; como tal, é usualmente implementada a aproximação de Schlick para a direcção da reflecção,
+dada pela fórmula
+\begin{displaymath}
+	R_{Schlick}(\theta_{i}) = \left\{
+		\begin{array}{ll}
+			R_{0} + (1 - R_{0}) (1 - \cos(\theta_{i}))^{5} & : \mu_{1} \leq \mu_{2} \\
+			R_{0} + (1 - R_{0}) (1 - \cos(\theta_{t}))^{5} & : \mu_{1} > \mu_{2} \wedge \neg \text{\texttt{TIR}} \\
+			1 & : \mu_{1} > \mu_{2} \wedge \text{\texttt{TIR}}
+		\end{array}
+	\right.
+\end{displaymath}
+onde $\mu_{1}$ corresponde ao índice de refracção do meio de origem, $\mu_{2}$ o índice de refracção do meio destino, $\theta_{i}$ o ângulo de incidência,
+$\theta_{t}$ o ângulo da reflecção, \texttt{TIR} o ângulo crítico\footnote{Ângulo crítico é o ângulo a partir do qual toda a luz é reflectida.}, e $R_{0}$ é dado por
+\begin{displaymath}
+	R_{0} = \left(\frac{\mu_{1} - \mu_{2}}{\mu_{1} + \mu_{2}}\right)^2
+\end{displaymath}
+
+Como a projecção de fotões é feita de forma estocástica, este valor é a probabilidade de um dado fotão reflectir após a colisão com uma superfície;
+dado que a fórmula é dependente dos meios (de origem e destino), esse valor será dependente do material da primitiva.
+
+A direcção da reflecção é dada pela equação
+
+\begin{displaymath}
+	V_{reflect} = \mathbf{l} + (2 \cos{\theta_{1}}) \, \mathbf{n}
+\end{displaymath}
+
+onde $\mathbf{l}$ é um vector normalizado da direcção da luz incidente, $\mathbf{n}$ um vector normal (normalizado) ao plano e $\cos{\theta_{1}}$ dado por
+\begin{displaymath}
+	\cos{\theta_{1}} = \mathbf{n} \, . \, (\mathbf{-l})
+\end{displaymath}
 
 \subsubsection{Specular}
-\indent \indent Tal como indicado, caso a reflecção seja especular os raios (e fotões) obtém uma nova direcção,
-calculada através da normal à superfície, e a cor provém destes. 
+\indent \indent Caso a reflecção seja especular os raios (e fotões) obtém uma nova direcção,
+calculada através da normal à superfície. Desta forma, a cor do raio que acabou de ser reflectido é igual à do novo raio.
+Por outro lado, durante a fase de \emph{photon-mapping}, um fotão quando é reflectido tem em parte a sua energia absorvida, pelo que apresenta uma cor diferente.
 
 \subsubsection{Diffuse}
-\indent Caso a reflecção seja difusa a cor é inferida a partir da radiosidade local,
-isto é, pela intensidade\footnote[1]{A importância de cada fotão depende do coseno do ângulo formado entre a sua direcção e a da normal à superfície} dos fotões perto do ponto de reflecção.
+\indent \indent Caso a reflecção seja difusa a cor é inferida a partir da radiosidade local,
+isto é, pela intensidade\footnote{A importância de cada fotão depende do cosseno do ângulo formado entre a sua direcção e a da normal à superfície.} dos fotões perto do ponto de reflecção.
 
 \indent Um efeito visível com esta técnica é o \emph{color bleeding}: transferência de cor entre duas superfícies
 através de reflecções difusas.
@@ -240,6 +274,24 @@ através de reflecções difusas.
 \indent A refracção é um efeito visível quando a luz muda entre meios com diferentes densidades.
 Este efeito caracteriza-se pela diferença entre a direcção do raio incidente e a direcção do raio emergente. 
 Desta forma a sua implementação adequa-se na sua totalidade ao paradigma de ray-tracing.
+
+A direcção da refracção é calculada segundo a equação
+
+\begin{displaymath}
+	V_{refract} = \left(\frac{\mu_{1}}{\mu_{2}}\right)\mathbf{l} + \left(\frac{\mu_{1}}{\mu_{2}} \cos(\theta_{1}) - cos(\theta_{2})\right)\mathbf{n}
+\end{displaymath}
+
+ou (caso $\cos(\theta_{1})$ seja negativo)
+
+\begin{displaymath}
+	V_{refract} = \left(\frac{\mu_{1}}{\mu_{2}}\right)\mathbf{l} + \left(\frac{\mu_{1}}{\mu_{2}} \cos(\theta_{1}) + cos(\theta_{2})\right)\mathbf{n}
+\end{displaymath}
+
+onde $\mu_{1}$, $\mu_{2}$, $\cos(\theta_{1})$, $\mathbf{l}$ e $\mathbf{n}$ são os definidos na secção \ref{sec:reflection}, e
+
+\begin{displaymath}
+	\cos(\theta_{2}) = \sqrt{1 - \left(\frac{\mu_{1}}{\mu_{2}}\right)^2 \left(1 - \cos\left(\theta_{1}\right)^2\right)}
+\end{displaymath}
 
 \subsubsection{Attenuation}
 \indent \indent Ao atravessar um material translúcido, parte da energia de um fotão é absorvida. De forma análoga,
