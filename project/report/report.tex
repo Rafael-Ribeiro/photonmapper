@@ -94,7 +94,7 @@ optámos por \texttt{JSON}, dado que as \texttt{APIs} disponíveis para esta lin
 				\texttt{Array} de \texttt{Objects} correspondentes à classe \texttt{Material}, compostos pelos seguintes parâmetros:
 				\begin{description}
 					\item[color] \hfill \\
-						Cor do material.
+						Cor do material em \texttt{RGB}.
 					\item[roughness] \hfill \\
 						Valor de 0 a 1, correspondente ao inverso do grau de polimento.
 					\item[absorvance] \hfill \\
@@ -112,6 +112,7 @@ optámos por \texttt{JSON}, dado que as \texttt{APIs} disponíveis para esta lin
 				Os seus parâmetros dependem do tipo de \texttt{Primitive} (ver secção \ref{sec:primitives}).
 				Apenas os objectos presentes nesta secção serão usados no cálculo do mapa de fotões. \\
 				É necessário pelo menos uma \texttt{Primitive} do tipo \texttt{Light}.
+				Possui o parâmetro obrigatório \texttt{collidable}, que indica se esta é visível na cena.
 			\item[Primitives (obrigatório)] \hfill \\
 				\texttt{Array} de \texttt{Objects} correspondentes à classe \texttt{Primitive}.
 				Os seus parâmetros dependem do tipo de \texttt{Primitive} (ver secção \ref{sec:primitives}).
@@ -142,17 +143,17 @@ optámos por \texttt{JSON}, dado que as \texttt{APIs} disponíveis para esta lin
 				Objecto correspondente aos parâmetros referentes ao \emph{Engine}.
 				\begin{description}
 					\item[MAX\_PHOTONS (opcional)] \hfill \\
-						Valor de 1 a $\infty$, correspondente ao número máximo de fotões em cena.
+						Valor inteiro de 1 a $\infty$, correspondente ao número de fotões projectados.
 					\item[MAX\_PHOTON\_BOUNCE (opcional)] \hfill \\
-						Valor de 1 a $\infty$, correspondente ao limite de recursividade relativo à reflexão de fotões.
+						Valor inteiro de 1 a $\infty$, correspondente ao limite de recursividade relativo à reflexão de fotões.
 					\item[MAX\_RAY\_BOUNCE (opcional)] \hfill \\
-						Valor de 1 a $\infty$, correspondente ao limite de recursividade relativo à reflexão de raios.
+						Valor inteiro de 1 a $\infty$, correspondente ao limite de recursividade relativo à reflexão de raios.
 					\item[MAX\_GATHER\_DISTANCE (opcional)] \hfill \\
 						Valor de 0 a $\infty$, correspondente ao raio de influência de um fotão.
 					\item[EXPOSURE (opcional)] \hfill \\
 						Valor de 0 a $\infty$, correspondente à luminosidade associada a cada fotão.
 					\item[EPS (opcional)] \hfill \\
-						Valor de 0 a $\infty$, correspondente à diferença mínima para dois números de vírgula flutoante serem considerados diferentes.
+						Valor de 0 a $\infty$, correspondente à diferença mínima para dois números de vírgula flutuante serem considerados diferentes.
 					\item[ANTIALIAS\_THRESHOLD (opcional)] \hfill \\
 						Valor de 0 a 1, correspondente ao nível de energia a partir do qual é feita oversamplagem de um dado píxel.
 				\end{description}
@@ -199,8 +200,8 @@ Uma vez que a sua superfície é, por definição, infinita, esta não pode serv
 \end{center}
 
 \subsubsection{Box}
-\indent \indent Uma caixa definida por um dos vértices desta, e 3 vectores correspondentes a cada uma das 
-arestas que contém este vértice.
+\indent \indent Uma caixa definida por um dos seus vértices e 3 vectores correspondentes a cada uma das 
+arestas que contém esse vértice.
 
 \cleardoublepage
 \subsection{Reflection}
@@ -219,8 +220,9 @@ que contém micro-ruído. A luz ao incidir nesta superfície é espalhada para v
 No entanto, na fase de \emph{ray-tracing} seria necessário projectar, para cada reflecção, vários raios, o que
 é computacionalmente muito exigente, pelo que para este caso é utilizado outro método.
 
+\hfill \\
 \indent A reflectância (i.e.: a relação entre a intensidade de luz que é reflectida e a intensidade de luz que é refractada) é indicada pelas equações de Fresnel.
-No entanto, estas são computacionalmente dispendiosas; como tal, é usualmente implementada a aproximação de Schlick para a direcção da reflecção,
+No entanto, estas são computacionalmente dispendiosas; como tal, é usualmente implementada a aproximação de Schlick para o cálculo da reflectância,
 dada pela fórmula
 \begin{displaymath}
 	R_{Schlick}(\theta_{i}) = \left\{
@@ -240,7 +242,9 @@ $\theta_{t}$ o ângulo da reflecção, \texttt{TIR} o ângulo crítico\footnote{
 Como a projecção de fotões é feita de forma estocástica, este valor é a probabilidade de um dado fotão reflectir após a colisão com uma superfície;
 dado que a fórmula é dependente dos meios (de origem e destino), esse valor será dependente do material da primitiva.
 
-A direcção da reflecção é dada pela equação
+\cleardoublepage
+
+A direcção da reflecção é dada pela equação da \textit{Lei de Snell}
 
 \begin{displaymath}
 	V_{reflect} = \mathbf{l} + (2 \cos{\theta_{1}}) \, \mathbf{n}
@@ -258,7 +262,15 @@ Por outro lado, durante a fase de \emph{photon-mapping}, um fotão quando é ref
 
 \subsubsection{Diffuse}
 \indent \indent Caso a reflecção seja difusa a cor é inferida a partir da radiosidade local,
-isto é, pela intensidade\footnote{A importância de cada fotão depende do cosseno do ângulo formado entre a sua direcção e a da normal à superfície.} dos fotões perto do ponto de reflecção.
+isto é, pela intensidade\footnote{A importância de cada fotão depende do coseno do ângulo formado entre a sua direcção e a da normal à superfície} dos fotões perto do ponto de reflecção.
+
+\begin{displaymath}
+	Radiosity = \frac{E}{\pi r^{2}} \sum \limits_{p \in P}{\max(0, \vec{N} \cdot \vec{d_{p}})}
+\end{displaymath}
+
+\indent Onde $E$ é a intensidade de luz de um fotão (\emph{exposure}), $r$ é o raio de influência de um fotão,
+$P$ é o conjunto de fotões a uma distância máxima $r$ do ponto, $\vec{N}$ é o vector normal à superfície
+e $\vec{d_{p}}$ é a direcção do fotão $p$.
 
 \indent Um efeito visível com esta técnica é o \emph{color bleeding}: transferência de cor entre duas superfícies
 através de reflecções difusas.
@@ -275,7 +287,7 @@ através de reflecções difusas.
 Este efeito caracteriza-se pela diferença entre a direcção do raio incidente e a direcção do raio emergente. 
 Desta forma a sua implementação adequa-se na sua totalidade ao paradigma de ray-tracing.
 
-A direcção da refracção é calculada segundo a equação
+A direcção da refracção é calculada segundo a equação da \textit{Lei de Snell}
 
 \begin{displaymath}
 	V_{refract} = \left(\frac{\mu_{1}}{\mu_{2}}\right)\mathbf{l} + \left(\frac{\mu_{1}}{\mu_{2}} \cos(\theta_{1}) - cos(\theta_{2})\right)\mathbf{n}
@@ -287,7 +299,7 @@ ou (caso $\cos(\theta_{1})$ seja negativo)
 	V_{refract} = \left(\frac{\mu_{1}}{\mu_{2}}\right)\mathbf{l} + \left(\frac{\mu_{1}}{\mu_{2}} \cos(\theta_{1}) + cos(\theta_{2})\right)\mathbf{n}
 \end{displaymath}
 
-onde $\mu_{1}$, $\mu_{2}$, $\cos(\theta_{1})$, $\mathbf{l}$ e $\mathbf{n}$ são os definidos na secção \ref{sec:reflection}, e
+onde $\mu_{1}$, $\mu_{2}$, $\cos(\theta_{1})$, $\mathbf{l}$ e $\mathbf{n}$ são os definidos na secção \ref{sec:reflection}, e $\cos(\theta_{2})$ é dado por
 
 \begin{displaymath}
 	\cos(\theta_{2}) = \sqrt{1 - \left(\frac{\mu_{1}}{\mu_{2}}\right)^2 \left(1 - \cos\left(\theta_{1}\right)^2\right)}
@@ -322,18 +334,67 @@ são sobresamplados.
 \section{Gallery}
 \subsection{Evolution}
 \begin{center}
-	\includegraphics[scale=1.00]{images/gallery/photon_projection.png}
-	\captionof{figure}{Initial projection of photons on the surface of a sphere shapped light}
+	\includegraphics[scale=0.50]{images/gallery/photon_projection.png}
+	\captionof{figure}{Initial projection of photons on the surface of a sphere shapped light.}
 	\label{fig:photon_projection}
 \end{center}
 
 \begin{center}
-	\includegraphics[scale=1.00]{images/gallery/ray_casting.png}
-	\captionof{figure}{First projection and intersection of rays and spheres}
+	\includegraphics[scale=0.50]{images/gallery/ray_casting.png}
+	\captionof{figure}{First projection and intersection of rays and spheres.}
 	\label{fig:ray_projection}
 \end{center}
 
+\begin{center}
+	\includegraphics[scale=0.45]{images/gallery/diffuse.png}
+	\captionof{figure}{Radiosity gathering of photons emitted by a white light (here still rendered black).}
+	\label{fig:diffuse}
+\end{center}
 
+\begin{center}
+	\includegraphics[scale=0.45]{images/gallery/reflection.png}
+	\captionof{figure}{Over-exposed image of a scene showing reflections.}
+	\label{fig:reflections}
+\end{center}
+
+\begin{center}
+	\includegraphics[scale=0.45]{images/gallery/color_bleed.png}
+	\captionof{figure}{Exagerated color bleeding effect.}
+	\label{fig:caustics}
+\end{center}
+
+\begin{center}
+	\includegraphics[scale=0.45]{images/gallery/caustics.png}
+	\captionof{figure}{Light refraction producing strong caustics.}
+	\label{fig:caustics}
+\end{center}
+
+\begin{center}
+	\includegraphics[scale=0.45]{images/gallery/sobel.png}
+	\captionof{figure}{Application of Sobel's edge detection operator.}
+	\label{fig:sobel}
+\end{center}
+
+\cleardoublepage
 \subsection{Final}
 
+\begin{center}
+	\includegraphics[scale=0.43]{images/gallery/balls.png}
+	\captionof{figure}{An adaptation of the Cornell box with 6 metallic spheres.}
+	\label{fig:balls}
+\end{center}
+
+\begin{center}
+	\includegraphics[scale=0.43]{images/gallery/mixed.png}
+	\captionof{figure}{Scene showing mixed properties and primitives.}
+	\label{fig:mixed}
+\end{center}
+
+\begin{center}
+	\includegraphics[scale=0.43]{images/gallery/rainbow.png}
+	\captionof{figure}{A scene with 7 colored glass spheres, with the colors of the rainbow.}
+	\label{fig:mixed}
+\end{center}
+
+% TODO Mirror box
 \end{document}
