@@ -89,7 +89,6 @@ double Material::reflectance(const Vector &direction, const Vector &normal, cons
 	 * Reflectance according to http://www.bramz.net/data/writings/reflection_transmission.pdf
 	 */
 
-	/* TODO FIXME IMPROVE */
 	if (this->n == numeric_limits<double>::infinity())
 		return 1.0;
 

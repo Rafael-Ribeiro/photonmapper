@@ -29,6 +29,7 @@
 				"pointA" : [10, 39, 10],
 				"pointB" : [-10, 39, 10],
 				"pointC" : [10, 39, -10],
+				"collidable" : true,
 				"name" : "ceilingAreaLight"
 			}
 		],
@@ -69,15 +70,6 @@
 			"width" : 800,
 			"height" : 600,
 			"filename" : "../renders/front.ppm"
-		},
-		{
-			"origin" : [0, 1, -40.0],
-			"direction" : [0, 0, -1],
-			"top" : [0, 1, 0],
-			"fovy" : 45.0,
-			"width" : 800,
-			"height" : 600,
-			"filename" : "../renders/back.ppm"
 		}
 	],
 
@@ -85,11 +77,11 @@
 	{
 		"Configurations" :
 		{
-			"MAX_PHOTONS" : 2000000,
+			"MAX_PHOTONS" : 5000000,
 			"MAX_PHOTON_BOUNCE" : 10,
 			"MAX_RAY_BOUNCE" : 50,
-			"MAX_GATHER_DISTANCE" : 2,
-			"EXPOSURE" : 0.02,
+			"MAX_GATHER_DISTANCE" : 2.5,
+			"EXPOSURE" : 0.0035,
 			"EPS" : 1e-10,
 			"ANTIALIAS_THRESHOLD" : 0.5
 		}
